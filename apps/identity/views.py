@@ -73,7 +73,7 @@ elder_required      = user_passes_test(is_elder_or_above, login_url='member-dash
 # ══════════════════════════════════════════════
 
 @ensure_csrf_cookie
-@rate_limit("login", 5, 300)
+@rate_limit("login", 20, 300)
 def login_view(request):
     if request.user.is_authenticated:
         return redirect(get_role_dashboard(request.user))

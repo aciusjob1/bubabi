@@ -10,3 +10,4 @@ whitenoise==6.12.0
 psycopg2-binary
 dj-database-url
 gunicorn
+africastalking

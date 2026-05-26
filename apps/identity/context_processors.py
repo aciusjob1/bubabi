@@ -20,7 +20,7 @@ def clan_settings(request):
         clan_banner = type('FakeBanner', (), {'url': DEFAULT_BANNER})()
 
     # Get logo (keep None if not set - templates handle this)
-    clan_logo = getattr(clan, 'logo', None) if clan else None
+    clan_logo = getattr(clan, 'logo', None) if clan and clan.logo else None
 
     return {
         'clan_primary_color': getattr(clan, 'primary_color', settings.CLAN_PRIMARY_COLOR) if clan else settings.CLAN_PRIMARY_COLOR,

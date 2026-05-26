@@ -370,8 +370,8 @@
 {% block sidebar %}
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-brand">
-    {% if request.user.clan and request.user.clan.logo %}
-    <img src="{{ request.user.clan.logo.url }}" alt="BUBABI Logo">
+    {% if clan_logo %}
+    <img src="{{ clan_logo.url }}" alt="BUBABI Logo">
     {% else %}
     <div class="brand-icon">⚔</div>
     {% endif %}

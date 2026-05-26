@@ -11,3 +11,5 @@ psycopg2-binary
 dj-database-url
 gunicorn
 africastalking
+africastalking
+requests

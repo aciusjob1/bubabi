@@ -53,12 +53,12 @@
       100% { background-position: 0% 0%; }
     }
 
-    {% if request.user.clan and request.user.clan.banner_image %}
+    {% if clan_banner %}
     body::before {
       content: '';
       position: fixed;
       inset: 0;
-      background: url('{{ request.user.clan.banner_image.url }}') center/cover no-repeat;
+      background: url('{{ clan_banner.url }}') center/cover no-repeat;
       opacity: 0.03;
       z-index: 0;
       pointer-events: none;

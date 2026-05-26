@@ -14,8 +14,8 @@
       font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
       min-height:100vh; min-height:100dvh;
       display:flex; align-items:center; justify-content:center; padding:1rem;
-      {% if clan and clan.banner_image %}
-      background: linear-gradient({{ clan_sidebar_color|default:'#3d1a1a' }}dd, {{ clan_sidebar_color|default:'#3d1a1a' }}ee), url('{{ clan.banner_image.url }}') center/cover no-repeat fixed;
+      {% if clan_banner %}
+      background: linear-gradient({{ clan_sidebar_color|default:'#3d1a1a' }}dd, {{ clan_sidebar_color|default:'#3d1a1a' }}ee), url('{{ clan_banner.url }}') center/cover no-repeat fixed;
       {% else %}
       background: linear-gradient({{ clan_sidebar_color|default:'#3d1a1a' }}dd, {{ clan_sidebar_color|default:'#3d1a1a' }}ee), url('https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=1920&q=80') center/cover no-repeat fixed;
       {% endif %}

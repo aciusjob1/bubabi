@@ -28,9 +28,9 @@
       position: relative;
       -webkit-tap-highlight-color: transparent;
       overflow-x: hidden;
-      {% if clan and clan.banner_image %}
+      {% if clan_banner %}
       background: linear-gradient(135deg, var(--sidebar-color-base), var(--sidebar-color-base)),
-                  url('{{ clan.banner_image.url }}') center/cover no-repeat fixed;
+                  url('{{ clan_banner.url }}') center/cover no-repeat fixed;
       background-blend-mode: multiply;
       {% else %}
       background: linear-gradient(135deg, var(--sidebar-color-base), #0f172a) center/cover no-repeat fixed;

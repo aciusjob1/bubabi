@@ -7,9 +7,9 @@
 <div style="max-width:1200px; margin:0 auto; position: relative; z-index: 1;">
 
   <!-- Clan Banner Preview Framework -->
-  {% if request.user.clan and request.user.clan.banner_image %}
+  {% if clan_banner %}
   <div id="bannerContainer" style="border-radius:12px; overflow:hidden; margin-bottom:1.5rem; height:140px; position:relative; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-    <img src="{{ request.user.clan.banner_image.url }}" style="width:100%; height:100%; object-fit:cover;" alt="{{ request.user.clan.name }}">
+    <img src="{{ clan_banner.url }}" style="width:100%; height:100%; object-fit:cover;" alt="{{ request.user.clan.name }}">
     <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.6)); padding:1rem 1.5rem;">
       <span style="color:#fff; font-weight:700; font-size:1.1rem;">{{ request.user.clan.name }} — {% trans "Treasury Ledger" %}</span>
     </div>

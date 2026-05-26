@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'django_extensions',
+    'cloudinary',
     # Our apps
     'apps.core',
     'apps.identity',

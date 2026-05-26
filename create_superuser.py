@@ -29,3 +29,13 @@ else:
     user.has_accepted_terms = True
     user.save()
     print(f"✅ Superuser updated: {email}")
+
+# Also assign Leader role if not already assigned
+from apps.governance.models import Role, MemberRole
+try:
+    leader_role = Role.objects.get(name='Leader')
+    if not MemberRole.objects.filter(member=user, role=leader_role).exists():
+        MemberRole.objects.create(member=user, role=leader_role)
+        print(f"✅ Leader role assigned to {email}")
+except Exception as e:
+    print(f"⚠️ Could not assign Leader role: {e}")

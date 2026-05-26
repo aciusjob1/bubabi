@@ -1,0 +1,75 @@
+{% extends "forms/base_form.html" %}
+{% load i18n %}
+
+{% block page_title %}{% trans "Post Announcement" %}{% endblock %}
+{% block form_title %}{% trans "Post Announcement" %}{% endblock %}
+{% block form_subtitle %}
+  📢 {% trans "This will notify all active BUBABI members." %}
+{% endblock %}
+
+{% block form_fields %}
+<div class="field">
+  <label>📝 {% trans "Title" %}</label>
+  {{ form.title }}
+  <div class="help">{% trans "A clear, concise title for your announcement" %}</div>
+</div>
+
+<div class="field">
+  <label>📄 {% trans "Content" %}</label>
+  {{ form.content }}
+  <div class="help">{% trans "The full message you want to share with the clan" %}</div>
+</div>
+
+<div class="field">
+  <label>🏷️ {% trans "Category" %}</label>
+  {{ form.category }}
+</div>
+
+<div class="field">
+  <label>⏱ {% trans "Auto-Expiry" %}</label>
+  <select name="duration_days" style="
+    width:100%; padding:0.7rem; border:1px solid #e2e8f0;
+    border-radius:8px; font-size:0.9rem; background:#fff;
+    outline:none; cursor:pointer;"
+    onfocus="this.style.borderColor='#10b981'"
+    onblur="this.style.borderColor='#e2e8f0'">
+    <option value="1">{% trans "1 day" %}</option>
+    <option value="3">{% trans "3 days" %}</option>
+    <option value="7">{% trans "7 days" %}</option>
+    <option value="14">{% trans "14 days" %}</option>
+    <option value="30" selected>{% trans "30 days (default)" %}</option>
+    <option value="60">{% trans "60 days" %}</option>
+    <option value="90">{% trans "90 days" %}</option>
+    <option value="">{% trans "Never expires" %}</option>
+  </select>
+  <div class="help">{% trans "Announcement will be automatically hidden after this period" %}</div>
+</div>
+
+<div class="field">
+  <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;
+                text-transform:none; letter-spacing:0;">
+    {{ form.is_pinned }}
+    <span style="font-size:0.85rem;font-weight:500;color:#374151;">
+      📌 {% trans "Pin this announcement to the top" %}
+    </span>
+  </label>
+  <div class="help" style="margin-left:1.5rem;">
+    {% trans "Pinned announcements stay at the top of the list" %}
+  </div>
+</div>
+
+<div class="field">
+  <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;
+                text-transform:none; letter-spacing:0;">
+    {{ form.send_sms }}
+    <span style="font-size:0.85rem;font-weight:500;color:#374151;">
+      📱 {% trans "Send as SMS to all members" %}
+    </span>
+  </label>
+  <div class="help" style="margin-left:1.5rem;">
+    {% trans "Members with phone numbers will receive an SMS notification" %}
+  </div>
+</div>
+{% endblock %}
+
+{% block submit_label %}📢 {% trans "Post Announcement" %}{% endblock %}

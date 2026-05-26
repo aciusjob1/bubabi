@@ -1,0 +1,44 @@
+{% extends "forms/base_form.html" %}
+{% block page_title %}Add Relationship{% endblock %}
+{% block form_title %}Add Family Relationship{% endblock %}
+{% block form_subtitle %}
+  The inverse relationship will be created automatically.
+{% endblock %}
+
+{% block form_fields %}
+<div class="field">
+  <label>Person</label>
+  {{ form.from_person }}
+</div>
+
+<div class="field">
+  <label>Relationship Type</label>
+  {{ form.relation_type }}
+</div>
+
+<div class="field">
+  <label>Related To</label>
+  {{ form.to_person }}
+</div>
+
+<div class="field">
+  <label>Biological Relationship?</label>
+  <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.3rem;">
+    {{ form.is_biological }}
+    <span style="font-size:0.85rem;">Yes, this is a biological relationship</span>
+  </div>
+</div>
+
+<div class="field">
+  <label>Start Date</label>
+  {{ form.start_date }}
+  <div class="help">For marriages — date of marriage</div>
+</div>
+
+<div class="field">
+  <label>Notes</label>
+  {{ form.notes }}
+</div>
+{% endblock %}
+
+{% block submit_label %}Add Relationship{% endblock %}

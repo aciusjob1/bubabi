@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% load i18n %}
+{% block page_title %}🏛️ {% trans "Auditor Dashboard" %}{% endblock %}
+{% block content %}
+<div style="max-width:1000px;margin:0 auto;">
+<h2>🏛️ {% trans "Legal Auditor Dashboard" %}</h2>
+{% for item in data %}
+<div style="background:#fff;border-radius:10px;padding:1rem;margin:0.5rem 0;border:1px solid #e2e8f0;">
+<p><b>{{ item.record.user.email }}</b> — {{ item.record.accepted_at }}</p>
+<p style="font-family:monospace;font-size:0.75rem;color:#6366f1;">🔐 {{ item.record.crypto_signature|default:"—" }}</p>
+<p style="font-family:monospace;font-size:0.75rem;color:#10b981;">⛓️ {{ item.record.blockchain_anchor|default:"—" }}</p>
+<p>{% trans "Risk" %}: <span style="color:{% if item.risk.level == 'HIGH' %}#ef4444{% elif item.risk.level == 'MEDIUM' %}#f59e0b{% else %}#10b981{% endif %};font-weight:700;">{{ item.risk.level }} ({{ item.risk.risk_score }})</span></p>
+</div>
+{% endfor %}
+</div>
+{% endblock %}

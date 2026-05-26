@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block page_title %}{% trans "New Family" %}{% endblock %}
+
+{% block content %}
+
+<div style="max-width:560px; margin:0 auto;">
+
+  <div class="section-title">🏠 {% trans "Create New Family House" %}</div>
+
+  <div style="background:#fff; border-radius:12px;
+              border:1px solid #e2e8f0; padding:1.5rem;">
+
+    <form method="post">
+      {% csrf_token %}
+
+      <!-- Family Name -->
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block; font-size:0.75rem; font-weight:600;
+                      color:#374151; text-transform:uppercase;
+                      letter-spacing:0.5px; margin-bottom:0.4rem;">
+          🏠 {% trans "Family Name" %} *
+        </label>
+        <input type="text" name="name" required
+               placeholder="{% trans 'e.g., House of Mensah, Asante Line' %}"
+               style="width:100%; padding:0.7rem; border:1px solid #e2e8f0;
+                      border-radius:8px; font-size:0.9rem; outline:none;
+                      transition:border-color 0.15s;"
+               onfocus="this.style.borderColor='#10b981'"
+               onblur="this.style.borderColor='#e2e8f0'">
+      </div>
+
+      <!-- Description -->
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block; font-size:0.75rem; font-weight:600;
+                      color:#374151; text-transform:uppercase;
+                      letter-spacing:0.5px; margin-bottom:0.4rem;">
+          📝 {% trans "Description" %}
+        </label>
+        <textarea name="description" rows="3"
+                  placeholder="{% trans 'Brief history or description of this family house...' %}"
+                  style="width:100%; padding:0.7rem; border:1px solid #e2e8f0;
+                         border-radius:8px; font-size:0.85rem; outline:none;
+                         resize:vertical;"></textarea>
+      </div>
+
+      <!-- Founding Person -->
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block; font-size:0.75rem; font-weight:600;
+                      color:#374151; text-transform:uppercase;
+                      letter-spacing:0.5px; margin-bottom:0.4rem;">
+          👤 {% trans "Founding Person" %}
+        </label>
+        <select name="founding_person"
+                style="width:100%; padding:0.7rem; border:1px solid #e2e8f0;
+                       border-radius:8px; font-size:0.9rem; outline:none;
+                       background:#fff;">
+          <option value="">— {% trans "Select founder (optional)" %} —</option>
+          {% for p in persons %}
+          <option value="{{ p.id }}">{{ p.full_name }}</option>
+          {% endfor %}
+        </select>
+        <div style="font-size:0.72rem; color:#64748b; margin-top:0.3rem;">
+          {% trans "The founding ancestor or head of this family house" %}
+        </div>
+      </div>
+
+      <!-- Established Date -->
+      <div style="margin-bottom:1.5rem;">
+        <label style="display:block; font-size:0.75rem; font-weight:600;
+                      color:#374151; text-transform:uppercase;
+                      letter-spacing:0.5px; margin-bottom:0.4rem;">
+          📅 {% trans "Established Date" %}
+        </label>
+        <input type="date" name="established_date"
+               style="width:100%; padding:0.7rem; border:1px solid #e2e8f0;
+                      border-radius:8px; font-size:0.9rem; outline:none;
+                      background:#fff;">
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display:flex; gap:0.75rem; justify-content:flex-end;">
+        <a href="{% url 'family-tree' %}"
+           style="padding:0.6rem 1.5rem; background:#f1f5f9; color:#374151;
+                  border-radius:8px; font-size:0.85rem; font-weight:600;
+                  text-decoration:none;">
+          {% trans "Cancel" %}
+        </a>
+        <button type="submit"
+                style="padding:0.6rem 1.5rem; background:#10b981; color:#fff;
+                       border:none; border-radius:8px; font-size:0.85rem;
+                       font-weight:600; cursor:pointer;">
+          🏠 {% trans "Create Family" %}
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Info -->
+  <div style="margin-top:1rem; background:#dbeafe; border-radius:8px;
+              padding:0.75rem 1rem; font-size:0.75rem; color:#1e40af;">
+    <strong>💡 {% trans "Tip" %}:</strong>
+    {% trans "After creating the family, you can add members (children, parents, spouses) from the Family Tree page." %}
+  </div>
+</div>
+
+{% endblock %}

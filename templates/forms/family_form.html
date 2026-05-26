@@ -1,0 +1,31 @@
+{% extends "forms/base_form.html" %}
+{% block page_title %}Add Family House{% endblock %}
+{% block form_title %}Register Family House{% endblock %}
+{% block form_subtitle %}
+  A family house represents a lineage within BUBABI.
+{% endblock %}
+
+{% block form_fields %}
+<div class="field">
+  <label>House Name</label>
+  {{ form.name }}
+</div>
+
+<div class="field">
+  <label>Founding Person</label>
+  {{ form.founding_person }}
+</div>
+
+<div class="field">
+  <label>Established Date</label>
+  {{ form.established_date }}
+  <div class="help">Optional — leave blank if unknown</div>
+</div>
+
+<div class="field">
+  <label>Description</label>
+  {{ form.description }}
+</div>
+{% endblock %}
+
+{% block submit_label %}Create Family House{% endblock %}

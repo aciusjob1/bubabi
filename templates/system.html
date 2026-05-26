@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+{% load i18n clan_filters %}
+
+{% block page_title %}{% trans "Control Panel" %}{% endblock %}
+
+{% block content %}
+
+<!-- Clan Banner -->
+{% if request.user.clan and request.user.clan.banner_image %}
+<div style="border-radius:12px; overflow:hidden; margin-bottom:1.5rem; height:120px;">
+  <img src="{{ request.user.clan.banner_image.url }}" style="width:100%; height:100%; object-fit:cover;">
+</div>
+{% endif %}
+
+<style>
+  .toggle-header {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+    padding-right: 0.5rem;
+  }
+  .toggle-header:hover { opacity: 0.75; }
+  .toggle-arrow {
+    transition: transform 0.2s;
+    font-size: 0.7rem;
+    color: #64748b;
+  }
+  .toggle-arrow.open { transform: rotate(90deg); }
+  .toggle-body { display: none; }
+  .toggle-body.open { display: block; }
+</style>
+
+<!-- System Overview Cards -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div>
+      <div class="stat-label">{% trans "Total Clans" %}</div>
+      <div class="stat-value">{{ total_clans }}</div>
+    </div>
+    <div class="stat-icon icon-purple">🏛️</div>
+  </div>
+  <div class="stat-card">
+    <div>
+      <div class="stat-label">{% trans "Total Members" %}</div>
+      <div class="stat-value">{{ total_members }}</div>
+    </div>
+    <div class="stat-icon icon-blue">👥</div>
+  </div>
+  <div class="stat-card">
+    <div>
+      <div class="stat-label">{% trans "Total Persons" %}</div>
+      <div class="stat-value">{{ total_persons }}</div>
+    </div>
+    <div class="stat-icon icon-green">👤</div>
+  </div>
+  <div class="stat-card">
+    <div>
+      <div class="stat-label">{% trans "Audit Entries" %}</div>
+      <div class="stat-value">{{ audit_count }}</div>
+    </div>
+    <div class="stat-icon icon-yellow">📜</div>
+  </div>
+</div>
+
+<!-- Quick Stats Row 2 -->
+<div class="stats-grid" style="margin-bottom:1rem;">
+  <div class="stat-card">
+    <div>
+      <div class="stat-label">{% trans "Contributions" %}</div>
+      <div class="stat-value">{{ contribution_count }}</div>
+    </div>
+    <div class="stat-icon icon-green">💰</div>
+  </div>
+  <div class="stat-card">
+    <div>
+      <div class="stat-label">{% trans "Ledger Entries" %}</div>
+      <div class="stat-value">{{ ledger_count }}</div>
+    </div>
+    <div class="stat-icon icon-blue">📒</div>
+  </div>
+  <div class="stat-card">
+    <div>
+      <div class="stat-label">{% trans "Relationships" %}</div>
+      <div class="stat-value">{{ relationship_count }}</div>
+    </div>
+    <div class="stat-icon icon-purple">🔗</div>
+  </div>
+  <div class="stat-card">
+    <div>
+      <div class="stat-label">{% trans "Votes Cast" %}</div>
+      <div class="stat-value">{{ votes_count }}</div>
+    </div>
+    <div class="stat-icon icon-yellow">🗳️</div>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.5rem;">
+  <a href="{% url 'clan-settings' %}" style="padding:0.5rem 1rem; background:#6366f1; color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none;">🎨 {% trans "Clan Settings" %}</a>
+  <a href="{% url 'admin:index' %}" style="padding:0.5rem 1rem; background:#0f172a; color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none;">⚙ {% trans "Django Admin" %}</a>
+  <a href="{% url 'reports' %}" style="padding:0.5rem 1rem; background:#10b981; color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none;">📊 {% trans "Reports" %}</a>
+</div>
+
+<!-- BULK SMS -->
+<div class="section-title toggle-header" onclick="toggleSection('sms')" style="color:#6366f1;">
+  <span>📱 {% trans "Send Bulk SMS" %}</span>
+  <span class="toggle-arrow" id="sms-arrow">▶</span>
+</div>
+<div id="sms" class="toggle-body">
+  <div style="background:#fff; border-radius:12px; border:1px solid #e2e8f0; padding:1.2rem; margin-bottom:1.5rem;">
+    <form method="post" action="{% url 'send-bulk-sms' %}">
+      {% csrf_token %}
+      <div style="margin-bottom:0.75rem;">
+        <label style="display:block; font-size:0.75rem; font-weight:600; color:#374151; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.4rem;">
+          {% trans "Message" %} ({% trans "max 160 chars" %})
+        </label>
+        <textarea name="message" rows="3" maxlength="160" id="smsText"
+                  placeholder="{% trans 'Type message to send to all active members...' %}"
+                  style="width:100%; padding:0.7rem; border:1px solid #e2e8f0; border-radius:8px; font-size:0.875rem; resize:vertical; outline:none;"></textarea>
+        <div style="font-size:0.72rem; color:#64748b; margin-top:0.3rem;">
+          <span id="charCount">0</span>/160 {% trans "characters" %}
+        </div>
+      </div>
+      <button type="button" onclick="var f=this.closest('form'); showConfirm('{% trans "Send Bulk SMS" %}', '{% trans "This will send an SMS to ALL active members. Proceed?" %}', function(){ f.submit(); }, null, '{% trans "Send" %}', 'bubabi-modal-btn-warning');"
+              style="padding:0.6rem 1.2rem; background:#6366f1; color:#fff; border:none; border-radius:8px; font-size:0.875rem; font-weight:700; cursor:pointer;">
+        📱 {% trans "Send to All Members" %}
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ALL CLANS -->
+<div class="section-title toggle-header" onclick="toggleSection('clans')">
+  <span>🏛️ {% trans "Registered Clans" %} ({{ all_clans|length }})</span>
+  <span class="toggle-arrow" id="clans-arrow">▶</span>
+</div>
+<div id="clans" class="toggle-body">
+  {% if all_clans %}
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>{% trans "Clan" %}</th>
+          <th>{% trans "Members" %}</th>
+          <th>{% trans "Balance" %}</th>
+          <th>{% trans "Public" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for entry in all_clans %}
+        <tr>
+          <td>
+            <strong>{{ entry.clan.name }}</strong>
+            {% if entry.clan.code %}<span style="color:#64748b; font-size:0.75rem;">({{ entry.clan.code }})</span>{% endif %}
+          </td>
+          <td>{{ entry.member_count }}</td>
+          <td>{{ entry.balance|clan_currency:entry.clan }}</td>
+          <td>
+            {% if entry.clan.is_public %}
+            <span style="color:#10b981;">✅ {% trans "Yes" %}</span>
+            {% else %}
+            <span style="color:#ef4444;">❌ {% trans "No" %}</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty">{% trans "No clans registered." %}</div>
+  {% endif %}
+</div>
+
+<!-- ALL MEMBERS -->
+<div class="section-title toggle-header" onclick="toggleSection('all-members')">
+  <span>👥 {% trans "All Members" %} ({{ all_members.count }})</span>
+  <span class="toggle-arrow" id="all-members-arrow">▶</span>
+</div>
+<div id="all-members" class="toggle-body">
+  {% if all_members %}
+  <div class="table-card">
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>{% trans "Name" %}</th>
+            <th>{% trans "Email" %}</th>
+            <th>{% trans "Clan" %}</th>
+            <th>{% trans "Status" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for m in all_members %}
+          <tr>
+            <td>
+              <a href="{% url 'member-profile' m.id %}" style="text-decoration:none; color:#1e293b; font-weight:600; display:flex; align-items:center; gap:0.5rem;">
+                {% avatar m 24 %}
+                {{ m.person.full_name|default:"—" }}
+              </a>
+            </td>
+            <td>{{ m.email }}</td>
+            <td>{{ m.clan.name|default:"—" }}</td>
+            <td><span class="badge {{ m.status }}">{{ m.status }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% else %}
+  <div class="empty">{% trans "No members." %}</div>
+  {% endif %}
+</div>
+
+<!-- RECENT AUDIT LOG -->
+<div class="section-title toggle-header" onclick="toggleSection('audit')">
+  <span>📜 {% trans "Recent Audit Log" %} ({{ recent_audit|length }})</span>
+  <span class="toggle-arrow" id="audit-arrow">▶</span>
+</div>
+<div id="audit" class="toggle-body">
+  {% if recent_audit %}
+  <div class="table-card">
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>{% trans "Time" %}</th>
+            <th>{% trans "Actor" %}</th>
+            <th>{% trans "Action" %}</th>
+            <th>{% trans "Domain" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for log in recent_audit %}
+          <tr>
+            <td style="white-space:nowrap;">{{ log.timestamp|date:"d M H:i" }}</td>
+            <td>{% if log.actor and log.actor.person %}{{ log.actor.person.full_name }}{% elif log.actor %}{{ log.actor.email }}{% else %}System{% endif %}</td>
+            <td>{{ log.action }}</td>
+            <td><span class="badge {{ log.domain }}">{{ log.domain }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% else %}
+  <div class="empty">{% trans "No audit entries yet." %}</div>
+  {% endif %}
+</div>
+
+<script>
+function toggleSection(id) {
+  const body = document.getElementById(id);
+  const arrow = document.getElementById(id + '-arrow');
+  if (body && arrow) {
+    body.classList.toggle('open');
+    arrow.classList.toggle('open');
+  }
+}
+
+// Character counter for SMS
+const smsText = document.getElementById('smsText');
+const charCount = document.getElementById('charCount');
+if (smsText && charCount) {
+  smsText.addEventListener('input', function() {
+    charCount.textContent = this.value.length;
+    charCount.style.color = this.value.length > 140 ? '#ef4444' : '#64748b';
+  });
+}
+</script>
+
+{% endblock %}

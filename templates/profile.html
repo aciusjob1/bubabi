@@ -1,0 +1,315 @@
+{% extends "base.html" %}
+{% load i18n clan_filters %}
+
+{% block page_title %}{{ profile_member.person.full_name|default:profile_member.email }}{% endblock %}
+
+{% block content %}
+<style>
+  .toggle-header { cursor:pointer; display:flex; align-items:center; justify-content:space-between; user-select:none; padding-right:0.5rem; }
+  .toggle-header:hover { opacity:0.75; }
+  .toggle-arrow { transition:transform 0.2s; font-size:0.7rem; color:#64748b; }
+  .toggle-arrow.open { transform:rotate(90deg); }
+  .toggle-body { display:none; }
+  .toggle-body.open { display:block; }
+</style>
+
+<div style="max-width:720px; margin:0 auto;">
+
+  <!-- Profile Header -->
+  <div style="background:linear-gradient(135deg, {{ clan_primary_color|default:'#0f172a' }}, {{ clan_accent_color|default:'#1e293b' }}); 
+              border-radius:12px; padding:1.5rem; border:1px solid #334155; margin-bottom:1.5rem;">
+    <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
+      
+      <!-- Avatar with upload option -->
+      <div style="position:relative;">
+        {% if profile_member.person and profile_member.person.profile_image %}
+        <img src="{{ profile_member.person.profile_image.url }}"
+             alt="{{ profile_member.person.full_name }}"
+             style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:3px solid var(--primary); flex-shrink:0;">
+        {% else %}
+        <div style="width:80px; height:80px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:800; color:#fff; flex-shrink:0; border:3px solid var(--primary);">
+          {{ profile_member.person.full_name|first|default:profile_member.email|first|upper }}
+        </div>
+        {% endif %}
+        
+        {% if request.user == profile_member or request.user.is_superuser %}
+        <form method="post" enctype="multipart/form-data" action="{% url 'upload-avatar' profile_member.id %}" style="position:absolute; bottom:0; right:0;">
+          {% csrf_token %}
+          <label for="avatarInput" aria-label="{% trans 'Change profile photo' %}" style="width:28px; height:28px; background:#6366f1; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; border:2px solid #fff; font-size:0.8rem;" title="{% trans 'Change photo' %}">📷</label>
+          <input type="file" name="photo" id="avatarInput" accept="image/*" style="display:none;" onchange="this.form.submit()">
+        </form>
+        {% endif %}
+      </div>
+
+      <div>
+        <div style="font-size:1.3rem; font-weight:800; color:#f8fafc;">
+          {{ profile_member.person.full_name|default:"—" }}
+        </div>
+        <div style="font-size:0.85rem; color:#94a3b8; margin-top:0.2rem;">
+          {{ profile_member.email }}
+          {% if profile_member.phone %}· {{ profile_member.phone }}{% endif %}
+        </div>
+        <div style="margin-top:0.5rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <span class="badge {{ profile_member.status }}">{{ profile_member.status }}</span>
+          {% for mr in roles %}
+          <span style="background:#ede9fe; color:#5b21b6; padding:0.18rem 0.6rem; border-radius:20px; font-size:0.68rem; font-weight:600;">{{ mr.role.name }}</span>
+          {% endfor %}
+        </div>
+        
+        <!-- Remove photo link (POST for destructive action) -->
+        {% if profile_member.person and profile_member.person.profile_image %}
+          {% if request.user == profile_member or request.user.is_superuser %}
+          <form method="post" action="{% url 'remove-avatar' profile_member.id %}" style="display:inline;" id="removeAvatarForm">
+            {% csrf_token %}
+            <button type="button"
+                    onclick="showConfirm('{% trans "Remove Photo" %}', '{% trans "Remove profile photo?" %}', function(){ document.getElementById('removeAvatarForm').submit(); });"
+                    style="background:none; border:none; padding:0; display:inline-block; margin-top:0.4rem; font-size:0.7rem; color:#f87171; cursor:pointer; text-decoration:underline;">
+              {% trans "Remove photo" %}
+            </button>
+          </form>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+
+    {% if profile_member.person %}
+    <div style="margin-top:1rem; display:grid; grid-template-columns:repeat(auto-fit, minmax(120px, 1fr)); gap:0.75rem;">
+      <div style="background:rgba(255,255,255,0.05); border-radius:8px; padding:0.75rem;">
+        <div style="font-size:0.65rem; color:#64748b; text-transform:uppercase; letter-spacing:1px;">{% trans "Age" %}</div>
+        <div style="font-size:1.1rem; font-weight:700; color:#e2e8f0; margin-top:0.2rem;">{{ profile_member.person.age }} {% trans "yrs" %}</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.05); border-radius:8px; padding:0.75rem;">
+        <div style="font-size:0.65rem; color:#64748b; text-transform:uppercase; letter-spacing:1px;">{% trans "Gender" %}</div>
+        <div style="font-size:1.1rem; font-weight:700; color:#e2e8f0; margin-top:0.2rem;">{{ profile_member.person.get_gender_display|default:profile_member.person.gender|title }}</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.05); border-radius:8px; padding:0.75rem;">
+        <div style="font-size:0.65rem; color:#64748b; text-transform:uppercase; letter-spacing:1px;">{% trans "Joined" %}</div>
+        <div style="font-size:1rem; font-weight:700; color:#e2e8f0; margin-top:0.2rem;">{{ profile_member.joined_at|date:"M Y"|default:"—" }}</div>
+      </div>
+      {% for fm in families %}
+      <div style="background:rgba(255,255,255,0.05); border-radius:8px; padding:0.75rem;">
+        <div style="font-size:0.65rem; color:#64748b; text-transform:uppercase; letter-spacing:1px;">{% trans "Family" %}</div>
+        <div style="font-size:0.9rem; font-weight:700; color:#e2e8f0; margin-top:0.2rem;">{{ fm.family.name }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Action Buttons -->
+  <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-bottom:1.5rem;">
+    {% if request.user.is_superuser %}
+    <a href="{% url 'assign-leader' profile_member.id %}" style="padding:0.5rem 1rem; background:#f59e0b; color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none;">👑 {% trans "Manage Leader" %}</a>
+    {% endif %}
+    {% if request.user.is_superuser or request.user.clan_roles.first.role.hierarchy_level|default:0 >= 5 %}
+    <a href="{% url 'assign-elder' profile_member.id %}" style="padding:0.5rem 1rem; background:#6366f1; color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none;">⭐ {% trans "Manage Elder" %}</a>
+    <a href="{% url 'assign-moderator' profile_member.id %}" style="padding:0.5rem 1rem; background:#8b5cf6; color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none;">⚖️ {% trans "Manage Moderator" %}</a>
+    <a href="{% url 'assign-treasurer' profile_member.id %}" style="padding:0.5rem 1rem; background:#10b981; color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none;">💰 {% trans "Manage Treasurer" %}</a>
+    <a href="{% url 'assign-secretary' profile_member.id %}" style="padding:0.5rem 1rem; background:#3b82f6; color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none;">📋 {% trans "Manage Secretary" %}</a>
+
+      {% if profile_member.is_blocked %}
+      <form method="post" action="{% url 'unblock-member' profile_member.id %}" style="display:inline;" id="unblockForm">
+        {% csrf_token %}
+        <button type="button"
+                onclick="showConfirm('{% trans "Unblock Member" %}', '{% trans "Unblock this member?" %}', function(){ document.getElementById('unblockForm').submit(); });"
+                style="padding:0.5rem 1rem; background:#10b981; color:#fff; border-radius:8px; border:none; font-size:0.8rem; font-weight:600; cursor:pointer;">
+          ✅ {% trans "Unblock" %}
+        </button>
+      </form>
+      {% else %}
+      <form method="post" action="{% url 'block-member' profile_member.id %}" style="display:inline;" id="blockForm">
+        {% csrf_token %}
+        <button type="button"
+                onclick="showConfirm('{% trans "Block Member" %}', '{% trans "Block this member?" %}', function(){ document.getElementById('blockForm').submit(); });"
+                style="padding:0.5rem 1rem; background:#ef4444; color:#fff; border-radius:8px; border:none; font-size:0.8rem; font-weight:600; cursor:pointer;">
+          🚫 {% trans "Block" %}
+        </button>
+      </form>
+      {% endif %}
+    {% endif %}
+    {% if request.user.clan_roles.first.role.hierarchy_level|default:0 >= 5 %}
+    <a href="{% url 'change-member-status' profile_member.id %}" style="padding:0.5rem 1rem; background:#f59e0b; color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none;">🔄 {% trans "Change Status" %}</a>
+    {% endif %}
+    
+    <a href="{% url 'pdf-member-statement' profile_member.id %}" style="padding:0.5rem 1rem; background:#6366f1; color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none;">📥 {% trans "Download Statement" %}</a>
+    
+    {% if profile_member.phone %}
+    <a href="tel:{{ profile_member.phone }}" style="padding:0.5rem 1rem; background:var(--primary); color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none;">📞 {% trans "Call" %}</a>
+    {% endif %}
+  </div>
+
+  <!-- Contributions -->
+  <div class="section-title toggle-header" onclick="toggleSection('profileContributions')">
+  <span>💳 {% trans "Contributions" %} ({{ contributions|length|default:0 }})</span>
+  <span class="toggle-arrow open" id="profileContributions-arrow">▶</span>
+</div>
+<div id="profileContributions" class="toggle-body open">
+  <div class="table-slider-wrapper"><button onclick="slideTable('profileContributionsTable', -1)" class="table-slider-btn left">◀</button><button onclick="slideTable('profileContributionsTable', 1)" class="table-slider-btn right">▶</button><div class="table-card" id="profileContributionsTable" style="overflow-x:auto;">
+    {% if contributions %}
+    <table>
+      <thead>
+        <tr>
+          <th>{% trans "Period" %}</th>
+          <th>{% trans "Due" %}</th>
+          <th>{% trans "Paid" %}</th>
+          <th>{% trans "Balance" %}</th>
+          <th>{% trans "Status" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in contributions %}
+        <tr>
+          <td><strong>{{ c.period_label }}</strong></td>
+          <td>{{ c.amount_due|clan_currency:request.user.clan }}</td>
+          <td>{{ c.amount_paid|clan_currency:request.user.clan }}</td>
+          <td style="font-weight:600; color:{% if c.balance_due > 0 %}#ef4444{% else %}#10b981{% endif %};">{{ c.balance_due|clan_currency:request.user.clan }}</td>
+          <td><span class="badge {{ c.status }}">{{ c.status }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty">{% trans "No contributions yet." %}</div>
+    {% endif %}
+  </div></div>
+</div>
+
+  <!-- Loans -->
+  <div class="section-title toggle-header" onclick="toggleSection('profileLoans')">
+  <span>🏦 {% trans "Loans" %} ({{ loans|length|default:0 }})</span>
+  <span class="toggle-arrow open" id="profileLoans-arrow">▶</span>
+</div>
+<div id="profileLoans" class="toggle-body open">
+  <div class="table-slider-wrapper"><button onclick="slideTable('profileLoansTable', -1)" class="table-slider-btn left">◀</button><button onclick="slideTable('profileLoansTable', 1)" class="table-slider-btn right">▶</button><div class="table-card" id="profileLoansTable" style="overflow-x:auto;">
+    {% if loans %}
+    <table>
+      <thead>
+        <tr>
+          <th>{% trans "Requested" %}</th>
+          <th>{% trans "Approved" %}</th>
+          <th>{% trans "Status" %}</th>
+          <th>{% trans "Purpose" %}</th>
+          <th>{% trans "Due Date" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for loan in loans %}
+        <tr>
+          <td>{{ loan.amount_requested|clan_currency:request.user.clan }}</td>
+          <td>{{ loan.amount_approved|clan_currency:request.user.clan|default:"—" }}</td>
+          <td><span class="badge {{ loan.status }}">{{ loan.status }}</span></td>
+          <td>{{ loan.purpose|truncatechars:30|default:"—" }}</td>
+          <td>{{ loan.due_date|date:"d M Y"|default:"—" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty">{% trans "No loans." %}</div>
+    {% endif %}
+  </div></div>
+</div>
+
+  <!-- Fines -->
+  <div class="section-title toggle-header" onclick="toggleSection('profileFines')">
+  <span>⚠️ {% trans "Fines" %} ({{ fines|length|default:0 }})</span>
+  <span class="toggle-arrow open" id="profileFines-arrow">▶</span>
+</div>
+<div id="profileFines" class="toggle-body open">
+  <div class="table-slider-wrapper"><button onclick="slideTable('profileFinesTable', -1)" class="table-slider-btn left">◀</button><button onclick="slideTable('profileFinesTable', 1)" class="table-slider-btn right">▶</button><div class="table-card" id="profileFinesTable" style="overflow-x:auto;">
+    {% if fines %}
+    <table>
+      <thead>
+        <tr>
+          <th>{% trans "Reason" %}</th>
+          <th>{% trans "Amount" %}</th>
+          <th>{% trans "Status" %}</th>
+          <th>{% trans "Date" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for f in fines %}
+        <tr>
+          <td>{{ f.reason|truncatechars:40 }}</td>
+          <td>{{ f.amount|clan_currency:request.user.clan }}</td>
+          <td><span class="badge {{ f.status }}">{{ f.status }}</span></td>
+          <td>{{ f.created_at|date:"d M Y" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty">{% trans "No fines." %}</div>
+    {% endif %}
+  </div></div>
+</div>
+
+  <!-- Status History -->
+  <div class="section-title toggle-header" onclick="toggleSection('profileStatus')">
+  <span>📋 {% trans "Status History" %} ({{ status_history|length|default:0 }})</span>
+  <span class="toggle-arrow" id="profileStatus-arrow">▶</span>
+</div>
+<div id="profileStatus" class="toggle-body">
+  <div class="table-slider-wrapper"><button onclick="slideTable('profileStatusTable', -1)" class="table-slider-btn left">◀</button><button onclick="slideTable('profileStatusTable', 1)" class="table-slider-btn right">▶</button><div class="table-card" id="profileStatusTable" style="overflow-x:auto;">
+    {% if status_history %}
+    <table>
+      <thead>
+        <tr>
+          <th>{% trans "From" %}</th>
+          <th>{% trans "To" %}</th>
+          <th>{% trans "Changed By" %}</th>
+          <th>{% trans "Date" %}</th>
+          <th>{% trans "Reason" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for h in status_history %}
+        <tr>
+          <td><span class="badge {{ h.from_status }}">{{ h.from_status }}</span></td>
+          <td><span class="badge {{ h.to_status }}">{{ h.to_status }}</span></td>
+          <td>{{ h.changed_by.person.full_name|default:"System" }}</td>
+          <td>{{ h.timestamp|date:"d M Y" }}</td>
+          <td>{{ h.reason|truncatechars:30|default:"—" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty">{% trans "No status changes recorded." %}</div>
+    {% endif %}
+  </div></div>
+</div>
+
+  <!-- Biography -->
+  {% if profile_member.person and profile_member.person.biography %}
+  <div class="section-title toggle-header" onclick="toggleSection('profileBiography')">
+  <span>📝 {% trans "Biography" %}</span>
+  <span class="toggle-arrow" id="profileBiography-arrow">▶</span>
+</div>
+<div id="profileBiography" class="toggle-body">
+  <div style="background:#fff; border-radius:12px; border:1px solid #e2e8f0; padding:1.2rem; margin-bottom:1.5rem;">
+    <p style="font-size:0.9rem; color:#374151; line-height:1.7; white-space:pre-line;">{{ profile_member.person.biography }}</p>
+  </div>
+</div>
+  {% endif %}
+
+  <!-- Navigation -->
+  <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-top:1rem;">
+    <a href="{% url 'members' %}" style="display:inline-block; font-size:0.8rem; color:#64748b; text-decoration:none; padding:0.5rem 1rem; background:#f1f5f9; border-radius:8px;">← {% trans "Back to Members" %}</a>
+    {% if profile_member.person %}
+    <a href="{% url 'family-tree' %}?person={{ profile_member.person.id }}" style="display:inline-block; font-size:0.8rem; color:#6366f1; text-decoration:none; padding:0.5rem 1rem; background:#ede9fe; border-radius:8px;">🌳 {% trans "View Family Tree" %}</a>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+function toggleSection(id) {
+  const body = document.getElementById(id);
+  const arrow = document.getElementById(id + '-arrow');
+  if (body && arrow) {
+    body.classList.toggle('open');
+    arrow.classList.toggle('open');
+  }
+}
+</script>
+{% endblock %}

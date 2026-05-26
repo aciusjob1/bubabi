@@ -1,0 +1,39 @@
+{% extends "forms/base_form.html" %}
+{% block page_title %}Invite Member{% endblock %}
+{% block form_title %}Invite New Member{% endblock %}
+{% block form_subtitle %}
+  This will create a Person record and send an invitation.
+{% endblock %}
+
+{% block form_fields %}
+<div class="field">
+  <label>Full Name</label>
+  {{ form.full_name }}
+  {% if form.full_name.errors %}
+  <div class="error">{{ form.full_name.errors.0 }}</div>
+  {% endif %}
+</div>
+
+<div class="field">
+  <label>Gender</label>
+  {{ form.gender }}
+</div>
+
+<div class="field">
+  <label>Date of Birth</label>
+  {{ form.birth_date }}
+</div>
+
+<div class="field">
+  <label>Email Address</label>
+  {{ form.email }}
+</div>
+
+<div class="field">
+  <label>Phone Number</label>
+  {{ form.phone }}
+  <div class="help">Optional</div>
+</div>
+{% endblock %}
+
+{% block submit_label %}Send Invitation{% endblock %}

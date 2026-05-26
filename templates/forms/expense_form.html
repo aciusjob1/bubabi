@@ -1,0 +1,41 @@
+{% extends "forms/base_form.html" %}
+{% block page_title %}Add Expense{% endblock %}
+{% block form_title %}Record Clan Expense{% endblock %}
+{% block form_subtitle %}
+  This will debit the clan fund immediately.
+{% endblock %}
+
+{% block form_fields %}
+<div class="field">
+  <label>Description</label>
+  {{ form.description }}
+</div>
+
+<div class="field">
+  <label>Amount (GHS)</label>
+  {{ form.amount }}
+</div>
+
+<div class="field">
+  <label>Category</label>
+  {{ form.category }}
+</div>
+
+<div class="field">
+  <label>Date</label>
+  {{ form.expense_date }}
+</div>
+
+<div class="field">
+  <label>Receipt Reference</label>
+  {{ form.receipt_ref }}
+  <div class="help">Optional</div>
+</div>
+
+<div class="field">
+  <label>Notes</label>
+  {{ form.notes }}
+</div>
+{% endblock %}
+
+{% block submit_label %}Record Expense{% endblock %}

@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block page_title %}{% trans "System Cleanup" %}{% endblock %}
+
+{% block content %}
+<div class="cleanup-container">
+  <h2>🧹 {% trans "System Cleanup" %}</h2>
+  <p class="cleanup-subtitle">{% trans "Delete old data, reset finances, or clear test data. Your password is required for all actions." %}</p>
+
+  <!-- Current Data Overview -->
+  <div class="cleanup-card">
+    <h4>📊 {% trans "Current Data Overview" %}</h4>
+    <div class="stats-grid-mini">
+      <div class="stat-item">💰 {% trans "Contributions" %}: <strong>{{ stats.contributions }}</strong></div>
+      <div class="stat-item">⚠️ {% trans "Fines" %}: <strong>{{ stats.fines }}</strong></div>
+      <div class="stat-item">🏦 {% trans "Loans" %}: <strong>{{ stats.loans }}</strong></div>
+      <div class="stat-item">📤 {% trans "Expenses" %}: <strong>{{ stats.expenses }}</strong></div>
+      <div class="stat-item">📒 {% trans "Ledger" %}: <strong>{{ stats.ledger }}</strong></div>
+      <div class="stat-item">📰 {% trans "Posts" %}: <strong>{{ stats.posts }}</strong></div>
+      <div class="stat-item">🔔 {% trans "Notifications" %}: <strong>{{ stats.notifications }}</strong></div>
+      <div class="stat-item">📢 {% trans "Announcements" %}: <strong>{{ stats.announcements }}</strong></div>
+      <div class="stat-item">📅 {% trans "Events" %}: <strong>{{ stats.events }}</strong></div>
+      <div class="stat-item">📜 {% trans "Audit" %}: <strong>{{ stats.audit }}</strong></div>
+      <div class="stat-item">🗳️ {% trans "Votes" %}: <strong>{{ stats.votes }}</strong></div>
+    </div>
+  </div>
+
+  <!-- Password Required -->
+  <div class="cleanup-card password-card">
+    <h4>🔐 {% trans "Authentication Required" %}</h4>
+    <p class="text-sm text-muted">{% trans "All cleanup actions require your account password for security." %}</p>
+    <div class="password-row">
+      <input type="password" id="masterPassword" class="cleanup-input" 
+             placeholder="{% trans 'Enter your password to enable actions' %}">
+      <button type="button" onclick="toggleActions()" class="btn btn-primary">🔓 {% trans "Unlock" %}</button>
+    </div>
+    <span id="unlockStatus" class="unlock-status"></span>
+  </div>
+
+  <!-- Actions Section -->
+  <div id="actionsSection" class="actions-locked">
+    
+    <!-- Quick Actions -->
+    <div class="cleanup-card">
+      <h4>⚡ {% trans "Quick Cleanup Actions" %}</h4>
+      <div class="action-grid">
+        <form method="post" onsubmit="return setPassword(this)" class="action-form">
+          {% csrf_token %}<input type="hidden" name="confirm_password"><input type="hidden" name="action" value="reset_finances">
+          <button type="submit" onclick="return confirm('{% trans "Reset ALL financial data?" %}')" class="btn btn-outline btn-block">🔄 {% trans "Reset Finances" %}</button>
+        </form>
+        <form method="post" onsubmit="return setPassword(this)" class="action-form">
+          {% csrf_token %}<input type="hidden" name="confirm_password"><input type="hidden" name="action" value="clear_posts">
+          <button type="submit" onclick="return confirm('{% trans "Delete ALL posts and comments?" %}')" class="btn btn-outline btn-block">📰 {% trans "Clear Posts" %}</button>
+        </form>
+        <form method="post" onsubmit="return setPassword(this)" class="action-form">
+          {% csrf_token %}<input type="hidden" name="confirm_password"><input type="hidden" name="action" value="clear_notifications">
+          <button type="submit" onclick="return confirm('{% trans "Delete ALL notifications?" %}')" class="btn btn-outline btn-block">🔔 {% trans "Clear Notifications" %}</button>
+        </form>
+        <form method="post" onsubmit="return setPassword(this)" class="action-form">
+          {% csrf_token %}<input type="hidden" name="confirm_password"><input type="hidden" name="action" value="clear_announcements">
+          <button type="submit" onclick="return confirm('{% trans "Delete ALL announcements?" %}')" class="btn btn-outline btn-block">📢 {% trans "Clear Announcements" %}</button>
+        </form>
+        <form method="post" onsubmit="return setPassword(this)" class="action-form">
+          {% csrf_token %}<input type="hidden" name="confirm_password"><input type="hidden" name="action" value="clear_events">
+          <button type="submit" onclick="return confirm('{% trans "Delete ALL events?" %}')" class="btn btn-outline btn-block">📅 {% trans "Clear Events" %}</button>
+        </form>
+        <form method="post" onsubmit="return setPassword(this)" class="action-form">
+          {% csrf_token %}<input type="hidden" name="confirm_password"><input type="hidden" name="action" value="clear_audit">
+          <button type="submit" onclick="return confirm('{% trans "Delete ALL audit logs?" %}')" class="btn btn-outline btn-block">📜 {% trans "Clear Audit Logs" %}</button>
+        </form>
+        <form method="post" onsubmit="return setPassword(this)" class="action-form">
+          {% csrf_token %}<input type="hidden" name="confirm_password"><input type="hidden" name="action" value="clear_votes">
+          <button type="submit" onclick="return confirm('{% trans "Delete ALL votes?" %}')" class="btn btn-outline btn-block">🗳️ {% trans "Clear Votes" %}</button>
+        </form>
+        <form method="post" onsubmit="return setPassword(this)" class="action-form">
+          {% csrf_token %}<input type="hidden" name="confirm_password"><input type="hidden" name="action" value="clear_media">
+          <button type="submit" onclick="return confirm('{% trans "Delete ALL uploaded media?" %}')" class="btn btn-outline btn-block">🖼️ {% trans "Clear Media" %}</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Time-Based -->
+    <div class="cleanup-card">
+      <h4>⏰ {% trans "Time-Based Cleanup" %}</h4>
+      <p class="text-sm text-muted">{% trans "Delete data older than a specified number of days." %}</p>
+      <form method="post" onsubmit="return setPassword(this)" class="time-form">
+        {% csrf_token %}<input type="hidden" name="confirm_password"><input type="hidden" name="action" value="cleanup_old">
+        <select name="days" class="cleanup-select">
+          <option value="30">30 {% trans "days" %}</option><option value="60">60 {% trans "days" %}</option>
+          <option value="90" selected>90 {% trans "days" %}</option><option value="180">180 {% trans "days" %}</option>
+          <option value="365">365 {% trans "days" %}</option>
+        </select>
+        <button type="submit" onclick="return confirm('{% trans "Delete data older than selected period?" %}')" class="btn btn-outline">🧹 {% trans "Clean Old Data" %}</button>
+      </form>
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="cleanup-card danger-card">
+      <h4 style="color:#ef4444;">⚠️ {% trans "Danger Zone" %}</h4>
+      <p class="text-sm text-muted">{% trans "Complete financial reset. Make sure you have a backup." %}</p>
+      <form method="post" onsubmit="return setPassword(this) && confirm('{% trans "⚠️ This will reset ALL financial records. This CANNOT be undone." %}')">
+        {% csrf_token %}<input type="hidden" name="confirm_password"><input type="hidden" name="action" value="reset_finances">
+        <button type="submit" class="btn btn-red btn-block">🔥 {% trans "Reset ALL Finances" %}</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  .cleanup-container { max-width:700px; margin:0 auto; padding:0 0.25rem; }
+  .cleanup-container h2 { margin:0 0 0.15rem; font-size:1.15rem; }
+  .cleanup-subtitle { font-size:0.8rem; color:#64748b; margin:0 0 1.25rem; }
+  .cleanup-card { background:#fff; border-radius:12px; border:1px solid #e2e8f0; padding:1.25rem; margin-bottom:1rem; }
+  .cleanup-card h4 { margin:0 0 0.75rem; font-size:0.9rem; }
+  .password-card { background:#fef3c7; border-color:#f59e0b; }
+  .danger-card { border-color:#ef4444; border-width:2px; }
+  .stats-grid-mini { display:grid; grid-template-columns:1fr 1fr; gap:0.4rem; font-size:0.82rem; }
+  .stat-item { padding:0.3rem 0; }
+  .password-row { display:flex; gap:0.5rem; }
+  .cleanup-input { flex:1; padding:0.65rem 0.85rem; border:1px solid #e2e8f0; border-radius:8px; font-size:0.9rem; outline:none; background:#fff; }
+  .cleanup-input:focus { border-color:#10b981; box-shadow:0 0 0 3px rgba(16,185,129,0.1); }
+  .cleanup-select { padding:0.65rem 0.85rem; border:1px solid #e2e8f0; border-radius:8px; font-size:0.9rem; background:#fff; cursor:pointer; }
+  .unlock-status { display:block; margin-top:0.4rem; font-size:0.78rem; }
+  .actions-locked { opacity:0.4; pointer-events:none; }
+  .actions-unlocked { opacity:1; pointer-events:auto; }
+  .action-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; }
+  .action-form { margin:0; }
+  .btn-block { width:100%; text-align:center; }
+  .time-form { display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap; }
+  .btn-red { background:#ef4444 !important; color:#fff !important; border:none; padding:0.65rem 1.2rem; border-radius:8px; font-size:0.85rem; font-weight:600; cursor:pointer; }
+
+  /* Mobile */
+  @media (max-width:480px) {
+    .cleanup-container { max-width:100%; padding:0; }
+    .cleanup-card { padding:1rem; border-radius:10px; }
+    .stats-grid-mini { grid-template-columns:1fr 1fr; gap:0.25rem; font-size:0.75rem; }
+    .action-grid { grid-template-columns:1fr 1fr; gap:0.35rem; }
+    .password-row { flex-direction:column; }
+    .cleanup-input { width:100%; font-size:16px; }
+    .time-form { flex-direction:column; }
+    .time-form .cleanup-select { width:100%; }
+    .time-form .btn { width:100%; }
+  }
+  @media (max-width:360px) {
+    .action-grid { grid-template-columns:1fr; }
+    .stats-grid-mini { grid-template-columns:1fr; }
+  }
+  @media (min-width:481px) and (max-width:768px) {
+    .cleanup-container { max-width:90%; }
+  }
+  @media (min-width:769px) {
+    .action-grid { grid-template-columns:1fr 1fr 1fr; }
+  }
+</style>
+
+<script>
+  function setPassword(form) {
+    var pw = document.getElementById('masterPassword').value;
+    if (!pw) { alert('{% trans "Please enter your password first." %}'); return false; }
+    form.querySelector('input[name="confirm_password"]').value = pw;
+    return true;
+  }
+
+  function toggleActions() {
+    var pw = document.getElementById('masterPassword').value;
+    var section = document.getElementById('actionsSection');
+    var status = document.getElementById('unlockStatus');
+    if (pw.length < 1) { status.textContent = '❌ {% trans "Enter your password" %}'; status.style.color = '#ef4444'; return; }
+    section.classList.remove('actions-locked');
+    section.classList.add('actions-unlocked');
+    status.textContent = '✅ {% trans "Actions unlocked — auto-locks in 5 minutes" %}';
+    status.style.color = '#10b981';
+    setTimeout(function() {
+      section.classList.remove('actions-unlocked');
+      section.classList.add('actions-locked');
+      status.textContent = '🔒 {% trans "Locked (timeout)" %}';
+      status.style.color = '#f59e0b';
+    }, 300000);
+  }
+</script>
+{% endblock %}

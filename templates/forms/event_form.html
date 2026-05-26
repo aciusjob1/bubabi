@@ -1,0 +1,35 @@
+{% extends "forms/base_form.html" %}
+{% block page_title %}Create Event{% endblock %}
+{% block form_title %}Create Clan Event{% endblock %}
+{% block form_subtitle %}
+  All active members will be able to see this event.
+{% endblock %}
+
+{% block form_fields %}
+<div class="field">
+  <label>Title</label>
+  {{ form.title }}
+</div>
+
+<div class="field">
+  <label>Event Type</label>
+  {{ form.event_type }}
+</div>
+
+<div class="field">
+  <label>Description</label>
+  {{ form.description }}
+</div>
+
+<div class="field">
+  <label>Date & Time</label>
+  {{ form.scheduled_at }}
+</div>
+
+<div class="field">
+  <label>Location</label>
+  {{ form.location }}
+</div>
+{% endblock %}
+
+{% block submit_label %}Create Event{% endblock %}

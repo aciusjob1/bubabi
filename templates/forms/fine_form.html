@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block page_title %}{% trans "Issue Fine" %}{% endblock %}
+{% block title %}Issue Fine — BUBABI{% endblock %}
+
+{% block content %}
+
+<div style="max-width:600px;margin:0 auto;">
+
+  <div class="section-title">⚠️ {% trans "Issue Fine" %}</div>
+
+  <div style="background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:1.5rem;">
+    
+    {% if member %}
+    <div style="background:#fef3c7;padding:0.75rem 1rem;border-radius:8px;
+                margin-bottom:1.5rem;font-size:0.85rem;color:#92400e;">
+      <strong>{% trans "Member" %}:</strong> 
+      {{ member.person.full_name|default:member.email }}
+    </div>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+
+      <!-- Member Selection (if not pre-selected) -->
+      {% if not member %}
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block;font-size:0.75rem;font-weight:600;
+                      color:#374151;text-transform:uppercase;letter-spacing:0.5px;
+                      margin-bottom:0.4rem;">
+          {% trans "Member" %} *
+        </label>
+        <select name="member_id" required
+                style="width:100%;padding:0.7rem;border:1px solid #e2e8f0;
+                       border-radius:8px;font-size:0.875rem;outline:none;
+                       background:#fff;">
+          <option value="">{% trans "Select a member" %}</option>
+          {% for m in members %}
+          <option value="{{ m.id }}">
+            {{ m.person.full_name|default:m.email }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      {% else %}
+      <input type="hidden" name="member_id" value="{{ member.id }}">
+      {% endif %}
+
+      <!-- Fine Amount -->
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block;font-size:0.75rem;font-weight:600;
+                      color:#374151;text-transform:uppercase;letter-spacing:0.5px;
+                      margin-bottom:0.4rem;">
+          {% trans "Amount (TSh)" %} *
+        </label>
+        <input type="number" name="amount" required min="0" step="0.01"
+               placeholder="e.g., 50000"
+               value="{{ form.amount.value|default:'' }}"
+               style="width:100%;padding:0.7rem;border:1px solid #e2e8f0;
+                      border-radius:8px;font-size:0.875rem;outline:none;
+                      transition:border-color 0.15s;"
+               onfocus="this.style.borderColor='#10b981'"
+               onblur="this.style.borderColor='#e2e8f0'">
+        {% if form.amount.errors %}
+        <div style="color:#ef4444;font-size:0.75rem;margin-top:0.3rem;">
+          {{ form.amount.errors.0 }}
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Fine Category -->
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block;font-size:0.75rem;font-weight:600;
+                      color:#374151;text-transform:uppercase;letter-spacing:0.5px;
+                      margin-bottom:0.4rem;">
+          {% trans "Category" %}
+        </label>
+        <select name="category"
+                style="width:100%;padding:0.7rem;border:1px solid #e2e8f0;
+                       border-radius:8px;font-size:0.875rem;outline:none;
+                       background:#fff;">
+          <option value="late_payment">{% trans "Late Payment" %}</option>
+          <option value="absenteeism">{% trans "Absenteeism" %}</option>
+          <option value="misconduct">{% trans "Misconduct" %}</option>
+          <option value="other">{% trans "Other" %}</option>
+        </select>
+      </div>
+
+      <!-- Reason -->
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block;font-size:0.75rem;font-weight:600;
+                      color:#374151;text-transform:uppercase;letter-spacing:0.5px;
+                      margin-bottom:0.4rem;">
+          {% trans "Reason" %} *
+        </label>
+        <textarea name="reason" rows="3" required
+                  placeholder="{% trans 'Explain why this fine is being issued...' %}"
+                  style="width:100%;padding:0.7rem;border:1px solid #e2e8f0;
+                         border-radius:8px;font-size:0.875rem;outline:none;
+                         resize:vertical;transition:border-color 0.15s;"
+                  onfocus="this.style.borderColor='#10b981'"
+                  onblur="this.style.borderColor='#e2e8f0'">{{ form.reason.value|default:'' }}</textarea>
+        {% if form.reason.errors %}
+        <div style="color:#ef4444;font-size:0.75rem;margin-top:0.3rem;">
+          {{ form.reason.errors.0 }}
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Due Date -->
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block;font-size:0.75rem;font-weight:600;
+                      color:#374151;text-transform:uppercase;letter-spacing:0.5px;
+                      margin-bottom:0.4rem;">
+          {% trans "Due Date" %}
+        </label>
+        <input type="date" name="due_date"
+               value="{{ form.due_date.value|default:'' }}"
+               style="width:100%;padding:0.7rem;border:1px solid #e2e8f0;
+                      border-radius:8px;font-size:0.875rem;outline:none;
+                      background:#fff;">
+        <div style="font-size:0.72rem;color:#64748b;margin-top:0.3rem;">
+          {% trans "Leave blank for immediate payment" %}
+        </div>
+      </div>
+
+      <!-- Notes (Internal) -->
+      <div style="margin-bottom:1.5rem;">
+        <label style="display:block;font-size:0.75rem;font-weight:600;
+                      color:#374151;text-transform:uppercase;letter-spacing:0.5px;
+                      margin-bottom:0.4rem;">
+          {% trans "Internal Notes" %}
+        </label>
+        <textarea name="notes" rows="2"
+                  placeholder="{% trans 'Optional notes for record keeping...' %}"
+                  style="width:100%;padding:0.7rem;border:1px solid #e2e8f0;
+                         border-radius:8px;font-size:0.875rem;outline:none;
+                         resize:vertical;">{{ form.notes.value|default:'' }}</textarea>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+        <a href="{% url 'fines' %}"
+           style="padding:0.6rem 1.5rem;background:#f1f5f9;color:#374151;
+                  border-radius:8px;font-size:0.85rem;font-weight:600;
+                  text-decoration:none;text-align:center;
+                  transition:background 0.15s;">
+          {% trans "Cancel" %}
+        </a>
+        <button type="submit"
+                style="padding:0.6rem 1.5rem;background:#ef4444;color:#fff;
+                       border:none;border-radius:8px;font-size:0.85rem;
+                       font-weight:600;cursor:pointer;
+                       transition:background 0.15s;">
+          ⚠️ {% trans "Issue Fine" %}
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Quick Info -->
+  <div style="margin-top:1rem;background:#fef3c7;border-radius:8px;
+              padding:0.75rem 1rem;font-size:0.75rem;color:#92400e;">
+    <strong>💡 {% trans "Note" %}:</strong>
+    {% trans "Issuing a fine will automatically notify the member via SMS if they have a phone number on file." %}
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Set default due date to 7 days from now
+  document.addEventListener('DOMContentLoaded', function() {
+    const dueDateInput = document.querySelector('input[name="due_date"]');
+    if (dueDateInput && !dueDateInput.value) {
+      const date = new Date();
+      date.setDate(date.getDate() + 7);
+      dueDateInput.value = date.toISOString().split('T')[0];
+    }
+  });
+
+  // Prevent double submission
+  document.querySelector('form').addEventListener('submit', function() {
+    const button = this.querySelector('button[type="submit"]');
+    button.disabled = true;
+    button.textContent = '⏳ Issuing...';
+  });
+</script>
+{% endblock %}

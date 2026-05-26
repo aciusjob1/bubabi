@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load i18n clan_filters %}
+
+{% block page_title %}{% trans "Generate Contributions" %}{% endblock %}
+
+{% block content %}
+
+<div style="max-width:560px; margin:0 auto;">
+
+  <div class="section-title">📋 {% trans "Generate Monthly Contributions" %}</div>
+
+  <div style="background:#fff; border-radius:12px;
+              border:1px solid #e2e8f0; padding:1.5rem;">
+
+    <!-- Info Banner -->
+    <div style="background:#dbeafe; padding:0.75rem 1rem; border-radius:8px;
+                margin-bottom:1.5rem; font-size:0.82rem; color:#1e40af;
+                display:flex; gap:0.5rem; align-items:flex-start;">
+      <span style="font-size:1.1rem; flex-shrink:0;">ℹ️</span>
+      <div>
+        <strong>{% trans "What this does:" %}</strong><br>
+        {% trans "Creates contribution records for all active clan members. Members who already have a record for this period will be skipped." %}
+      </div>
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+
+      <!-- Period Label -->
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block; font-size:0.75rem; font-weight:600;
+                      color:#374151; text-transform:uppercase;
+                      letter-spacing:0.5px; margin-bottom:0.4rem;">
+          {% trans "Period Label" %} *
+        </label>
+        {{ form.period_label }}
+        {% if form.period_label.errors %}
+        <div style="color:#ef4444; font-size:0.72rem; margin-top:0.3rem;">
+          {{ form.period_label.errors.0 }}
+        </div>
+        {% else %}
+        <div style="font-size:0.72rem; color:#64748b; margin-top:0.3rem;">
+          {% trans "e.g., January 2026, Q1 2026, Mwezi wa 5" %}
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Amount Due -->
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block; font-size:0.75rem; font-weight:600;
+                      color:#374151; text-transform:uppercase;
+                      letter-spacing:0.5px; margin-bottom:0.4rem;">
+          {% trans "Amount Due (TSh)" %} *
+        </label>
+        {{ form.amount_due }}
+        {% if form.amount_due.errors %}
+        <div style="color:#ef4444; font-size:0.72rem; margin-top:0.3rem;">
+          {{ form.amount_due.errors.0 }}
+        </div>
+        {% else %}
+        <div style="font-size:0.72rem; color:#64748b; margin-top:0.3rem;">
+          {% trans "Amount each active member should pay." %}
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Due Date -->
+      <div style="margin-bottom:1.5rem;">
+        <label style="display:block; font-size:0.75rem; font-weight:600;
+                      color:#374151; text-transform:uppercase;
+                      letter-spacing:0.5px; margin-bottom:0.4rem;">
+          {% trans "Due Date" %} *
+        </label>
+        {{ form.due_date }}
+        {% if form.due_date.errors %}
+        <div style="color:#ef4444; font-size:0.72rem; margin-top:0.3rem;">
+          {{ form.due_date.errors.0 }}
+        </div>
+        {% else %}
+        <div style="font-size:0.72rem; color:#64748b; margin-top:0.3rem;">
+          {% trans "Deadline for payment." %}
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Summary Info -->
+      <div style="background:#f8fafc; border-radius:8px; padding:0.75rem 1rem;
+                  margin-bottom:1.5rem; border:1px solid #e2e8f0;
+                  font-size:0.82rem; color:#374151;">
+        <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.3rem;">
+          <span>👥 {% trans "Active members" %}:</span>
+          <strong>{{ active_members_count|default:"—" }}</strong>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display:flex; gap:0.75rem; justify-content:flex-end;">
+        <a href="{% url 'contributions' %}"
+           style="padding:0.6rem 1.5rem; background:#f1f5f9; color:#374151;
+                  border-radius:8px; font-size:0.85rem; font-weight:600;
+                  text-decoration:none; text-align:center;">
+          {% trans "Cancel" %}
+        </a>
+        <button type="submit"
+                onclick="showConfirm('{% trans "Confirm" %}', '{% trans "Generate contributions for ALL active members?" %}', function(){ /* TODO: add redirect */ }); return false;"
+                style="padding:0.6rem 1.5rem; background:#10b981; color:#fff;
+                       border:none; border-radius:8px; font-size:0.85rem;
+                       font-weight:600; cursor:pointer;">
+          📋 {% trans "Generate" %}
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Warning -->
+  <div style="margin-top:1rem; background:#fef3c7; border-radius:8px;
+              padding:0.75rem 1rem; font-size:0.75rem; color:#92400e;">
+    <strong>⚠️ {% trans "Note" %}:</strong>
+    {% trans "Members who already have a contribution record for this period will not be duplicated." %}
+  </div>
+</div>
+
+<script>
+  // Set default due date to 30 days from now
+  const dueDateInput = document.querySelector('input[name="due_date"]');
+  if (dueDateInput && !dueDateInput.value) {
+    const date = new Date();
+    date.setDate(date.getDate() + 30);
+    dueDateInput.value = date.toISOString().split('T')[0];
+  }
+  
+  // Set default period label
+  const periodInput = document.querySelector('input[name="period_label"]');
+  if (periodInput && !periodInput.value) {
+    const months = ['January','February','March','April','May','June',
+                    'July','August','September','October','November','December'];
+    const now = new Date();
+    periodInput.value = months[now.getMonth()] + ' ' + now.getFullYear();
+  }
+</script>
+
+{% endblock %}

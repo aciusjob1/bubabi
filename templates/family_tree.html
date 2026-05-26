@@ -1,0 +1,330 @@
+{% extends "base.html" %}
+{% load i18n clan_filters %}
+
+{% block page_title %}{% trans "Family Tree" %}{% endblock %}
+
+{% block content %}
+<div style="max-width:1200px; margin:0 auto; position: relative; z-index: 1;">
+
+  <!-- Premium Clan Banner Component -->
+  {% if request.user.clan and request.user.clan.banner_image %}
+  <div id="bannerContainer" style="border-radius:12px; overflow:hidden; margin-bottom:1.5rem; height:140px; position:relative; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+    <img src="{{ request.user.clan.banner_image.url }}" style="width:100%; height:100%; object-fit:cover;" alt="Clan Banner">
+    <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.6)); padding:1rem 1.5rem;">
+      <span style="color:#fff; font-weight:700; font-size:1.1rem;">{{ request.user.clan.name }}</span>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Primary Controls Matrix -->
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:0.5rem;">
+    <div class="section-title toggle-header" style="margin:0; width: auto; flex: initial; padding: 0.5rem 1rem;">
+      <span style="display:flex; align-items:center; gap:0.4rem; font-weight: 700;">🌳 {% trans "Family Tree" %}</span>
+    </div>
+    <div style="display:flex; gap:0.5rem;">
+      <a href="{% url 'add-family' %}" class="panel-btn-link" style="background:#6366f1; box-shadow: 0 2px 4px rgba(99,102,241,0.15);">+ {% trans "New Family" %}</a>
+      <a href="{% url 'add-relationship' %}" class="panel-btn-link" style="background:rgba(var(--clan-primary-raw, 16, 185, 129), 1);">🔗 {% trans "Add Relationship" %}</a>
+    </div>
+  </div>
+
+  <!-- Interactive Search / Filter Selector Matrix -->
+  <div class="settings-card" style="padding:1.2rem; margin-bottom:1.5rem;">
+    <form method="get" style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:flex-end;">
+      <div style="flex:1; min-width:240px;">
+        <label style="display:block; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.4rem;">{% trans "Select Person" %}</label>
+        <select name="person" style="width:100%; padding:0.65rem; border:1px solid #cbd5e1; border-radius:8px; font-size:0.9rem; background:#fff; color:#1e293b; outline:none; transition:border 0.15s;">
+          <option value="">— {% trans "Choose a person" %} —</option>
+          {% for p in all_persons %}
+          <option value="{{ p.id }}" {% if selected_person and selected_person.id == p.id %}selected{% endif %}>{{ p.full_name }}{% if p.death_date %} ({% trans "deceased" %}){% endif %}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="panel-btn-link" style="background:rgba(var(--clan-primary-raw, 16, 185, 129), 1); border:none; cursor:pointer; height:41px; padding:0 1.5rem;">{% trans "View Tree" %}</button>
+    </form>
+  </div>
+
+  <!-- Full Tree Visualization Frame -->
+  {% if selected_person %}
+  
+  <!-- Highlight Focus Card Profile -->
+  <div style="background:linear-gradient(135deg, {{ clan_primary_color|default:'#10b981' }}, {{ clan_accent_color|default:'#6366f1' }}); border-radius:12px; padding:1.25rem 1.5rem; margin-bottom:1rem; color:#f8fafc; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+    <div style="display:flex; align-items:center; gap:1rem;">
+      <div style="width:48px; height:48px; background:rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.3rem; font-weight:800; backdrop-filter:blur(4px);">{{ selected_person.full_name|first|upper }}</div>
+      <div>
+        <div style="font-weight:700; font-size:1.1rem; letter-spacing:-0.2px;">{{ selected_person.full_name }}</div>
+        <div style="font-size:0.78rem; color:rgba(241,245,249,0.85); margin-top:0.15rem;">
+          {% if selected_person.birth_date %}🎂 {{ selected_person.birth_date|date:"d M Y" }}{% endif %}
+          {% if selected_person.death_date %} · 🕊️ {{ selected_person.death_date|date:"d M Y" }}{% endif %}
+          {% if not selected_person.birth_date and not selected_person.death_date %}{% trans "No vital records found" %}{% endif %}
+        </div>
+      </div>
+    </div>
+    <div style="display:flex; gap:0.5rem;">
+      <a href="{% url 'add-relationship' %}" style="padding:0.45rem 0.9rem; background:rgba(255,255,255,0.18); color:#fff; border-radius:6px; font-size:0.72rem; font-weight:600; text-decoration:none; backdrop-filter:blur(4px); transition: background 0.15s;">🔗 {% trans "Add Relation" %}</a>
+      <a href="{% if selected_member %}{% url 'member-profile' selected_member.id %}{% else %}#{% endif %}" style="padding:0.45rem 0.9rem; background:rgba(255,255,255,0.18); color:#fff; border-radius:6px; font-size:0.72rem; font-weight:600; text-decoration:none; backdrop-filter:blur(4px); transition: background 0.15s;">👤 {% trans "Profile" %}</a>
+    </div>
+  </div>
+
+  <!-- Interactive Relational Tree Graph Context Block -->
+  <div class="settings-card" style="padding:1.5rem 1rem; margin-bottom:1.5rem; overflow-x:auto;">
+    
+    <div style="text-align:center; font-weight:700; font-size:0.75rem; color:#64748b; margin-bottom:1rem; text-transform:uppercase; letter-spacing:1px;">
+      ⬆️ {% trans "ANCESTORS" %} — {% trans "Parents & Grandparents" %} ⬆️
+    </div>
+    
+    <!-- Ancestor Tree Layout -->
+    {% if ancestors_tree %}
+    <div style="display:flex; justify-content:center; padding:0.5rem 0 1.5rem 0; overflow-x:auto;">
+      <div id="ancestorsContainer" style="display:inline-flex; white-space:nowrap;"></div>
+    </div>
+    {% else %}
+    <div style="text-align:center; padding:1.5rem; color:#94a3b8; font-size:0.8rem; background:rgba(0,0,0,0.02); border-radius:8px; margin-bottom:1.5rem;">
+      <div style="font-weight:600; color:#64748b; margin-bottom:0.15rem;">{% trans "No ancestors recorded" %}</div>
+      <span>{% trans "Link parental figures to map this section." %}</span>
+    </div>
+    {% endif %}
+    
+    <!-- Selected Node Platform Highlight -->
+    <div style="display:flex; justify-content:center; padding:1.25rem 0; border-top:1px dashed #cbd5e1; border-bottom:1px dashed #cbd5e1; margin:1rem 0; background:rgba(var(--clan-primary-raw, 16, 185, 129), 0.03); border-radius:8px;">
+      <div style="background:rgba(var(--clan-primary-raw, 16, 185, 129), 1); color:#fff; border-radius:8px; padding:12px 22px; text-align:center; min-width:150px; box-shadow:0 4px 14px rgba(var(--clan-primary-raw, 16, 185, 129), 0.3);">
+        <div style="font-size:0.95rem; font-weight:700;">⭐ {{ selected_person.full_name }}</div>
+        <div style="font-size:0.7rem; opacity:0.85; margin-top:3px; font-weight:500; font-family:monospace;">
+          {% if selected_person.birth_date %}{{ selected_person.birth_date.year }}{% else %}?{% endif %}
+          — 
+          {% if selected_person.death_date %}{{ selected_person.death_date.year }}{% else %}{% trans "Present" %}{% endif %}
+        </div>
+      </div>
+    </div>
+    
+    <div style="text-align:center; font-weight:700; font-size:0.75rem; color:#64748b; margin-top:1rem; margin-bottom:1rem; text-transform:uppercase; letter-spacing:1px;">
+      ⬇️ {% trans "DESCENDANTS" %} — {% trans "Children & Grandchildren" %} ⬇️
+    </div>
+    
+    <!-- Descendants Tree Layout -->
+    {% if descendants_tree %}
+    <div style="display:flex; justify-content:center; padding:0.5rem 0; overflow-x:auto;">
+      <div id="descendantsContainer" style="display:inline-flex; white-space:nowrap;"></div>
+    </div>
+    {% else %}
+    <div style="text-align:center; padding:1.5rem; color:#94a3b8; font-size:0.8rem; background:rgba(0,0,0,0.02); border-radius:8px;">
+      <div style="font-weight:600; color:#64748b; margin-bottom:0.15rem;">{% trans "No descendants recorded" %}</div>
+      <span>{% trans "Link children to grow the branches of this tree." %}</span>
+    </div>
+    {% endif %}
+    
+    <!-- Graph Legend Metadata Map -->
+    <div style="display:flex; gap:1.5rem; justify-content:center; margin-top:2rem; padding-top:1rem; border-top:1px solid #e2e8f0; font-size:0.72rem; font-weight:600; color:#64748b;">
+      <span style="display:flex; align-items:center; gap:0.25rem;"><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981;"></span> {% trans "Living" %}</span>
+      <span style="display:flex; align-items:center; gap:0.25rem;"><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#94a3b8;"></span> {% trans "Deceased" %}</span>
+      <span style="display:flex; align-items:center; gap:0.25rem;"><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:rgba(var(--clan-primary-raw, 16, 185, 129), 1);"></span> {% trans "Selected Focus" %}</span>
+    </div>
+  </div>
+
+  <script>
+  {% if ancestors_tree %}
+  const ancestorsData = {{ ancestors_tree|safe }};
+  function renderAncestors(node, container, isRoot = true) {
+    if (!node) return;
+    const box = document.createElement('div');
+    box.style.cssText = 'display:inline-flex;flex-direction:column;align-items:center;margin:0 8px;vertical-align:top;';
+    
+    // Skip drawing the root person's card - only show parents and above
+    if (!isRoot) {
+      const card = document.createElement('div');
+      card.style.cssText = `background:${node.is_deceased ? '#f8fafc' : '#eff6ff'};border:1px solid ${node.is_deceased ? '#cbd5e1' : '#bfdbfe'};border-radius:8px;padding:8px 12px;text-align:center;min-width:110px;box-shadow: 0 1px 3px rgba(0,0,0,0.02);`;
+      card.innerHTML = `<div style="font-weight:700;color:#1e293b;font-size:0.78rem;white-space:normal;max-width:130px;">${node.name}</div><div style="font-size:0.65rem;color:#64748b;margin-top:2px;font-family:monospace;">${node.birth_year || ''}</div>`;
+      box.appendChild(card);
+    }
+    
+    if (node.parents && node.parents.length > 0) {
+      if (!isRoot) {
+        const connector = document.createElement('div');
+        connector.style.cssText = 'width:1px;height:12px;background:#cbd5e1;';
+        box.appendChild(connector);
+      }
+      const parentRow = document.createElement('div');
+      parentRow.style.cssText = 'display:flex;align-items:flex-start;border-top:1px dashed #cbd5e1;padding-top:8px;position:relative;';
+      node.parents.forEach(p => renderAncestors(p, parentRow, false));
+      box.appendChild(parentRow);
+    }
+    container.appendChild(box);
+  }
+  renderAncestors(ancestorsData, document.getElementById('ancestorsContainer'), true);
+  {% endif %}
+
+  {% if descendants_tree %}
+  const descendantsData = {{ descendants_tree|safe }};
+  function renderDescendants(node, container, isRoot = true) {
+    if (!node) return;
+    const box = document.createElement('div');
+    box.style.cssText = 'display:inline-flex;flex-direction:column;align-items:center;margin:0 8px;vertical-align:top;';
+    
+    // Skip drawing the root person's card - only show children and below
+    if (!isRoot) {
+      const card = document.createElement('div');
+      card.style.cssText = `background:${node.is_deceased ? '#f8fafc' : '#f0fdf4'};border:1px solid ${node.is_deceased ? '#cbd5e1' : '#bbf7d0'};border-radius:8px;padding:8px 12px;text-align:center;min-width:110px;box-shadow: 0 1px 3px rgba(0,0,0,0.02);`;
+      card.innerHTML = `<div style="font-weight:700;color:#1e293b;font-size:0.78rem;white-space:normal;max-width:130px;">${node.name}</div><div style="font-size:0.65rem;color:#64748b;margin-top:2px;font-family:monospace;">${node.birth_year || ''}</div>`;
+      box.appendChild(card);
+    }
+    
+    if (node.children && node.children.length > 0) {
+      if (!isRoot) {
+        const connector = document.createElement('div');
+        connector.style.cssText = 'width:1px;height:12px;background:#cbd5e1;';
+        box.appendChild(connector);
+      }
+      const childRow = document.createElement('div');
+      childRow.style.cssText = 'display:flex;align-items:flex-start;border-top:1px dashed #cbd5e1;padding-top:8px;position:relative;';
+      node.children.forEach(c => renderDescendants(c, childRow, false));
+      box.appendChild(childRow);
+    }
+    container.appendChild(box);
+  }
+  renderDescendants(descendantsData, document.getElementById('descendantsContainer'), true);
+  {% endif %}
+  </script>
+  {% endif %}
+
+  <!-- ═══════════════════════════════ -->
+  <!-- FAMILY HOUSES CLAN REGISTRY     -->
+  <!-- ═══════════════════════════════ -->
+  <div class="section-title toggle-header" onclick="toggleSection('families-section')">
+    <span style="display:flex; align-items:center; gap:0.4rem;">🏠 {% trans "Family Houses" %} <span style="font-size:0.8rem; background:rgba(0,0,0,0.06); padding:0.1rem 0.4rem; border-radius:6px;">{{ families|length|default:0 }}</span></span>
+    <span class="toggle-arrow open" id="families-section-arrow">▶</span>
+  </div>
+  
+  <div id="families-section" class="toggle-body open">
+    <div class="settings-card" style="padding:0.5rem; border-radius:12px; overflow:hidden;">
+      <div style="overflow-x:auto; width:100%; position:relative;">
+        {% if families %}
+        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.875rem;">
+          <thead>
+            <tr style="border-bottom:2px solid #f1f5f9; background:rgba(248,250,252,0.6);">
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "House Name" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Founder" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Members" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase; text-align:right;">{% trans "Actions" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for f in families %}
+            <tr style="border-bottom:1px solid #f1f5f9; transition:background 0.15s;" class="ledger-row">
+              <td style="padding:0.85rem 1rem;"><strong style="color:#1e293b; font-weight:600;">🏠 {{ f.name }}</strong></td>
+              <td style="padding:0.85rem 1rem; color:#475569;">{{ f.founding_person.full_name|default:"—" }}</td>
+              <td style="padding:0.85rem 1rem; color:#64748b; font-weight:600;">{{ f.member_count|default:f.members.count }}</td>
+              <td style="padding:0.85rem 1rem; text-align:right; white-space:nowrap;">
+                <div style="display:inline-flex; gap:0.35rem; justify-content:flex-end; width:100%;">
+                  {% if f.founding_person %}
+                  <a href="?person={{ f.founding_person.id }}" class="panel-btn-link" style="background:#d1fae5; color:#065f46; font-size:0.7rem; padding:0.25rem 0.6rem; border-radius:6px; box-shadow:none;">🌳 {% trans "Tree" %}</a>
+                  {% endif %}
+                  <a href="{% url 'add-family-member' f.id %}" class="panel-btn-link" style="background:rgba(var(--clan-primary-raw, 16, 185, 129), 1); font-size:0.7rem; padding:0.25rem 0.6rem; border-radius:6px; box-shadow:none;">➕ {% trans "Add Member" %}</a>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div style="text-align:center; padding:3rem 2rem; color:#94a3b8;">
+          <div style="font-size:2.2rem; margin-bottom:0.4rem;">🏠</div>
+          <div style="font-weight:600; font-size:0.9rem; color:#475569;">{% trans "No family houses recorded." %}</div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<style>
+  /* Dynamic Glassmorphism Variables Context */
+  :root {
+    --clan-primary-raw: 16, 185, 129;
+    --clan-accent-raw: 99, 102, 241;
+    --blur-intensity: 6px;
+  }
+
+  body {
+    background: linear-gradient(
+      135deg, 
+      rgba(var(--clan-primary-raw), 0.04) 0%, 
+      rgba(var(--clan-accent-raw), 0.02) 50%, 
+      #f8fafc 100%
+    ) !important;
+    background-attachment: fixed !important;
+  }
+
+  /* Content Cards */
+  .settings-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(var(--blur-intensity));
+    -webkit-backdrop-filter: blur(var(--blur-intensity));
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.01);
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  .settings-card:hover {
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03);
+  }
+
+  /* Interactive Toggles & Section Headers */
+  .section-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #475569;
+    background: rgba(255,255,255,0.6);
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.5);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .toggle-header {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .toggle-header:hover { background: rgba(255,255,255,0.9); }
+  .toggle-arrow { transition: transform 0.2s; font-size: 0.7rem; color: #94a3b8; }
+  .toggle-arrow.open { transform: rotate(90deg); }
+  .toggle-body { display: none; margin-bottom: 1.25rem; }
+  .toggle-body.open { display: block; }
+
+  /* Buttons & Anchors */
+  .panel-btn-link {
+    padding: 0.55rem 1.25rem; 
+    color: #fff; 
+    border-radius: 8px; 
+    font-size: 0.82rem; 
+    font-weight: 600; 
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: opacity 0.15s, transform 0.1s;
+    white-space: nowrap;
+  }
+  .panel-btn-link:hover { opacity: 0.9; transform: translateY(-1px); }
+  .panel-btn-link:active { transform: translateY(0); }
+  .ledger-row:hover { background: rgba(248, 250, 252, 0.8) !important; }
+</style>
+
+<script>
+function toggleSection(id) {
+  const body = document.getElementById(id);
+  const arrow = document.getElementById(id + '-arrow');
+  if (body && arrow) {
+    body.classList.toggle('open');
+    arrow.classList.toggle('open');
+  }
+}
+</script>
+{% endblock %}

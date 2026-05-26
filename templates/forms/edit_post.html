@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block page_title %}{% trans "Edit Post" %}{% endblock %}
+
+{% block content %}
+
+<div style="max-width:600px; margin:0 auto;">
+  <div class="section-title">✏️ {% trans "Edit Post" %}</div>
+
+  <div style="background:#fff; border-radius:12px;
+              border:1px solid #e2e8f0; padding:1.5rem;">
+    
+    <form method="post">
+      {% csrf_token %}
+
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block; font-size:0.75rem; font-weight:600;
+                      color:#374151; text-transform:uppercase;
+                      letter-spacing:0.5px; margin-bottom:0.4rem;">
+          {% trans "Content" %}
+        </label>
+        <textarea name="content" rows="5" maxlength="1000" required
+                  style="width:100%; padding:0.7rem; border:1px solid #e2e8f0;
+                         border-radius:8px; font-size:0.9rem; outline:none;
+                         resize:vertical; font-family:inherit;
+                         line-height:1.6;"
+                  onfocus="this.style.borderColor='#10b981'"
+                  onblur="this.style.borderColor='#e2e8f0'">{{ post.content }}</textarea>
+        <div style="font-size:0.72rem; color:#64748b; margin-top:0.3rem;
+                    text-align:right;">
+          <span id="editCharCount">{{ post.content|length }}</span>/1000
+        </div>
+      </div>
+
+      <div style="display:flex; gap:0.75rem; justify-content:flex-end;">
+        <a href="{% url 'posts' %}#post-{{ post.id }}"
+           style="padding:0.6rem 1.5rem; background:#f1f5f9; color:#374151;
+                  border-radius:8px; font-size:0.85rem; font-weight:600;
+                  text-decoration:none;">
+          {% trans "Cancel" %}
+        </a>
+        <button type="submit"
+                style="padding:0.6rem 1.5rem; background:#10b981; color:#fff;
+                       border:none; border-radius:8px; font-size:0.85rem;
+                       font-weight:600; cursor:pointer;">
+          💾 {% trans "Save Changes" %}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const textarea = document.querySelector('textarea[name="content"]');
+  const charCount = document.getElementById('editCharCount');
+  if (textarea && charCount) {
+    textarea.addEventListener('input', function() {
+      charCount.textContent = this.value.length;
+      if (this.value.length > 900) {
+        charCount.style.color = '#ef4444';
+      } else {
+        charCount.style.color = '#64748b';
+      }
+    });
+  }
+</script>
+
+{% endblock %}

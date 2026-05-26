@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block page_title %}{% trans "Notifications" %}{% endblock %}
+
+{% block content %}
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+  <div class="section-title" style="margin:0;">🔔 {% trans "Notifications" %}</div>
+  {% if notifications %}
+  <a href="{% url 'mark-all-notifications-read' %}" style="
+     padding:0.4rem 0.8rem;background:#f1f5f9;color:#64748b;
+     border-radius:6px;font-size:0.72rem;font-weight:600;
+     text-decoration:none;">
+    ✅ {% trans "Mark all as read" %}
+  </a>
+  {% endif %}
+</div>
+
+{% if notifications %}
+<div style="display:flex;flex-direction:column;gap:0.75rem;">
+  {% for n in notifications %}
+  <a href="{% url 'notif-read' n.id %}"
+     style="text-decoration:none;display:block;
+            background:#fff;border-radius:10px;padding:1rem 1.2rem;
+            border:1px solid {% if not n.is_read %}#bfdbfe{% else %}#e2e8f0{% endif %};
+            {% if not n.is_read %}border-left:4px solid #3b82f6;{% endif %}
+            transition:background 0.15s;"
+     onmouseover="this.style.background='#f8fafc'"
+     onmouseout="this.style.background='#fff'">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
+      <div>
+        <div style="font-size:0.9rem;font-weight:{% if not n.is_read %}700{% else %}500{% endif %};
+                    color:#1e293b;margin-bottom:0.3rem;">
+          {% if not n.is_read %}🔵 {% endif %}{{ n.title }}
+        </div>
+        <div style="font-size:0.82rem;color:#64748b;">
+          {{ n.message }}
+        </div>
+        <div style="font-size:0.72rem;color:#94a3b8;margin-top:0.4rem;">
+          {{ n.sent_at|date:"d M Y · H:i" }}
+          {% if n.is_read %}
+          <span style="color:#10b981;margin-left:0.5rem;">✓ {% trans "Read" %}</span>
+          {% endif %}
+        </div>
+      </div>
+      <div style="flex-shrink:0;">
+        {% if n.notif_type == 'contribution_due' %}🟡
+        {% elif n.notif_type == 'fine_issued' %}🔴
+        {% elif n.notif_type == 'loan_approved' %}🟢
+        {% elif n.notif_type == 'loan_rejected' %}🔴
+        {% elif n.notif_type == 'vote_opened' %}⚖️
+        {% elif n.notif_type == 'announcement' %}📢
+        {% else %}🔔{% endif %}
+      </div>
+    </div>
+    {% if n.link %}
+    <div style="margin-top:0.5rem;font-size:0.75rem;color:#3b82f6;">
+      {% trans "View" %} →
+    </div>
+    {% endif %}
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<div class="table-card">
+  <div class="empty">🔔 {% trans "No notifications yet." %}</div>
+</div>
+{% endif %}
+
+{% endblock %}

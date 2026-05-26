@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% block title %}About BUBABI{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="max-width: 1000px; margin: 0 auto; padding: 20px;">
+
+  <!-- Hero -->
+  <div style="text-align: center; padding: 40px 0;">
+    <h1 style="color: var(--primary); font-size: 2.2rem;">BUBABI</h1>
+    <p style="font-size: 1.1rem; color: #94a3b8;">Clan Governance Operating System</p>
+    <p style="color: #64748b;">Connecting generations. Preserving legacy.</p>
+  </div>
+
+  <!-- Stats -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-bottom: 40px;">
+    <div class="card"><div class="num">91+</div><div class="label">Features</div></div>
+    <div class="card"><div class="num">36</div><div class="label">Data Models</div></div>
+    <div class="card"><div class="num">6</div><div class="label">Domains</div></div>
+    <div class="card"><div class="num">29</div><div class="label">Permissions</div></div>
+  </div>
+
+  <!-- Mission & Vision -->
+  <div class="section">
+    <h2>🎯 Mission & Vision</h2>
+    <p><strong>Mission:</strong> Deliver secure, transparent, and scalable clan governance infrastructure.</p>
+    <p><strong>Vision:</strong> Become the global standard for digital community governance systems.</p>
+  </div>
+
+  <!-- How It Works -->
+  <div class="section">
+    <h2>⚙️ How It Works</h2>
+    <ol>
+      <li>Secure member onboarding</li>
+      <li>RBAC role assignment with inheritance</li>
+      <li>Controlled module access</li>
+      <li>Immutable audit logging</li>
+      <li>Governance workflows (votes, approvals)</li>
+      <li>Reporting & analytics</li>
+    </ol>
+  </div>
+
+  <!-- Modules -->
+  <div class="section">
+    <h2>🧩 Core Modules</h2>
+    <ul>
+      <li><strong>Identity:</strong> Auth, roles, lifecycle control</li>
+      <li><strong>Financials:</strong> Ledger, loans, fines</li>
+      <li><strong>Genealogy:</strong> Tree + lineage engine</li>
+      <li><strong>Governance:</strong> Voting + compliance</li>
+      <li><strong>Events:</strong> Scheduling + attendance</li>
+      <li><strong>Communication:</strong> Feed + SMS alerts</li>
+    </ul>
+  </div>
+
+  <!-- Security -->
+  <div class="section">
+    <h2>🔐 Security & Compliance</h2>
+    <ul>
+      <li>RBAC + Least Privilege</li>
+      <li>Separation of Duties (SoD)</li>
+      <li>Immutable Audit Logs</li>
+      <li>CSRF / XSS Protection</li>
+      <li>Rate Limiting</li>
+      <li>Encryption (in transit & at rest)</li>
+    </ul>
+    <p class="muted">Aligned with ISO 27001 & SOC2 principles</p>
+  </div>
+
+  <!-- Tech -->
+  <div class="section">
+    <h2>🛠️ Tech Stack</h2>
+    <ul>
+      <li>Django 6.0</li>
+      <li>Python 3.13</li>
+      <li>PostgreSQL / SQLite</li>
+      <li>Django REST Framework</li>
+      <li>Chart.js</li>
+    </ul>
+  </div>
+
+  <!-- Footer -->
+  <div style="text-align:center; margin-top:40px;">
+    <p>Designed by <strong>Acius Job Missingo</strong></p>
+    <small>© 2026 BUBABI System</small>
+  </div>
+
+</div>
+
+<style>
+.card {
+  background: rgba(255,255,255,0.04);
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+}
+.num {
+  font-size: 1.8rem;
+  color: var(--primary);
+  font-weight: bold;
+}
+.label {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+.section {
+  margin-bottom: 35px;
+}
+.section h2 {
+  color: var(--primary);
+  margin-bottom: 10px;
+}
+.section p, .section li {
+  color: #cbd5e1;
+}
+.muted {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+</style>
+
+{% endblock %}

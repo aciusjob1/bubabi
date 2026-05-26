@@ -1,0 +1,622 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Bubabi Clan System</title>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --clan-primary-raw: 16, 185, 129;
+      --blur-intensity: 12px;
+      --primary: {{ clan.primary_color|default:'#10b981' }};
+      --accent: {{ clan.accent_color|default:'#6366f1' }};
+      --sidebar-color-base: {{ clan_sidebar_color|default:'#1e293b' }};
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      position: relative;
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+      {% if clan and clan.banner_image %}
+      background: linear-gradient(135deg, var(--sidebar-color-base), var(--sidebar-color-base)),
+                  url('{{ clan.banner_image.url }}') center/cover no-repeat fixed;
+      background-blend-mode: multiply;
+      {% else %}
+      background: linear-gradient(135deg, var(--sidebar-color-base), #0f172a) center/cover no-repeat fixed;
+      {% endif %}
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 50% 15%, rgba(var(--clan-primary-raw), 0.12) 0%, transparent 65%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 410px;
+      position: relative;
+      z-index: 1;
+      animation: fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Branding ── */
+    .logo-area {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.85rem;
+      margin-bottom: 1.5rem;
+    }
+    .brand-icon {
+      width: 52px; height: 52px; min-width: 52px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.35rem;
+      box-shadow: 0 8px 20px rgba(var(--clan-primary-raw), 0.25);
+    }
+    .brand-icon img { width: 52px; height: 52px; border-radius: 14px; object-fit: cover; }
+    .brand-name {
+      font-size: 1.45rem; font-weight: 800; color: #ffffff;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+      max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .brand-tagline { font-size: 0.72rem; color: #94a3b8; margin-top: 1px; font-weight: 500; }
+
+    /* ── Card ── */
+    .login-card {
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(var(--blur-intensity));
+      -webkit-backdrop-filter: blur(var(--blur-intensity));
+      padding: 2rem 1.75rem;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+    .card-title {
+      font-size: 0.75rem; font-weight: 700; color: #94a3b8;
+      text-align: center; margin-bottom: 1.25rem;
+      text-transform: uppercase; letter-spacing: 2px;
+    }
+
+    /* ── Alerts ── */
+    .alert {
+      padding: 0.75rem 1rem; border-radius: 10px; font-size: 0.8rem;
+      margin-bottom: 1.25rem; display: flex; align-items: flex-start;
+      gap: 0.6rem; word-break: break-word; border-left: 3px solid;
+    }
+    .alert-error   { background: rgba(239, 68, 68, 0.15);  color: #fca5a5; border-color: #ef4444; }
+    .alert-success { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border-color: #10b981; }
+    .alert-info    { background: rgba(99, 102, 241, 0.15); color: #c7d2fe; border-color: var(--accent); }
+    .alert-close   { margin-left: auto; background: none; border: none; color: inherit; cursor: pointer; font-size: 1.1rem; opacity: 0.6; line-height: 1; }
+    .alert-close:hover { opacity: 1; }
+
+    /* ── Login method tabs ── */
+    .login-methods {
+      display: flex; gap: 0.25rem; margin-bottom: 1.25rem;
+      background: rgba(0, 0, 0, 0.35); border-radius: 10px;
+      padding: 0.25rem; border: 1px solid rgba(255,255,255,0.03);
+    }
+    .login-method-tab {
+      flex: 1; padding: 0.55rem; text-align: center;
+      font-size: 0.78rem; font-weight: 700; color: #94a3b8;
+      background: transparent; border: none; border-radius: 8px;
+      cursor: pointer; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .login-method-tab.active {
+      background: var(--primary); color: #ffffff;
+      box-shadow: 0 4px 12px rgba(var(--clan-primary-raw), 0.3);
+    }
+    .login-method-tab:hover:not(.active) { color: #f1f5f9; background: rgba(255,255,255,0.03); }
+
+    /* ── Form fields ── */
+    .field-group { margin-bottom: 1.15rem; }
+
+    label {
+      display: block; font-size: 0.7rem; text-transform: uppercase;
+      color: #94a3b8; margin-bottom: 0.45rem; letter-spacing: 1px; font-weight: 700;
+    }
+
+    /*
+     * FIX: .input-wrapper is position:relative so .pw-toggle's top:50%
+     * is relative to the input row only — not the entire field-group
+     * (which also includes the label and error div).
+     */
+    .input-wrapper { position: relative; }
+
+    input[type="email"],
+    input[type="password"],
+    input[type="text"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 0.75rem 2.5rem 0.75rem 0.9rem;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1.5px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      color: #f8fafc; font-size: 0.9rem;
+      outline: none; transition: all 0.2s;
+    }
+    input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(var(--clan-primary-raw), 0.15);
+      background: rgba(0, 0, 0, 0.55);
+    }
+    input::placeholder { color: #475569; }
+
+    /* FIX: hardcoded hex — CSS variables don't work inside webkit autofill shadow */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus {
+      -webkit-box-shadow: 0 0 0 30px #1e293b inset !important;
+      -webkit-text-fill-color: #f8fafc !important;
+      border-color: var(--primary) !important;
+    }
+
+    .field-group.error input { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,0.15); }
+    .field-error {
+      font-size: 0.7rem; color: #fca5a5; margin-top: 0.35rem;
+      display: none; align-items: center; gap: 0.3rem; font-weight: 500;
+    }
+    .field-group.error .field-error { display: flex; }
+
+    /* FIX: centred against .input-wrapper, not .field-group */
+    .pw-toggle {
+      position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: #64748b;
+      cursor: pointer; font-size: 1.1rem; padding: 8px 10px;
+      transition: color 0.15s; z-index: 2;
+    }
+    .pw-toggle:hover { color: #cbd5e1; }
+
+    /* ── Options row ── */
+    .options-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.5rem; font-size: 0.78rem; color: #94a3b8;
+      min-height: 32px; flex-wrap: wrap; gap: 0.5rem;
+    }
+    .remember-row { display: flex; align-items: center; gap: 0.45rem; }
+    .remember-row input { width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; }
+    .remember-row label { cursor: pointer; margin: 0; text-transform: none; letter-spacing: 0; font-weight: 500; color: #94a3b8; }
+    .forgot-link { color: #94a3b8; text-decoration: none; font-weight: 600; transition: color 0.15s; }
+    .forgot-link:hover { color: var(--primary); }
+
+    /* ── Terms notice ── */
+    .terms-notice {
+      font-size: 0.7rem; color: #64748b;
+      text-align: center; margin-bottom: 0.75rem;
+      line-height: 1.5;
+    }
+    .terms-notice a { color: #6366f1; text-decoration: none; }
+    .terms-notice a:hover { text-decoration: underline; }
+
+    /* ── Buttons ── */
+    .btn-login {
+      width: 100%; padding: 0.85rem; min-height: 48px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #ffffff; border: none; border-radius: 10px;
+      font-size: 0.9rem; font-weight: 700; cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      box-shadow: 0 4px 14px rgba(var(--clan-primary-raw), 0.25);
+    }
+    .btn-login:hover  { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(var(--clan-primary-raw), 0.35); }
+    .btn-login:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .spinner {
+      display: none; width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.25); border-top-color: #ffffff;
+      border-radius: 50%; animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .btn-login.loading .spinner  { display: block; }
+    .btn-login.loading .btn-text { display: none; }
+
+    /* ── Divider ── */
+    .divider {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin: 1.5rem 0; color: #475569;
+      font-size: 0.7rem; text-transform: uppercase;
+      letter-spacing: 1.5px; font-weight: 700;
+    }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
+
+    .btn-join {
+      display: block; width: 100%; padding: 0.75rem; text-align: center;
+      background: rgba(255,255,255,0.03); color: #e2e8f0;
+      border: 1px solid rgba(255,255,255,0.08); border-radius: 10px;
+      font-size: 0.82rem; font-weight: 600; text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-join:hover { background: rgba(255,255,255,0.06); color: #ffffff; border-color: rgba(255,255,255,0.15); }
+
+    /* ── Language switcher ── */
+    .lang-row {
+      display: flex; justify-content: center; gap: 0.5rem;
+      margin-top: 1.5rem; padding-top: 1.25rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .lang-btn {
+      padding: 0.45rem 1rem; min-height: 34px;
+      background: rgba(255,255,255,0.02); color: #94a3b8;
+      border: 1px solid rgba(255,255,255,0.06); border-radius: 20px;
+      font-size: 0.72rem; cursor: pointer; transition: all 0.15s; font-weight: 600;
+    }
+    .lang-btn:hover { color: #f1f5f9; background: rgba(255,255,255,0.05); }
+    .lang-btn.active-lang {
+      background: var(--primary); color: #ffffff; border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(var(--clan-primary-raw), 0.2);
+    }
+
+    /* ── Footer ── */
+    .footer-text { text-align: center; font-size: 0.68rem; color: rgba(148,163,184,0.4); margin-top: 1.5rem; font-weight: 500; }
+    .footer-links { display: flex; justify-content: center; gap: 1rem; margin-top: 0.4rem; }
+    .footer-links a { font-size: 0.65rem; color: rgba(148,163,184,0.4); text-decoration: none; }
+    .footer-links a:hover { color: #94a3b8; }
+
+    /* ── Forgot password modal ── */
+    /*
+     * FIX: The modal uses display:none/flex toggled via the .active class.
+     * Previously there was no .active CSS rule so the modal never appeared
+     * even though JS added the class correctly.
+     */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: 1000;
+      align-items: center; justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-box {
+      background: #1e293b; border-radius: 16px; padding: 2rem;
+      max-width: 400px; width: 100%; text-align: center;
+      border: 1px solid rgba(255,255,255,0.1);
+      animation: fadeUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .modal-icon  { font-size: 2rem; margin-bottom: 0.5rem; }
+    .modal-title { color: #ffffff; font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .modal-body  { color: #94a3b8; font-size: 0.85rem; margin-bottom: 1.5rem; line-height: 1.5; }
+    .modal-close {
+      padding: 0.65rem 1.5rem;
+      background: var(--primary); color: #ffffff;
+      border: none; border-radius: 8px;
+      cursor: pointer; font-weight: 600; font-size: 0.9rem;
+      transition: opacity 0.15s;
+    }
+    .modal-close:hover { opacity: 0.85; }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      body { padding: 0.75rem; align-items: flex-start; padding-top: 8vh; }
+      .brand-icon { width: 44px; height: 44px; min-width: 44px; font-size: 1.2rem; border-radius: 12px; }
+      .brand-icon img { width: 44px; height: 44px; border-radius: 12px; }
+      .brand-name { font-size: 1.3rem; }
+      .login-card { padding: 1.5rem 1.15rem; border-radius: 14px; }
+      input[type="email"],
+      input[type="password"],
+      input[type="text"],
+      input[type="tel"] { padding: 0.8rem 2.5rem 0.8rem 0.9rem; font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+
+    <!-- ── Branding ── -->
+    <div class="logo-area">
+      <div class="brand-icon">
+        {% if clan and clan.logo %}
+          <img src="{{ clan.logo.url }}" alt="{{ clan.name }} Logo">
+        {% else %}
+          B
+        {% endif %}
+      </div>
+      <div>
+        <div class="brand-name" data-en="BUBABI CLAN" data-sw="UKOO WA BUBABI">
+          {{ clan.name|default:"Bubabi Clan" }}
+        </div>
+        <div class="brand-tagline" data-en="Management Information System" data-sw="Mfumo wa Habari wa Usimamizi">
+          Management Information System
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Login card ── -->
+    <div class="login-card">
+
+      <div class="card-title" data-en="Account Authentication" data-sw="Uthibitisho wa Akaunti">
+        Account Authentication
+      </div>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{% if message.tags == 'error' %}error{% elif message.tags == 'success' %}success{% else %}info{% endif %}">
+            <span>{{ message }}</span>
+            <button class="alert-close" onclick="this.parentElement.remove();">&times;</button>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <!-- Login method tabs -->
+      <div class="login-methods">
+        <button type="button" class="login-method-tab active"
+                onclick="switchMethod('identity')"
+                data-en="Clan ID / Email" data-sw="ID ya Ukoo / Email">
+          Clan ID / Email
+        </button>
+        <button type="button" class="login-method-tab"
+                onclick="switchMethod('phone')"
+                data-en="Phone Number" data-sw="Namba ya Simu">
+          Phone Number
+        </button>
+      </div>
+
+      <form id="loginForm" method="POST" action="" onsubmit="return handleFormSubmit(this)">
+        {% csrf_token %}
+        <input type="hidden" name="login_method" id="loginMethodInput" value="identity">
+
+        <!-- Identity field -->
+        <div class="field-group" id="identityFieldGroup">
+          <!-- FIX: for="email" matches the input's actual id -->
+          <label for="email" data-en="Clan ID or Email Address" data-sw="ID ya Ukoo au Barua Pepe">
+            Clan ID or Email Address
+          </label>
+          <div class="input-wrapper">
+            <input type="text" id="email" name="email"
+                   autocomplete="username"
+                   placeholder="e.g., BB-2026-001 or name@domain.com"
+                   required>
+          </div>
+          <div class="field-error">Please enter a valid Clan ID or email address.</div>
+        </div>
+
+        <!-- Phone field -->
+        <div class="field-group" id="phoneFieldGroup" style="display: none;">
+          <label for="phoneInput" data-en="Registered Phone Number" data-sw="Namba ya Simu Iliyosajiliwa">
+            Registered Phone Number
+          </label>
+          <div class="input-wrapper">
+            <input type="tel" id="phoneInput" name="phone"
+                   autocomplete="tel"
+                   placeholder="e.g., +255 712 345 678">
+          </div>
+          <div class="field-error">Please enter a valid phone number.</div>
+        </div>
+
+        <!-- Password field -->
+        <div class="field-group">
+          <label for="passwordInput" data-en="Account Password" data-sw="Neno la Siri la Akaunti">
+            Account Password
+          </label>
+          <!--
+            FIX: .input-wrapper is the positioned ancestor for .pw-toggle,
+            so top:50% centres the eye icon within the input row only.
+          -->
+          <div class="input-wrapper">
+            <input type="password" id="passwordInput" name="password"
+                   autocomplete="current-password"
+                   placeholder="••••••••"
+                   required>
+            <button type="button" class="pw-toggle"
+                    onclick="togglePasswordVisibility('passwordInput')"
+                    aria-label="Toggle Password Visibility">👁️</button>
+          </div>
+          <div class="field-error">Password is required.</div>
+        </div>
+
+        <!-- Remember / Forgot row -->
+        <div class="options-row">
+          <div class="remember-row">
+            <input type="checkbox" id="rememberMe" name="remember_me">
+            <label for="rememberMe" data-en="Keep me logged in" data-sw="Nikumbuke kwenye kifaa hiki">
+              Keep me logged in
+            </label>
+          </div>
+          <a href="#" class="forgot-link" id="forgotPasswordLink"
+             onclick="openForgotModal(); return false;"
+             data-en="Forgot password?" data-sw="Umesahau neno la siri?">
+            Forgot password?
+          </a>
+        </div>
+
+        <!--
+          FIX: Terms paragraph uses individual <span> and <a> elements with their own
+          data-en/sw attributes. setSystemLanguage() targets leaf nodes, so the <a>
+          links are preserved when the language switches — previously the whole
+          paragraph's textContent was overwritten, destroying the links entirely.
+        -->
+        <!--p class="terms-notice">
+          ✅
+          <span data-en="By logging in, you agree to the" data-sw="Kwa kuingia, unakubali">By logging in, you agree to the</span>
+          <a href="{% url 'terms' %}" data-en="Terms of Service" data-sw="Masharti ya Huduma">Terms of Service</a>
+          <span data-en="and" data-sw="na">and</span>
+          <a href="{% url 'privacy' %}" data-en="Privacy Policy" data-sw="Sera ya Faragha">Privacy Policy</a>
+        </p-->
+
+        <button type="submit" class="btn-login" id="submitBtn">
+          <span class="spinner"></span>
+          <span class="btn-text" data-en="Secure Sign In" data-sw="Ingia Salama">Secure Sign In</span>
+        </button>
+
+        <div class="divider" data-en="New to the Clan?" data-sw="Mgeni kwenye Ukoo?">New to the Clan?</div>
+        <a href="{% url 'register' %}" class="btn-join"
+           data-en="Request Access Portal" data-sw="Omba Kujiunga na Mfumo">
+          Request Access Portal
+        </a>
+      </form>
+
+      <div class="lang-row">
+        <button class="lang-btn active-lang" onclick="setSystemLanguage('en')">English</button>
+        <button class="lang-btn" onclick="setSystemLanguage('sw')">Kiswahili</button>
+      </div>
+
+    </div>
+
+    <!-- ── Footer ── -->
+    <div class="footer-text">
+      &copy; 2026 Bubabi Clan System. All Rights Reserved.
+      <!-- FIX: same URL names and same labels as the in-form links for consistency -->
+      <div class="footer-links">
+        <a href="{% url 'terms' %}" data-en="Terms of Service" data-sw="Masharti ya Huduma">Terms of Service</a>
+        <a href="{% url 'privacy' %}" data-en="Privacy Policy" data-sw="Sera ya Faragha">Privacy Policy</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!--
+    FIX: Modal CSS rule `.modal-overlay.active { display: flex; }` is now defined
+    in the <style> block above. Previously the class was toggled by JS but no CSS
+    rule made it visible, so the modal never appeared.
+  -->
+  <div class="modal-overlay" id="forgotModal">
+    <div class="modal-box">
+      <div class="modal-icon">🔑</div>
+      <div class="modal-title">Forgot Password?</div>
+      <p class="modal-body">
+        Contact your clan administrator to reset your password.
+        They can reach you at your registered phone number or email address.
+      </p>
+      <button class="modal-close" onclick="closeForgotModal()">Close</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Resolve password reset URL from backend context if available
+      const resetUrl = "{{ password_reset_url|default:'' }}";
+      if (resetUrl) {
+        document.getElementById('forgotPasswordLink').href = resetUrl;
+        document.getElementById('forgotPasswordLink').onclick = null;
+      }
+
+      // Restore saved language preference
+      const savedLang = localStorage.getItem('clan_lang');
+      if (savedLang && savedLang !== 'en') {
+        setSystemLanguage(savedLang);
+      }
+    });
+
+    /* ── Modal ── */
+    function openForgotModal() {
+      document.getElementById('forgotModal').classList.add('active');
+    }
+    function closeForgotModal() {
+      document.getElementById('forgotModal').classList.remove('active');
+    }
+    // Close on backdrop click
+    document.getElementById('forgotModal').addEventListener('click', function (e) {
+      if (e.target === this) closeForgotModal();
+    });
+
+    /* ── Login method tabs ── */
+    function switchMethod(method) {
+      const identityTab   = document.querySelectorAll('.login-method-tab')[0];
+      const phoneTab      = document.querySelectorAll('.login-method-tab')[1];
+      const identityGroup = document.getElementById('identityFieldGroup');
+      const phoneGroup    = document.getElementById('phoneFieldGroup');
+      const methodInput   = document.getElementById('loginMethodInput');
+      const identityInput = document.getElementById('email');
+      const phoneInput    = document.getElementById('phoneInput');
+
+      methodInput.value = method;
+
+      if (method === 'identity') {
+        identityTab.classList.add('active');
+        phoneTab.classList.remove('active');
+        identityGroup.style.display = 'block';
+        phoneGroup.style.display    = 'none';
+        identityInput.setAttribute('required', 'required');
+        phoneInput.removeAttribute('required');
+      } else {
+        phoneTab.classList.add('active');
+        identityTab.classList.remove('active');
+        phoneGroup.style.display    = 'block';
+        identityGroup.style.display = 'none';
+        phoneInput.setAttribute('required', 'required');
+        identityInput.removeAttribute('required');
+      }
+    }
+
+    /* ── Password visibility toggle ── */
+    function togglePasswordVisibility(fieldId) {
+      const input  = document.getElementById(fieldId);
+      const button = input.nextElementSibling; // .pw-toggle is the next sibling inside .input-wrapper
+      if (input.type === 'password') {
+        input.type = 'text';
+        button.textContent = '🙈';
+      } else {
+        input.type = 'password';
+        button.textContent = '👁️';
+      }
+    }
+
+    /* ── Form submission ── */
+    function handleFormSubmit(form) {
+      // FIX: reportValidity() triggers the browser's native validation UI;
+      // the old checkValidity()-only approach failed silently.
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return false;
+      }
+      const btn = document.getElementById('submitBtn');
+      btn.classList.add('loading');
+      btn.disabled = true;
+      return true;
+    }
+
+    /* ── Language switcher ── */
+    function setSystemLanguage(lang) {
+      // Persist choice
+      localStorage.setItem('clan_lang', lang);
+
+      // Update tab button states
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        const isSwahili = btn.textContent.toLowerCase().includes('swahili');
+        const isEnglish = btn.textContent.toLowerCase().includes('english');
+        btn.classList.toggle('active-lang', (lang === 'sw' && isSwahili) || (lang === 'en' && isEnglish));
+      });
+
+      /*
+       * FIX: Only leaf-node elements carry data-en/sw. Structural elements
+       * (like the terms <p>) were removed from this selection to prevent
+       * textContent assignment from destroying their child <a> links.
+       * Each translatable string is now its own <span> or <a>.
+       */
+      document.querySelectorAll('[data-en]').forEach(el => {
+        const text = el.getAttribute(lang === 'sw' ? 'data-sw' : 'data-en');
+        if (!text) return;
+        if (el.tagName === 'INPUT') {
+          el.placeholder = text;
+        } else {
+          el.textContent = text;
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

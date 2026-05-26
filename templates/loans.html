@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+{% load i18n clan_filters %}
+
+{% block page_title %}{% trans "Loans" %}{% endblock %}
+
+{% block content %}
+<div style="max-width:1200px; margin:0 auto; position: relative; z-index: 1;">
+
+  <!-- Premium Clan Banner Component -->
+  {% if request.user.clan and request.user.clan.banner_image %}
+  <div id="bannerContainer" style="border-radius:12px; overflow:hidden; margin-bottom:1.5rem; height:140px; position:relative; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+    <img src="{{ request.user.clan.banner_image.url }}" style="width:100%; height:100%; object-fit:cover;" alt="Clan Banner">
+    <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.6)); padding:1rem 1.5rem;">
+      <span style="color:#fff; font-weight:700; font-size:1.1rem;">{{ request.user.clan.name }}</span>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Header & Action Matrix -->
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:0.75rem;">
+    <div class="section-title toggle-header" style="margin:0; width: auto; flex: initial; padding: 0.5rem 1rem;">
+      <span style="display:flex; align-items:center; gap:0.4rem; font-weight: 700;">
+        🏦 {% trans "Loans Registry" %} 
+        <span style="font-size:0.8rem; background:rgba(0,0,0,0.06); padding:0.1rem 0.4rem; border-radius:6px; font-weight: 600; color: #475569;">
+          {% if is_treasurer %}
+            {{ loans.count|default:0 }} {% trans "records" %}
+          {% else %}
+            {% trans "My Ledger" %}
+          {% endif %}
+        </span>
+      </span>
+    </div>
+    <a href="{% url 'request-loan' %}" class="panel-btn-link" style="background:rgba(var(--clan-primary-raw, 16, 185, 129), 1);">
+      + {% trans "Request Loan" %}
+    </a>
+  </div>
+
+  <!-- Loan Limit Info Alert Panel -->
+  {% if request.user.clan and request.user.clan.max_loan_amount %}
+  <div style="background:rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.2); padding:0.75rem 1.25rem; border-radius:10px; margin-bottom:1.5rem; font-size:0.82rem; color:#1e40af; display:flex; align-items:center; gap:0.5rem; backdrop-filter: blur(4px);">
+    <span>💡</span>
+    <span>{% trans "Maximum structural loan ceiling" %}: <strong>{{ request.user.clan.max_loan_amount|clan_currency:request.user.clan }}</strong></span>
+  </div>
+  {% endif %}
+
+  <!-- ═══════════════════════════════ -->
+  <!-- LOAN TRANSACTION REGISTRY      -->
+  <!-- ═══════════════════════════════ -->
+  <div class="section-title toggle-header" onclick="toggleSection('loans-section')">
+    <span style="display:flex; align-items:center; gap:0.4rem;">📋 {% trans "Active Applications & Status" %}</span>
+    <span class="toggle-arrow open" id="loans-section-arrow">▶</span>
+  </div>
+
+  <div id="loans-section" class="toggle-body open">
+    <div class="settings-card" style="padding:0.5rem; border-radius:12px; overflow:hidden;">
+      <div style="overflow-x:auto; width:100%;">
+        {% if loans %}
+        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.875rem;">
+          <thead>
+            <tr style="border-bottom:2px solid #f1f5f9; background:rgba(248,250,252,0.6);">
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Borrower" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Requested" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Approved" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;" class="hide-mobile">{% trans "Purpose" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Status" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;" class="hide-mobile">{% trans "Date" %}</th>
+              {% if is_treasurer %}
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase; text-align:right;">{% trans "Action" %}</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for loan in loans %}
+            <tr style="border-bottom:1px solid #f1f5f9; transition:background 0.15s; {% if loan.status == 'defaulted' %}background:rgba(239, 68, 68, 0.03);{% elif loan.status == 'repaid' %}background:rgba(16, 185, 129, 0.03);{% endif %}" class="ledger-row">
+              <td style="padding:0.85rem 1rem;">
+                <a href="{% url 'member-profile' loan.borrower.id %}" style="text-decoration:none; color:#1e293b; display:flex; align-items:center; gap:0.6rem;">
+                  {% avatar loan.borrower 28 %}
+                  <div>
+                    <div style="font-weight:600; color:#1e293b; font-size:0.85rem;">
+                      {{ loan.borrower.person.full_name|default:loan.borrower.email }}
+                    </div>
+                    {% if loan.borrower == request.user %}
+                    <span style="font-size:0.65rem; color:rgba(var(--clan-primary-raw), 1); font-weight:700;">({% trans "you" %})</span>
+                    {% endif %}
+                  </div>
+                </a>
+              </td>
+              <td style="padding:0.85rem 1rem; font-weight:600; color:#1e293b; font-family:monospace;">
+                {{ loan.amount_requested|clan_currency:request.user.clan }}
+              </td>
+              <td style="padding:0.85rem 1rem; font-weight:700; color:#0f766e; font-family:monospace;">
+                {{ loan.amount_approved|clan_currency:request.user.clan|default:"—" }}
+              </td>
+              <td style="padding:0.85rem 1rem; color:#64748b; max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" class="hide-mobile">
+                {{ loan.purpose|default:"—" }}
+              </td>
+              <td style="padding:0.85rem 1rem; white-space:nowrap;">
+                <span class="badge {{ loan.status }}" style="display:inline-block; padding:0.2rem 0.5rem; border-radius:6px; font-size:0.68rem; font-weight:700; text-transform:uppercase; background:#e2e8f0; color:#334155;">
+                  {{ loan.status }}
+                </span>
+              </td>
+              <td style="padding:0.85rem 1rem; color:#64748b; font-size:0.8rem; font-family:monospace; white-space:nowrap;" class="hide-mobile">
+                {{ loan.created_at|date:"d M Y" }}
+              </td>
+              {% if is_treasurer %}
+              <td style="padding:0.85rem 1rem; text-align:right; white-space:nowrap;">
+                <a href="{% url 'review-loan' loan.id %}" class="panel-btn-link" style="background:#f59e0b; color:#0f172a; font-size:0.7rem; padding:0.25rem 0.6rem; border-radius:6px; box-shadow:none;">📋 {% trans "Review" %}</a>
+              </td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div style="text-align:center; padding:4rem 2rem; color:#94a3b8;">
+          <div style="font-size:2.5rem; margin-bottom:0.5rem;">🏦</div>
+          <div style="font-weight:600; font-size:1rem; color:#475569;">{% trans "No loan entries found" %}</div>
+          <div style="font-size:0.85rem; color:#94a3b8; margin-top:0.3rem; max-width:320px; margin-left:auto; margin-right:auto; line-height:1.4;">
+            {% if is_treasurer %}
+              {% trans "No loan applications have been filed within this clan registry database yet." %}
+            {% else %}
+              {% trans "You do not have any active or historical loan records under this account profile." %}
+            {% endif %}
+          </div>
+          <a href="{% url 'request-loan' %}" class="panel-btn-link" style="background:rgba(var(--clan-primary-raw, 16, 185, 129), 1); margin-top:1.25rem; font-size:0.85rem; padding: 0.6rem 1.5rem;">
+            + {% trans "Request Loan" %}
+          </a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<style>
+  /* Global Dynamic Glassmorphism Context Engine */
+  :root {
+    --clan-primary-raw: 16, 185, 129;
+    --clan-accent-raw: 99, 102, 241;
+    --blur-intensity: 6px;
+  }
+
+  body {
+    background: linear-gradient(
+      135deg, 
+      rgba(var(--clan-primary-raw), 0.04) 0%, 
+      rgba(var(--clan-accent-raw), 0.02) 50%, 
+      #f8fafc 100%
+    ) !important;
+    background-attachment: fixed !important;
+  }
+
+  /* Content Structural Architecture Cards */
+  .settings-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(var(--blur-intensity));
+    -webkit-backdrop-filter: blur(var(--blur-intensity));
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.01);
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  .settings-card:hover {
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03);
+  }
+
+  /* Dynamic Segment Header Bars */
+  .section-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #475569;
+    background: rgba(255,255,255,0.6);
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.5);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .toggle-header {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .toggle-header:hover { background: rgba(255,255,255,0.9); }
+  .toggle-arrow { transition: transform 0.2s; font-size: 0.7rem; color: #94a3b8; }
+  .toggle-arrow.open { transform: rotate(90deg); }
+  .toggle-body { display: none; margin-bottom: 1.25rem; }
+  .toggle-body.open { display: block; }
+
+  /* Premium Interaction Controls */
+  .panel-btn-link {
+    padding: 0.55rem 1.25rem; 
+    color: #fff; 
+    border-radius: 8px; 
+    font-size: 0.82rem; 
+    font-weight: 600; 
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: opacity 0.15s, transform 0.1s;
+    white-space: nowrap;
+  }
+  .panel-btn-link:hover { opacity: 0.9; transform: translateY(-1px); }
+  .panel-btn-link:active { transform: translateY(0); }
+  .ledger-row:hover { background: rgba(248, 250, 252, 0.8) !important; }
+
+  /* Custom Functional Badges Adaptation Matrix */
+  .badge.repaid, .badge.approved { background: #d1fae5 !important; color: #065f46 !important; }
+  .badge.defaulted, .badge.rejected { background: #fee2e2 !important; color: #991b1b !important; }
+  .badge.pending, .badge.reviewing { background: #fef3c7 !important; color: #92400e !important; }
+
+  /* Screen Size Viewport Optimization */
+  @media (max-width: 768px) {
+    .hide-mobile { display: none !important; }
+  }
+</style>
+
+<script>
+function toggleSection(id) {
+  const body = document.getElementById(id);
+  const arrow = document.getElementById(id + '-arrow');
+  if (body && arrow) {
+    body.classList.toggle('open');
+    arrow.classList.toggle('open');
+  }
+}
+</script>
+{% endblock %}

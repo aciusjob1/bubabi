@@ -1,0 +1,3523 @@
+# Kiswahili translations for BUBABI Clan System
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: sw\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# ── Navigation ──
+msgid "Sign out"
+msgstr "Toka"
+
+msgid "Dashboard"
+msgstr "Mwanzo"
+
+msgid "Members"
+msgstr "Wanachama"
+
+msgid "Contributions"
+msgstr "Michango"
+
+msgid "Loans"
+msgstr "Mikopo"
+
+msgid "Fines"
+msgstr "Faini"
+
+msgid "Audit Log"
+msgstr "Kumbukumbu ya Ukaguzi"
+
+msgid "Heritage"
+msgstr "Urithi"
+
+msgid "Financials"
+msgstr "Fedha"
+
+msgid "Operations"
+msgstr "Uendeshaji"
+
+msgid "My Account"
+msgstr "Akaunti Yangu"
+
+msgid "Overview"
+msgstr "Muhtasari"
+
+msgid "Control Panel"
+msgstr "Paneli ya Udhibiti"
+
+msgid "Clan Settings"
+msgstr "Mipangilio ya Ukoo"
+
+msgid "Community"
+msgstr "Jamii"
+
+msgid "People"
+msgstr "Watu"
+
+msgid "Finance"
+msgstr "Fedha"
+
+msgid "Records"
+msgstr "Rekodi"
+
+msgid "Main"
+msgstr "Kuu"
+
+msgid "Announcements"
+msgstr "Matangazo"
+
+msgid "Notifications"
+msgstr "Taarifa"
+
+msgid "Clan Feed"
+msgstr "Mlisho wa Ukoo"
+
+msgid "Family Tree"
+msgstr "Mti wa Familia"
+
+msgid "Events"
+msgstr "Matukio"
+
+msgid "Reports"
+msgstr "Ripoti"
+
+msgid "System"
+msgstr "Mfumo"
+
+# ── Auth ──
+msgid "Sign In"
+msgstr "Ingia"
+
+msgid "Sign in"
+msgstr "Ingia"
+
+msgid "Email Address"
+msgstr "Anwani ya Barua Pepe"
+
+msgid "Password"
+msgstr "Nenosiri"
+
+msgid "Enter System"
+msgstr "Ingia kwenye Mfumo"
+
+msgid "Don't have an account?"
+msgstr "Huna akaunti?"
+
+msgid "Register"
+msgstr "Jisajili"
+
+msgid "Join BUBABI"
+msgstr "Jiunge na BUBABI"
+
+msgid "Create your account to connect with your clan"
+msgstr "Tengeneza akaunti yako kuungana na ukoo wako"
+
+msgid "Already have an account?"
+msgstr "Tayari una akaunti?"
+
+msgid "Full Name"
+msgstr "Jina Kamili"
+
+msgid "Email"
+msgstr "Barua Pepe"
+
+msgid "Phone"
+msgstr "Simu"
+
+msgid "Phone Number"
+msgstr "Nambari ya Simu"
+
+msgid "Gender"
+msgstr "Jinsia"
+
+msgid "Birth Date"
+msgstr "Tarehe ya Kuzaliwa"
+
+msgid "Select gender"
+msgstr "Chagua jinsia"
+
+msgid "Male"
+msgstr "Kiume"
+
+msgid "Female"
+msgstr "Kike"
+
+msgid "Other"
+msgstr "Nyingine"
+
+msgid "Select"
+msgstr "Chagua"
+
+msgid "Create a strong password"
+msgstr "Tengeneza nenosiri imara"
+
+msgid "Repeat your password"
+msgstr "Rudia nenosiri lako"
+
+msgid "Confirm Password"
+msgstr "Thibitisha Nenosiri"
+
+msgid "For SMS notifications"
+msgstr "Kwa taarifa za SMS"
+
+msgid "For SMS notifications about contributions and events"
+msgstr "Kwa taarifa za SMS kuhusu michango na matukio"
+
+msgid "Select your clan"
+msgstr "Chagua ukoo wako"
+
+msgid "Choose the clan you belong to"
+msgstr "Chagua ukoo unaotoka"
+
+msgid "Select your family (optional)"
+msgstr "Chagua familia yako (si lazima)"
+
+msgid "Your family lineage within the clan"
+msgstr "Ukoo wako wa familia ndani ya ukoo"
+
+msgid "Clan"
+msgstr "Ukoo"
+
+msgid "Family"
+msgstr "Familia"
+
+msgid "Please fix the errors below:"
+msgstr "Tafadhali rekebisha makosa hapa chini:"
+
+msgid "Clan System"
+msgstr "Mfumo wa Ukoo"
+
+msgid "Clan Management System"
+msgstr "Mfumo wa Usimamizi wa Ukoo"
+
+msgid "Forgot password?"
+msgstr "Umesahau nenosiri?"
+
+msgid "Remember me"
+msgstr "Nikumbuke"
+
+msgid "Keep me signed in"
+msgstr "Niweke nikiwa nimeingia"
+
+msgid "No account yet?"
+msgstr "Bado huna akaunti?"
+
+msgid "Join the clan"
+msgstr "Jiunge na ukoo"
+
+msgid "Member Sign In"
+msgstr "Ingia kama Mwanachama"
+
+msgid "or"
+msgstr "au"
+
+# ── Dashboards ──
+msgid "Clan Fund"
+msgstr "Mfuko wa Ukoo"
+
+msgid "Active Members"
+msgstr "Wanachama Hai"
+
+msgid "Contributions Due"
+msgstr "Michango Inayodaiwa"
+
+msgid "Unpaid Fines"
+msgstr "Faini Ambazo Hazijalipwa"
+
+msgid "Current Balance"
+msgstr "Salio la Sasa"
+
+msgid "Total Collected"
+msgstr "Jumla Iliyokusanywa"
+
+msgid "Total Expenses"
+msgstr "Jumla ya Matumizi"
+
+msgid "Loans Outstanding"
+msgstr "Mikopo Inayoendelea"
+
+msgid "Upcoming Events"
+msgstr "Matukio Yajayo"
+
+msgid "Recent Members"
+msgstr "Wanachama Wapya"
+
+msgid "Recent Activity"
+msgstr "Shughuli za Hivi Karibuni"
+
+msgid "Welcome back"
+msgstr "Karibu tena"
+
+msgid "Member of BUBABI"
+msgstr "Mwanachama wa BUBABI"
+
+msgid "My Status"
+msgstr "Hali Yangu"
+
+msgid "My Contributions"
+msgstr "Michango Yangu"
+
+msgid "Outstanding Dues"
+msgstr "Madeni Yangu"
+
+msgid "My Fines"
+msgstr "Faini Zangu"
+
+msgid "My Loans"
+msgstr "Mikopo Yangu"
+
+msgid "My Family"
+msgstr "Familia Yangu"
+
+msgid "Upcoming Clan Events"
+msgstr "Matukio ya Ukoo Yajayo"
+
+msgid "Open Votes"
+msgstr "Kura Wazi"
+
+msgid "Pending Approvals"
+msgstr "Idhini Zinazosubiri"
+
+msgid "Family Houses"
+msgstr "Nyumba za Familia"
+
+msgid "Elders"
+msgstr "Wazee"
+
+msgid "Council of Elders"
+msgstr "Baraza la Wazee"
+
+msgid "Pending Invitations"
+msgstr "Mialiko Inayosubiri"
+
+msgid "Late Payments"
+msgstr "Malipo ya Kuchelewa"
+
+msgid "Active Loans"
+msgstr "Mikopo Inayoendelea"
+
+msgid "Recent Expenses"
+msgstr "Matumizi ya Hivi Karibuni"
+
+msgid "Awaiting Verification"
+msgstr "Inasubiri Uthibitisho"
+
+msgid "Active Votes"
+msgstr "Kura Zinazoendelea"
+
+# ── Table Headers ──
+msgid "Name"
+msgstr "Jina"
+
+msgid "Status"
+msgstr "Hali"
+
+msgid "Elder"
+msgstr "Mzee"
+
+msgid "Joined"
+msgstr "Alijiunga"
+
+msgid "Actions"
+msgstr "Vitendo"
+
+msgid "Member"
+msgstr "Mwanachama"
+
+msgid "Period"
+msgstr "Kipindi"
+
+msgid "Amount Due"
+msgstr "Kiasi Kinachostahili"
+
+msgid "Amount Paid"
+msgstr "Kiasi Kilicholipwa"
+
+msgid "Balance"
+msgstr "Salio"
+
+msgid "Due Date"
+msgstr "Tarehe ya Mwisho"
+
+msgid "Borrower"
+msgstr "Mkopaji"
+
+msgid "Requested"
+msgstr "Iliyoombwa"
+
+msgid "Approved"
+msgstr "Iliyoidhinishwa"
+
+msgid "Time"
+msgstr "Wakati"
+
+msgid "Actor"
+msgstr "Mtendaji"
+
+msgid "Action"
+msgstr "Kitendo"
+
+msgid "Domain"
+msgstr "Kikoa"
+
+msgid "Target"
+msgstr "Lengo"
+
+msgid "House Name"
+msgstr "Jina la Nyumba"
+
+msgid "Founding Person"
+msgstr "Mwanzilishi"
+
+msgid "Founder"
+msgstr "Mwanzilishi"
+
+msgid "Established"
+msgstr "Ilianzishwa"
+
+msgid "Est."
+msgstr "Ilianzishwa"
+
+msgid "Topic"
+msgstr "Mada"
+
+msgid "Initiated By"
+msgstr "Alianzisha"
+
+msgid "Closes"
+msgstr "Inafungwa"
+
+msgid "Due"
+msgstr "Inadaiwa"
+
+msgid "Paid"
+msgstr "Imelipwa"
+
+msgid "Verified"
+msgstr "Imethibitishwa"
+
+msgid "Changed By"
+msgstr "Imebadilishwa na"
+
+msgid "Purpose"
+msgstr "Madhumuni"
+
+msgid "Reason"
+msgstr "Sababu"
+
+msgid "Date"
+msgstr "Tarehe"
+
+msgid "Location"
+msgstr "Mahali"
+
+msgid "Description"
+msgstr "Maelezo"
+
+msgid "Notes"
+msgstr "Maelezo"
+
+msgid "Category"
+msgstr "Aina"
+
+msgid "Amount"
+msgstr "Kiasi"
+
+msgid "Count"
+msgstr "Idadi"
+
+msgid "Total"
+msgstr "Jumla"
+
+# ── Actions & Buttons ──
+msgid "Invite Member"
+msgstr "Alika Mwanachama"
+
+msgid "Generate Period"
+msgstr "Tengeneza Kipindi"
+
+msgid "Generate Contributions"
+msgstr "Tengeneza Michango"
+
+msgid "Record Expense"
+msgstr "Rekodi Matumizi"
+
+msgid "Create Event"
+msgstr "Tengeneza Tukio"
+
+msgid "Add Person"
+msgstr "Ongeza Mtu"
+
+msgid "Add Family House"
+msgstr "Ongeza Nyumba ya Familia"
+
+msgid "Add Relationship"
+msgstr "Ongeza Uhusiano"
+
+msgid "Initiate Vote"
+msgstr "Anzisha Kura"
+
+msgid "Request Loan"
+msgstr "Omba Mkopo"
+
+msgid "Pay"
+msgstr "Lipa"
+
+msgid "Verify"
+msgstr "Thibitisha"
+
+msgid "Save Settings"
+msgstr "Hifadhi Mipangilio"
+
+msgid "Go back"
+msgstr "Rudi Nyuma"
+
+msgid "Cancel"
+msgstr "Ghairi"
+
+msgid "Save"
+msgstr "Hifadhi"
+
+msgid "Delete"
+msgstr "Futa"
+
+msgid "Edit"
+msgstr "Hariri"
+
+msgid "View"
+msgstr "Tazama"
+
+msgid "Read"
+msgstr "Soma"
+
+msgid "Record"
+msgstr "Rekodi"
+
+msgid "Tree"
+msgstr "Mti"
+
+msgid "Add Member"
+msgstr "Ongeza Mwanachama"
+
+msgid "New Family"
+msgstr "Familia Mpya"
+
+msgid "View Tree"
+msgstr "Tazama Mti"
+
+msgid "Select Person"
+msgstr "Chagua Mtu"
+
+msgid "Choose a person"
+msgstr "Chagua mtu"
+
+msgid "Save Minutes"
+msgstr "Hifadhi Kumbukumbu"
+
+msgid "Record Minutes"
+msgstr "Rekodi Kumbukumbu"
+
+msgid "Download PDF"
+msgstr "Pakua PDF"
+
+msgid "Download Statement"
+msgstr "Pakua Taarifa"
+
+msgid "Change Status"
+msgstr "Badilisha Hali"
+
+msgid "Change Photo"
+msgstr "Badilisha Picha"
+
+msgid "Remove Photo"
+msgstr "Ondoa Picha"
+
+msgid "Call"
+msgstr "Piga Simu"
+
+msgid "Share"
+msgstr "Shirikisha"
+
+msgid "Like"
+msgstr "Penda"
+
+msgid "Comment"
+msgstr "Toa Maoni"
+
+msgid "Post"
+msgstr "Chapisha"
+
+msgid "Search"
+msgstr "Tafuta"
+
+msgid "Clear"
+msgstr "Futa"
+
+msgid "All"
+msgstr "Zote"
+
+msgid "Late"
+msgstr "Zilizochelewa"
+
+msgid "Penalized"
+msgstr "Zilizotozwa"
+
+msgid "Select All"
+msgstr "Chagua Zote"
+
+msgid "Clear All"
+msgstr "Futa Zote"
+
+msgid "None"
+msgstr "Hakuna"
+
+msgid "Submit"
+msgstr "Wasilisha"
+
+msgid "Create Family"
+msgstr "Tengeneza Familia"
+
+msgid "Add to Family"
+msgstr "Ongeza kwenye Familia"
+
+msgid "Generate"
+msgstr "Tengeneza"
+
+msgid "Read more"
+msgstr "Soma zaidi"
+
+msgid "Hide"
+msgstr "Ficha"
+
+msgid "Review"
+msgstr "Kagua"
+
+msgid "Dismiss"
+msgstr "Tupilia Mbali"
+
+msgid "Unblock"
+msgstr "Fungua"
+
+msgid "Block"
+msgstr "Zuia"
+
+# ── Notifications ──
+msgid "Mark all as read"
+msgstr "Weka zote kama imesomwa"
+
+msgid "No notifications yet."
+msgstr "Hakuna taarifa bado."
+
+msgid "✓ Read"
+msgstr "✓ Imesomwa"
+
+msgid "Post Announcement"
+msgstr "Chapisha Tangazo"
+
+msgid "This will notify all active BUBABI members."
+msgstr "Hii itaarifu wanachama wote hai wa BUBABI."
+
+msgid "A clear, concise title for your announcement"
+msgstr "Kichwa cha habari kifupi na wazi kwa tangazo lako"
+
+msgid "The full message you want to share with the clan"
+msgstr "Ujumbe kamili unaotaka kushirikisha na ukoo"
+
+msgid "Auto-Expiry"
+msgstr "Mwisho wa Tangazo"
+
+msgid "30 days (default)"
+msgstr "Siku 30 (chaguo msingi)"
+
+msgid "7 days"
+msgstr "Siku 7"
+
+msgid "14 days"
+msgstr "Siku 14"
+
+msgid "60 days"
+msgstr "Siku 60"
+
+msgid "90 days"
+msgstr "Siku 90"
+
+msgid "1 day"
+msgstr "Siku 1"
+
+msgid "3 days"
+msgstr "Siku 3"
+
+msgid "Never expires"
+msgstr "Haimaliziki"
+
+msgid "Announcement will be automatically hidden after this period"
+msgstr "Tangazo litafichwa moja kwa moja baada ya kipindi hiki"
+
+msgid "Pin this announcement to the top"
+msgstr "Bandika tangazo hili juu"
+
+msgid "Pinned announcements stay at the top of the list"
+msgstr "Matangazo yaliyobandikwa hukaa juu ya orodha"
+
+msgid "Send as SMS to all members"
+msgstr "Tuma kama SMS kwa wanachama wote"
+
+msgid "Members with phone numbers will receive an SMS notification"
+msgstr "Wanachama wenye nambari za simu watapokea taarifa ya SMS"
+
+msgid "PINNED"
+msgstr "IMEBANDIKWA"
+
+msgid "Expired"
+msgstr "Imeisha"
+
+msgid "Expires"
+msgstr "Inaisha"
+
+msgid "Delete for EVERYONE? This cannot be undone."
+msgstr "Futa kwa WOTE? Hii haiwezi kutenguliwa."
+
+msgid "Hide this announcement from your view? Others will still see it."
+msgstr "Ficha tangazo hili kwako? Wengine bado wataliona."
+
+msgid "Delete permanently"
+msgstr "Futa kabisa"
+
+msgid "Hide from my view only"
+msgstr "Ficha kwangu tu"
+
+msgid "No announcements yet"
+msgstr "Hakuna matangazo bado"
+
+msgid "Post the first one to keep everyone informed!"
+msgstr "Chapisha la kwanza kuwafahamisha wote!"
+
+# ── Posts & Clan Feed ──
+msgid "Share something with BUBABI clan..."
+msgstr "Shirikisha kitu na ukoo wa BUBABI..."
+
+msgid "Write a comment..."
+msgstr "Andika maoni..."
+
+msgid "No posts yet"
+msgstr "Hakuna machapisho bado"
+
+msgid "Be the first to share something with BUBABI clan!"
+msgstr "Kuwa wa kwanza kushirikisha kitu na ukoo wa BUBABI!"
+
+msgid "Create First Post"
+msgstr "Tengeneza Chapisho la Kwanza"
+
+msgid "No comments yet. Be the first!"
+msgstr "Hakuna maoni bado. Kuwa wa kwanza!"
+
+msgid "Photo"
+msgstr "Picha"
+
+msgid "Video"
+msgstr "Video"
+
+msgid "Post image"
+msgstr "Picha ya chapisho"
+
+msgid "Post options"
+msgstr "Chaguzi za chapisho"
+
+msgid "Delete this post?"
+msgstr "Futa chapisho hili?"
+
+msgid "Share as SMS to all members?"
+msgstr "Shirikisha kama SMS kwa wanachama wote?"
+
+msgid "Share via SMS"
+msgstr "Shirikisha kwa SMS"
+
+msgid "Link copied to clipboard!"
+msgstr "Kiungo kimenakiliwa!"
+
+msgid "Delete this comment?"
+msgstr "Futa maoni haya?"
+
+msgid "Edited"
+msgstr "Imebadilishwa"
+
+msgid "ago"
+msgstr "iliyopita"
+
+msgid "you"
+msgstr "wewe"
+
+msgid "comment"
+msgstr "maoni"
+
+msgid "comments"
+msgstr "maoni"
+
+msgid "Report Post"
+msgstr "Ripoti Chapisho"
+
+msgid "Submit Report"
+msgstr "Wasilisha Ripoti"
+
+msgid "Post by"
+msgstr "Chapisho la"
+
+msgid "This post has been hidden due to multiple reports. Under moderator review."
+msgstr "Chapisho hili limefichwa kutokana na ripoti nyingi. Linakaguliwa na msimamizi."
+
+# ── Events & Minutes ──
+msgid "Events & Minutes"
+msgstr "Matukio na Kumbukumbu"
+
+msgid "Clan Events"
+msgstr "Matukio ya Ukoo"
+
+msgid "New Event"
+msgstr "Tukio Jipya"
+
+msgid "Past Events"
+msgstr "Matukio Yaliyopita"
+
+msgid "Scheduled"
+msgstr "Imepangwa"
+
+msgid "Cancelled"
+msgstr "Imefutwa"
+
+msgid "Missing"
+msgstr "Haipo"
+
+msgid "Recorded"
+msgstr "Imerekodiwa"
+
+msgid "Minutes"
+msgstr "Kumbukumbu"
+
+msgid "Meeting Minutes"
+msgstr "Kumbukumbu za Mkutano"
+
+msgid "Record Meeting Minutes"
+msgstr "Rekodi Kumbukumbu za Mkutano"
+
+msgid "Recorded by"
+msgstr "Imerekodiwa na"
+
+msgid "Back to Events"
+msgstr "Rudi kwenye Matukio"
+
+msgid "Decisions & Resolutions"
+msgstr "Maamuzi na Maazimio"
+
+msgid "Agenda"
+msgstr "Ajenda"
+
+msgid "Discussion Summary"
+msgstr "Muhtasari wa Majadiliano"
+
+msgid "Decisions Made"
+msgstr "Maamuzi Yaliyofanywa"
+
+msgid "Action Items"
+msgstr "Vitendo vya Kufanya"
+
+msgid "Next Meeting"
+msgstr "Mkutano Ujao"
+
+msgid "Next Meeting Date"
+msgstr "Tarehe ya Mkutano Ujao"
+
+msgid "Attendance"
+msgstr "Mahudhurio"
+
+msgid "present"
+msgstr "alihudhuria"
+
+msgid "absent"
+msgstr "hakuhudhuria"
+
+msgid "I'm Attending"
+msgstr "Nitahudhuria"
+
+msgid "Can't Attend"
+msgstr "Siwezi Kuhudhuria"
+
+msgid "All Present"
+msgstr "Wote Wamehudhuria"
+
+# ── Family & Genealogy ──
+msgid "No family houses recorded."
+msgstr "Hakuna nyumba za familia."
+
+msgid "Create New Family House"
+msgstr "Tengeneza Nyumba Mpya ya Familia"
+
+msgid "Family Name"
+msgstr "Jina la Familia"
+
+msgid "Select founder (optional)"
+msgstr "Chagua mwanzilishi (si lazima)"
+
+msgid "Established Date"
+msgstr "Tarehe ya Kuanzishwa"
+
+msgid "Add Member to Family"
+msgstr "Ongeza Mwanachama kwenye Familia"
+
+msgid "Select a person"
+msgstr "Chagua mtu"
+
+msgid "No available persons"
+msgstr "Hakuna watu wanaopatikana"
+
+msgid "Current Members"
+msgstr "Wanachama wa Sasa"
+
+msgid "Role in Family"
+msgstr "Jukumu Katika Familia"
+
+msgid "Select role"
+msgstr "Chagua jukumu"
+
+msgid "Select role..."
+msgstr "Chagua jukumu..."
+
+msgid "Person"
+msgstr "Mtu"
+
+msgid "Role"
+msgstr "Jukumu"
+
+msgid "Child"
+msgstr "Mtoto"
+
+msgid "Parent"
+msgstr "Mzazi"
+
+msgid "Father"
+msgstr "Baba"
+
+msgid "Mother"
+msgstr "Mama"
+
+msgid "Spouse"
+msgstr "Mwenzi"
+
+msgid "Sibling"
+msgstr "Ndugu"
+
+msgid "Grandparent"
+msgstr "Babu/Bibi"
+
+msgid "Grandchild"
+msgstr "Mjukuu"
+
+msgid "Aunt/Uncle"
+msgstr "Shangazi/Mjomba"
+
+msgid "Nephew/Niece"
+msgstr "Mpwa"
+
+msgid "Cousin"
+msgstr "Binamu"
+
+msgid "In-Law"
+msgstr "Mkwe / Shemeji"
+
+msgid "Parent(s)"
+msgstr "Mzazi/Wazazi"
+
+msgid "Relationship Type"
+msgstr "Aina ya Uhusiano"
+
+msgid "ANCESTORS"
+msgstr "WAZAZI/WAHENGA"
+
+msgid "Parents & Grandparents"
+msgstr "Wazazi na Mababu"
+
+msgid "DESCENDANTS"
+msgstr "WAZAO"
+
+msgid "Children & Grandchildren"
+msgstr "Watoto na Wajukuu"
+
+msgid "No ancestors recorded"
+msgstr "Hakuna wahenga waliorekodiwa"
+
+msgid "No descendants recorded"
+msgstr "Hakuna wazao waliorekodiwa"
+
+msgid "Add parents to build the family tree"
+msgstr "Ongeza wazazi kujenga mti wa familia"
+
+msgid "Add children to grow the family tree"
+msgstr "Ongeza watoto kukuza mti wa familia"
+
+msgid "Add Relation"
+msgstr "Ongeza Uhusiano"
+
+msgid "Profile"
+msgstr "Profaili"
+
+msgid "No dates recorded"
+msgstr "Hakuna tarehe zilizorekodiwa"
+
+msgid "Living"
+msgstr "Hai"
+
+msgid "Deceased"
+msgstr "Amefariki"
+
+msgid "Selected"
+msgstr "Imechaguliwa"
+
+# ── Demographics ──
+msgid "Age"
+msgstr "Umri"
+
+msgid "yrs"
+msgstr "miaka"
+
+msgid "deceased"
+msgstr "amefariki"
+
+# ── Reports ──
+msgid "Download Owing List"
+msgstr "Pakua Orodha ya Wadeni"
+
+msgid "Annual Report"
+msgstr "Ripoti ya Mwaka"
+
+msgid "Collection Rate"
+msgstr "Kiwango cha Mkusanyiko"
+
+msgid "Outstanding"
+msgstr "Inayodaiwa"
+
+msgid "Collected"
+msgstr "Imekusanywa"
+
+msgid "Expected"
+msgstr "Inayotarajiwa"
+
+msgid "Rate"
+msgstr "Kiwango"
+
+msgid "Total Due"
+msgstr "Jumla Inayodaiwa"
+
+msgid "records"
+msgstr "rekodi"
+
+msgid "found"
+msgstr "imepatikana"
+
+msgid "Monthly Collection"
+msgstr "Mkusanyiko wa Kila Mwezi"
+
+msgid "Period Breakdown"
+msgstr "Mgawanyiko wa Vipindi"
+
+msgid "Expenses by Category"
+msgstr "Matumizi kwa Aina"
+
+# ── Messages ──
+msgid "No contributions yet."
+msgstr "Hakuna michango bado."
+
+msgid "No loans."
+msgstr "Hakuna mikopo."
+
+msgid "No upcoming events."
+msgstr "Hakuna matukio yajayo."
+
+msgid "No activity yet."
+msgstr "Hakuna shughuli bado."
+
+msgid "No expenses recorded."
+msgstr "Hakuna matumizi yaliyorekodiwa."
+
+msgid "No fines."
+msgstr "Hakuna faini."
+
+msgid "No status changes recorded."
+msgstr "Hakuna mabadiliko ya hali."
+
+msgid "No contributions found"
+msgstr "Hakuna michango iliyopatikana"
+
+msgid "No upcoming events scheduled."
+msgstr "Hakuna matukio yaliyopangwa."
+
+msgid "overdue"
+msgstr "imechelewa"
+
+msgid "Optional"
+msgstr "Si lazima"
+
+msgid "Note"
+msgstr "Kumbuka"
+
+msgid "Tip"
+msgstr "Kidokezo"
+
+msgid "Important"
+msgstr "Muhimu"
+
+msgid "What this does:"
+msgstr "Hii inafanya nini:"
+
+msgid "Preview"
+msgstr "Hakiki"
+
+msgid "Total expected"
+msgstr "Jumla inayotarajiwa"
+
+msgid "Active members"
+msgstr "Wanachama hai"
+
+msgid "No contribution data yet."
+msgstr "Hakuna data ya michango bado."
+
+msgid "No members."
+msgstr "Hakuna wanachama."
+
+msgid "No clans registered."
+msgstr "Hakuna koo zilizosajiliwa."
+
+# ── SMS ──
+msgid "Send Bulk SMS"
+msgstr "Tuma SMS kwa Wengi"
+
+msgid "Message"
+msgstr "Ujumbe"
+
+msgid "max 160 chars"
+msgstr "herufi 160 kwa juu"
+
+msgid "Send to All Members"
+msgstr "Tuma kwa Wanachama Wote"
+
+msgid "Send Broadcast"
+msgstr "Tuma Matangazo"
+
+msgid "SMS"
+msgstr "SMS"
+
+msgid "Type your broadcast message..."
+msgstr "Andika ujumbe wako wa matangazo..."
+
+msgid "Sent to all active members with phone numbers"
+msgstr "Inatumwa kwa wanachama wote hai wenye nambari za simu"
+
+msgid "Send Bulk SMS?"
+msgstr "Tuma SMS kwa Wengi?"
+
+msgid "Send Now"
+msgstr "Tuma Sasa"
+
+msgid "Sending..."
+msgstr "Inatuma..."
+
+msgid "This will send an SMS to ALL active members. Proceed?"
+msgstr "Hii itatuma SMS kwa wanachama WOTE hai. Endelea?"
+
+# ── Misc ──
+msgid "Toggle sidebar"
+msgstr "Fungua/Funga upau"
+
+msgid "Open menu"
+msgstr "Fungua menyu"
+
+msgid "Change language"
+msgstr "Badilisha lugha"
+
+msgid "Guest"
+msgstr "Mgeni"
+
+msgid "English"
+msgstr "Kiingereza"
+
+msgid "Kiswahili"
+msgstr "Kiswahili"
+
+msgid "outstanding"
+msgstr "inadaiwa"
+
+msgid "total records"
+msgstr "rekodi zote"
+
+msgid "Content"
+msgstr "Yaliyomo"
+
+msgid "days"
+msgstr "siku"
+
+msgid "characters"
+msgstr "herufi"
+
+msgid "Send"
+msgstr "Tuma"
+
+msgid "Confirm Action"
+msgstr "Thibitisha Kitendo"
+
+msgid "Are you sure you want to proceed?"
+msgstr "Una uhakika unataka kuendelea?"
+
+msgid "Are you sure?"
+msgstr "Una uhakika?"
+
+msgid "Confirm"
+msgstr "Thibitisha"
+
+msgid "in"
+msgstr "katika"
+
+msgid "of"
+msgstr "ya"
+
+msgid "total"
+msgstr "jumla"
+
+msgid "active"
+msgstr "hai"
+
+msgid "on record"
+msgstr "kwenye rekodi"
+
+msgid "preserved"
+msgstr "imehifadhiwa"
+
+msgid "overall"
+msgstr "kwa jumla"
+
+msgid "all time"
+msgstr "muda wote"
+
+msgid "Main Fund"
+msgstr "Mfuko Mkuu"
+
+msgid "Privacy"
+msgstr "Faragha"
+
+msgid "Help"
+msgstr "Msaada"
+
+msgid "Terms"
+msgstr "Masharti"
+
+# ── Role Management ──
+msgid "Super Admin"
+msgstr "Msimamizi Mkuu"
+
+msgid "Super Admin View"
+msgstr "Muonekano wa Msimamizi Mkuu"
+
+msgid "You can see all clans and manage system settings."
+msgstr "Unaweza kuona koo zote na kusimamia mipangilio ya mfumo."
+
+msgid "Manage Leader"
+msgstr "Simamia Kiongozi"
+
+msgid "Manage Elder"
+msgstr "Simamia Mzee"
+
+msgid "Manage Role"
+msgstr "Simamia Wadhifa"
+
+msgid "Manage"
+msgstr "Simamia"
+
+msgid "Assign as"
+msgstr "Weka kama"
+
+msgid "Remove"
+msgstr "Ondoa"
+
+msgid "role from"
+msgstr "wadhifa kutoka kwa"
+
+msgid "Currently"
+msgstr "Kwa Sasa"
+
+msgid "Back to Profile"
+msgstr "Rudi kwenye Profaili"
+
+msgid "You are viewing as Super Admin"
+msgstr "Unaangalia kama Msimamizi Mkuu"
+
+msgid "Django Admin"
+msgstr "Usimamizi wa Django"
+
+msgid "Bulk SMS"
+msgstr "SMS kwa Wengi"
+
+# ── Moderator & Roles ──
+msgid "Moderator"
+msgstr "Msimamizi"
+
+msgid "Moderation"
+msgstr "Usimamizi"
+
+msgid "Manage Moderator"
+msgstr "Simamia Msimamizi"
+
+msgid "Documents & Law"
+msgstr "Nyaraka na Sheria"
+
+msgid "Upload Document"
+msgstr "Pakia Nyaraka"
+
+msgid "Constitution"
+msgstr "Katiba"
+
+msgid "Download Constitution"
+msgstr "Pakua Katiba"
+
+msgid "Constitution Not Yet Uploaded"
+msgstr "Katiba Bado Haijapakiwa"
+
+msgid "The clan constitution has not been uploaded yet."
+msgstr "Katiba ya ukoo bado haijapakiwa."
+
+msgid "Upload Constitution"
+msgstr "Pakia Katiba"
+
+msgid "Clan Documents"
+msgstr "Nyaraka za Ukoo"
+
+msgid "Judicial Cases"
+msgstr "Kesi za Kisheria"
+
+msgid "Judicial Case"
+msgstr "Kesi ya Kisheria"
+
+msgid "File Case"
+msgstr "Wasilisha Kesi"
+
+msgid "File Judicial Case"
+msgstr "Wasilisha Kesi ya Kisheria"
+
+msgid "Case Title"
+msgstr "Kichwa cha Kesi"
+
+msgid "Case Type"
+msgstr "Aina ya Kesi"
+
+msgid "Parties Involved"
+msgstr "Wahusika"
+
+msgid "Attachments"
+msgstr "Viambatisho"
+
+msgid "Attachments / Evidence"
+msgstr "Viambatisho / Ushahidi"
+
+msgid "Upload evidence, documents, or supporting files"
+msgstr "Pakia ushahidi, nyaraka, au mafaili ya kuunga mkono"
+
+msgid "Accepted: PDF, Word, Excel, PowerPoint, Text, Images"
+msgstr "Inakubalika: PDF, Word, Excel, PowerPoint, Maandishi, Picha"
+
+msgid "Accepted: Documents, Images, Audio, Video, Spreadsheets"
+msgstr "Inakubalika: Nyaraka, Picha, Sauti, Video, Lahajedwali"
+
+msgid "Documents, Images, Audio, Video, Spreadsheets — Max 10MB each"
+msgstr "Nyaraka, Picha, Sauti, Video, Lahajedwali — Max 10MB kila moja"
+
+msgid "Upload ruling document or additional evidence"
+msgstr "Pakia hati ya uamuzi au ushahidi wa ziada"
+
+msgid "Add Attachment"
+msgstr "Ongeza Kiambatisho"
+
+msgid "Update Case"
+msgstr "Sasisha Kesi"
+
+msgid "Rule"
+msgstr "Amua"
+
+msgid "No documents uploaded yet."
+msgstr "Hakuna nyaraka zilizopakiwa."
+
+msgid "No judicial cases filed."
+msgstr "Hakuna kesi zilizowasilishwa."
+
+msgid "All cases are reviewed by clan moderators. False claims may result in penalties."
+msgstr "Kesi zote zinakaguliwa na wasimamizi wa ukoo. Madai ya uongo yanaweza kusababisha adhabu."
+
+msgid "e.g., Land Dispute - Plot 42"
+msgstr "mf., Mgogoro wa Ardhi - Kiwanja 42"
+
+msgid "Describe the case in detail..."
+msgstr "Eleza kesi kwa kina..."
+
+msgid "Names of all parties involved in this case..."
+msgstr "Majina ya wahusika wote wanaohusika na kesi hii..."
+
+# ── Block/Unblock ──
+msgid "Block Member"
+msgstr "Zuia Mwanachama"
+
+msgid "Unblock Member"
+msgstr "Fungulia Mwanachama"
+
+msgid "Reason for blocking this member..."
+msgstr "Sababu ya kumzuia mwanachama huyu..."
+
+msgid "Visible to all members"
+msgstr "Inaonekana kwa wanachama wote"
+
+msgid "No blocked members."
+msgstr "Hakuna wanachama waliozuiliwa."
+
+# ── Moderation Dashboard ──
+msgid "Pending Reports"
+msgstr "Ripoti Zinazosubiri"
+
+msgid "awaiting review"
+msgstr "zinazosubiri kukaguliwa"
+
+msgid "Hidden Posts"
+msgstr "Machapisho Yaliyofichwa"
+
+msgid "by reports"
+msgstr "kwa ripoti"
+
+msgid "Suspended"
+msgstr "Waliosimamishwa"
+
+msgid "Reported By"
+msgstr "Imeripotiwa na"
+
+msgid "No pending reports."
+msgstr "Hakuna ripoti zinazosubiri."
+
+msgid "No pending reports. Great job!"
+msgstr "Hakuna ripoti zinazosubiri. Kazi nzuri!"
+
+msgid "Author"
+msgstr "Mwandishi"
+
+msgid "No hidden posts."
+msgstr "Hakuna machapisho yaliyofichwa."
+
+msgid "Blocked Members"
+msgstr "Wanachama Waliozuiliwa"
+
+msgid "Blocked By"
+msgstr "Imezuiliwa na"
+
+msgid "Suspended Members"
+msgstr "Wanachama Waliosimamishwa"
+
+msgid "Hidden"
+msgstr "Imefichwa"
+
+msgid "Has image"
+msgstr "Ina picha"
+
+msgid "Has video"
+msgstr "Ina video"
+
+msgid "Review Reported Post"
+msgstr "Kagua Chapisho Lililoripotiwa"
+
+msgid "Posted by:"
+msgstr "Imechapishwa na:"
+
+msgid "Text:"
+msgstr "Maandishi:"
+
+msgid "Image:"
+msgstr "Picha:"
+
+msgid "Video:"
+msgstr "Video:"
+
+msgid "Your browser does not support video playback."
+msgstr "Kivinjari chako hakiungi mkono uchezaji wa video."
+
+msgid "This post has no text, image, or video content."
+msgstr "Chapisho hili halina maandishi, picha, wala video."
+
+msgid "Resolution Note (optional):"
+msgstr "Maelezo ya Uamuzi (si lazima):"
+
+msgid "Reason for your decision..."
+msgstr "Sababu ya uamuzi wako..."
+
+msgid "Dismiss Report"
+msgstr "Tupilia Mbali Ripoti"
+
+msgid "Dismiss this report? The post will remain."
+msgstr "Tupilia mbali ripoti hii? Chapisho litabaki."
+
+msgid "DELETE this post permanently? This cannot be undone."
+msgstr "FUTA chapisho hili kabisa? Hili haliwezi kutenguliwa."
+
+msgid "Dismiss ALL pending reports? This will restore any hidden posts that drop below the report threshold."
+msgstr "Tupilia mbali ripoti ZOTE zinazosubiri? Hii itarejesha machapisho yoyote yaliyofichwa ambayo yanashuka chini ya kiwango cha ripoti."
+
+# ── Clan Settings ──
+msgid "Clan Identity"
+msgstr "Utambulisho wa Ukoo"
+
+msgid "Basic information about your clan"
+msgstr "Taarifa za msingi kuhusu ukoo wako"
+
+msgid "Clan Name"
+msgstr "Jina la Ukoo"
+
+msgid "Short Code / Acronym"
+msgstr "Nambari Fupi / Kifupi"
+
+msgid "e.g., BUBABI, MAKOLO"
+msgstr "mf., BUBABI, MAKOLO"
+
+msgid "Motto / Slogan"
+msgstr "Kauli Mbiu"
+
+msgid "A short phrase that inspires your clan"
+msgstr "Maneno mafupi yanayoongoza ukoo wako"
+
+msgid "Branding & Appearance"
+msgstr "Chapa na Muonekano"
+
+msgid "Logo, banner and colour theme"
+msgstr "Nembo, bango na rangi"
+
+msgid "Clan Logo"
+msgstr "Nembo ya Ukoo"
+
+msgid "Recommended: 512×512 px, PNG or JPG (max 2MB)"
+msgstr "Inapendekezwa: 512×512 px, PNG au JPG (max 2MB)"
+
+msgid "Cover Banner"
+msgstr "Bango la Jalada"
+
+msgid "Recommended: 1200×400 px (max 5MB)"
+msgstr "Inapendekezwa: 1200×400 px (max 5MB)"
+
+msgid "Primary Colour"
+msgstr "Rangi Msingi"
+
+msgid "Accent Colour"
+msgstr "Rangi ya Pili"
+
+msgid "Current logo"
+msgstr "Nembo ya sasa"
+
+msgid "Current banner"
+msgstr "Bango la sasa"
+
+msgid "Remove logo"
+msgstr "Ondoa nembo"
+
+msgid "Remove banner"
+msgstr "Ondoa bango"
+
+msgid "Financial Settings"
+msgstr "Mipangilio ya Kifedha"
+
+msgid "Currency, contribution defaults and fines"
+msgstr "Sarafu, michango chaguomsingi na faini"
+
+msgid "Currency"
+msgstr "Sarafu"
+
+msgid "Default Contribution"
+msgstr "Mchango Chaguomsingi"
+
+msgid "Amount each member pays per period"
+msgstr "Kiasi kila mwanachama analipa kwa kipindi"
+
+msgid "Late Payment Fine"
+msgstr "Faini ya Kuchelewa Kulipa"
+
+msgid "Max Loan Amount"
+msgstr "Kiasi cha Juu cha Mkopo"
+
+msgid "Maximum amount a member can borrow"
+msgstr "Kiasi cha juu mwanachama anaweza kukopa"
+
+msgid "Advanced"
+msgstr "Ya Juu"
+
+msgid "Timezone, language and registration"
+msgstr "Saa za eneo, lugha na usajili"
+
+msgid "Timezone"
+msgstr "Eneo la Saa"
+
+msgid "Default Language"
+msgstr "Lugha Chaguomsingi"
+
+msgid "Allow public registration"
+msgstr "Ruhusu usajili wa umma"
+
+msgid "When enabled, anyone can register to join your clan without an invitation."
+msgstr "Inapowezeshwa, mtu yeyote anaweza kujisajili kujiunga na ukoo wako bila mwaliko."
+
+msgid "Save All Settings"
+msgstr "Hifadhi Mipangilio Yote"
+
+msgid "Live Preview"
+msgstr "Ona Mwonekano"
+
+msgid "Sample Button"
+msgstr "Kitufe cha Mfano"
+
+msgid "Danger Zone"
+msgstr "Eneo la Hatari"
+
+msgid "These actions cannot be undone. Please be certain."
+msgstr "Vitendo hivi haviwezi kutenguliwa. Tafadhali kuwa na uhakika."
+
+msgid "Reset to Defaults"
+msgstr "Rejesha kwa Chaguomsingi"
+
+msgid "Remove the current logo?"
+msgstr "Ondoa nembo ya sasa?"
+
+msgid "Remove the current banner?"
+msgstr "Ondoa bango la sasa?"
+
+msgid "Reset ALL settings to default values? This cannot be undone."
+msgstr "Rejesha mipangilio YOTE kwa thamani chaguomsingi? Hii haiwezi kutenguliwa."
+
+msgid "Settings reset to defaults. Click Save to apply."
+msgstr "Mipangilio imerejeshwa kwa chaguomsingi. Bonyeza Hifadhi kutumia."
+
+msgid "Click Save to apply changes."
+msgstr "Bonyeza Hifadhi kutumia mabadiliko."
+
+# ── System Dashboard ──
+msgid "System Administration"
+msgstr "Usimamizi wa Mfumo"
+
+msgid "Total Clans"
+msgstr "Jumla ya Koo"
+
+msgid "active communities"
+msgstr "jamii hai"
+
+msgid "Total Members"
+msgstr "Jumla ya Wanachama"
+
+msgid "across all clans"
+msgstr "katika koo zote"
+
+msgid "Genealogy"
+msgstr "Nasaba"
+
+msgid "people recorded"
+msgstr "watu waliorekodiwa"
+
+msgid "Audit Logs"
+msgstr "Rekodi za Ukaguzi"
+
+msgid "events tracked"
+msgstr "matukio yaliyofuatiliwa"
+
+msgid "Total Persons"
+msgstr "Jumla ya Watu"
+
+msgid "Audit Entries"
+msgstr "Rekodi za Ukaguzi"
+
+msgid "Ledger Entries"
+msgstr "Kumbukumbu za Buku la Fedha"
+
+msgid "Relationships"
+msgstr "Mahusiano"
+
+msgid "Votes Cast"
+msgstr "Kura Zilizopigwa"
+
+msgid "Registered Clans"
+msgstr "Koo Zilizosajiliwa"
+
+msgid "Public"
+msgstr "Ya Umma"
+
+msgid "No clans registered yet."
+msgstr "Hakuna koo zilizosajiliwa bado."
+
+msgid "Search by name, email, or clan..."
+msgstr "Tafuta kwa jina, barua pepe, au ukoo..."
+
+msgid "Recent Audit Log"
+msgstr "Rekodi za Hivi Karibuni za Ukaguzi"
+
+msgid "No audit entries yet."
+msgstr "Hakuna rekodi za ukaguzi bado."
+
+# ── Event Management ──
+msgid "Event Title"
+msgstr "Kichwa cha Tukio"
+
+msgid "Event Type"
+msgstr "Aina ya Tukio"
+
+msgid "Date & Time"
+msgstr "Tarehe na Wakati"
+
+msgid "Organized By"
+msgstr "Imeandaliwa na"
+
+msgid "Who is organizing this event?"
+msgstr "Nani anaandaa tukio hili?"
+
+msgid "e.g., Monthly Clan Meeting"
+msgstr "mf., Mkutano wa Kila Mwezi wa Ukoo"
+
+msgid "e.g., Community Hall, or Google Meet link"
+msgstr "mf., Ukumbi wa Jamii, au kiungo cha Google Meet"
+
+msgid "Create New Event"
+msgstr "Tengeneza Tukio Jipya"
+
+msgid "Edit Event"
+msgstr "Hariri Tukio"
+
+msgid "Update Event"
+msgstr "Sasisha Tukio"
+
+msgid "Cancel Event"
+msgstr "Ghairi Tukio"
+
+msgid "Delete Event"
+msgstr "Futa Tukio"
+
+msgid "Reason for cancellation..."
+msgstr "Sababu ya kughairi..."
+
+msgid "Delete Permanently"
+msgstr "Futa Kabisa"
+
+msgid "Manage Attendance"
+msgstr "Simamia Mahudhurio"
+
+msgid "Save Attendance"
+msgstr "Hifadhi Mahudhurio"
+
+msgid "Editing existing minutes."
+msgstr "Inahariri kumbukumbu zilizopo."
+
+msgid "This event has been cancelled."
+msgstr "Tukio hili limeghairiwa."
+
+msgid "Fill in the event details below"
+msgstr "Jaza maelezo ya tukio hapa chini"
+
+# ── Registration Form ──
+msgid "Invite New Member"
+msgstr "Alika Mwanachama Mpya"
+
+msgid "Member Registration"
+msgstr "Usajili wa Mwanachama"
+
+msgid "Create your account"
+msgstr "Tengeneza akaunti yako"
+
+msgid "Already have an account? Sign In"
+msgstr "Tayari una akaunti? Ingia"
+
+msgid "Select Clan"
+msgstr "Chagua Ukoo"
+
+msgid "If you don't see your clan, contact your clan leadership for an invitation."
+msgstr "Kama huoni ukoo wako, wasiliana na uongozi wa ukoo wako kwa mwaliko."
+
+msgid "Select Family (Optional)"
+msgstr "Chagua Familia (Si Lazima)"
+
+msgid "No families available for this clan"
+msgstr "Hakuna familia zinazopatikana kwa ukoo huu"
+
+msgid "Phone Number (for SMS)"
+msgstr "Nambari ya Simu (kwa SMS)"
+
+msgid "Leave blank if you don't wish to receive SMS"
+msgstr "Acha wazi kama hutaki kupokea SMS"
+
+msgid "By registering, you agree to abide by the clan constitution and rules."
+msgstr "Kwa kujisajili, unakubali kufuata katiba na sheria za ukoo."
+
+msgid "Create Account"
+msgstr "Tengeneza Akaunti"
+
+msgid "Sign In here"
+msgstr "Ingia hapa"
+
+msgid "Invited by"
+msgstr "Umealikwa na"
+
+msgid "You have been invited to join the clan."
+msgstr "Umealikwa kujiunga na ukoo."
+
+msgid "Complete your registration below."
+msgstr "Kamilisha usajili wako hapa chini."
+
+msgid "Already a member? Sign in here."
+msgstr "Tayari ni mwanachama? Ingia hapa."
+
+# ── Account / Profile ──
+msgid "Account Settings"
+msgstr "Mipangilio ya Akaunti"
+
+msgid "Profile Information"
+msgstr "Taarifa za Profaili"
+
+msgid "Update your personal details"
+msgstr "Sasisha maelezo yako binafsi"
+
+msgid "Profile Photo"
+msgstr "Picha ya Profaili"
+
+msgid "Upload a new profile photo"
+msgstr "Pakia picha mpya ya profaili"
+
+msgid "Update Profile"
+msgstr "Sasisha Profaili"
+
+msgid "Current Password"
+msgstr "Nenosiri la Sasa"
+
+msgid "New Password"
+msgstr "Nenosiri Jipya"
+
+msgid "Confirm New Password"
+msgstr "Thibitisha Nenosiri Jipya"
+
+msgid "Your password must be at least 6 characters."
+msgstr "Nenosiri lako lazima liwe na angalau herufi 6."
+
+msgid "Passwords do not match."
+msgstr "Nenosiri halilingani."
+
+msgid "Invalid credentials. Please try again."
+msgstr "Vitambulisho visivyo sahihi. Tafadhali jaribu tena."
+
+msgid "Your account has been blocked. Contact a moderator."
+msgstr "Akaunti yako imezuiliwa. Wasiliana na msimamizi."
+
+msgid "Welcome to BUBABI"
+msgstr "Karibu BUBABI"
+
+msgid "Connecting generations. Preserving legacy."
+msgstr "Kuunganisha vizazi. Kuhifadhi urithi."
+
+msgid "Clan Management"
+msgstr "Usimamizi wa Ukoo"
+
+msgid "Sending to"
+msgstr "Inatuma kwa"
+
+msgid "active members:"
+msgstr "wanachama hai:"
+
+msgid "SMS segment"
+msgstr "sehemu ya SMS"
+
+msgid "SMS segments"
+msgstr "sehemu za SMS"
+
+msgid "Show password"
+msgstr "Onyesha nenosiri"
+
+msgid "Hide password"
+msgstr "Ficha nenosiri"
+
+msgid "Toggle password visibility"
+msgstr "Badilisha kuonekana kwa nenosiri"
+
+msgid "System Online"
+msgstr "Mfumo Upo Mtandaoni"
+
+msgid "Contact your clan administrator to reset your password."
+msgstr "Wasiliana na msimamizi wa ukoo wako kubadilisha nenosiri lako."
+
+msgid "Please enter a valid email address"
+msgstr "Tafadhali weka anwani sahihi ya barua pepe"
+
+msgid "Password is required (min 6 characters)"
+msgstr "Nenosiri linahitajika (angalau herufi 6)"
+
+msgid "Please enter a valid phone number"
+msgstr "Tafadhali weka nambari sahihi ya simu"
+
+msgid "Scroll left"
+msgstr "Tembeza kushoto"
+
+msgid "Scroll right"
+msgstr "Tembeza kulia"
+
+msgid "No members found."
+msgstr "Hakuna wanachama waliopatikana."
+msgid "Account matching query does not exist."
+msgstr "Akaunti inayolingana haipo."
+
+# ── Payment Methods ──
+msgid "Mobile money providers"
+msgstr "Watoa huduma za simu"
+
+msgid "Banks"
+msgstr "Mabenki"
+
+msgid "Name of person who received cash"
+msgstr "Jina la aliyepokea fedha"
+
+msgid "Enter receipt or voucher number"
+msgstr "Ingiza nambari ya risiti au vocha"
+
+msgid "Account number used"
+msgstr "Nambari ya akaunti iliyotumika"
+
+msgid "Bank reference or deposit slip number"
+msgstr "Kumbukumbu ya benki au nambari ya hati ya amana"
+
+msgid "Additional details..."
+msgstr "Maelezo ya ziada..."
+
+msgid "Describe the event, agenda, or any important details..."
+msgstr "Eleza tukio, ajenda, au maelezo muhimu..."
+
+msgid "List the main agenda items discussed..."
+msgstr "Orodhesha ajenda kuu zilizojadiliwa..."
+
+msgid "List all decisions and resolutions..."
+msgstr "Orodhesha maamuzi na maazimio yote..."
+
+msgid "List tasks assigned, responsible persons, and deadlines..."
+msgstr "Orodhesha kazi, watekelezaji, na muda wa mwisho..."
+
+msgid "Optional notes for record keeping..."
+msgstr "Maelezo ya ziada kwa utunzaji kumbukumbu..."
+
+msgid "Create a strong password (min 6 characters)"
+msgstr "Tengeneza nenosiri imara (angalau herufi 6)"
+
+msgid "Enter your full name"
+msgstr "Ingiza jina lako kamili"
+
+msgid "Document title"
+msgstr "Kichwa cha hati"
+
+msgid "Brief history or description of this family house..."
+msgstr "Historia fupi au maelezo ya nyumba hii ya familia..."
+
+msgid "Explain why this fine is being issued..."
+msgstr "Eleza sababu ya kutozwa faini hii..."
+
+msgid "Change photo"
+msgstr "Badilisha picha"
+
+# ── Key Missing UI Translations ──
+msgid "Already Paid"
+msgstr "Tayari Imelipwa"
+
+msgid "Amount to Pay"
+msgstr "Kiasi cha Kulipa"
+
+msgid "Remaining"
+msgstr "Kilichobaki"
+
+msgid "Amount cannot exceed the remaining balance."
+msgstr "Kiasi hakiwezi kuzidi salio lililobaki."
+
+msgid "Cannot exceed remaining balance of"
+msgstr "Haiwezi kuzidi salio la"
+
+msgid "Cash"
+msgstr "Fedha Taslimu"
+
+msgid "Mobile Money"
+msgstr "Pesa za Simu"
+
+msgid "Bank Transfer"
+msgstr "Uhamisho wa Benki"
+
+msgid "Bank Name"
+msgstr "Jina la Benki"
+
+msgid "Account Number"
+msgstr "Nambari ya Akaunti"
+
+msgid "Transaction Reference"
+msgstr "Kumbukumbu ya Muamala"
+
+msgid "Transaction ID"
+msgstr "Kitambulisho cha Muamala"
+
+msgid "Provider"
+msgstr "Mtoa Huduma"
+
+msgid "Select bank"
+msgstr "Chagua benki"
+
+msgid "Select provider"
+msgstr "Chagua mtoa huduma"
+
+msgid "Confirm Payment"
+msgstr "Thibitisha Malipo"
+
+msgid "Pay Full"
+msgstr "Lipa Yote"
+
+msgid "Payment Method"
+msgstr "Njia ya Malipo"
+
+msgid "Payment Methods"
+msgstr "Njia za Malipo"
+
+msgid "Received by"
+msgstr "Imepokelewa na"
+
+msgid "Receipt Number"
+msgstr "Nambari ya Risiti"
+
+msgid "Important for audit"
+msgstr "Muhimu kwa ukaguzi"
+
+msgid "Number that sent the payment"
+msgstr "Nambari iliyotuma malipo"
+
+msgid "Enter the transaction ID from the confirmation SMS"
+msgstr "Ingiza kitambulisho cha muamala kutoka SMS ya uthibitisho"
+
+msgid "Upload Slip (optional)"
+msgstr "Pakia Hati (si lazima)"
+
+msgid "In-kind, manual"
+msgstr "Vitu, mkono"
+
+msgid "Record Payment"
+msgstr "Rekodi Malipo"
+
+msgid "Treasurer only"
+msgstr "Mweka Hazina tu"
+
+msgid "Please enter a valid amount."
+msgstr "Tafadhali weka kiasi sahihi."
+
+msgid "Proceed?"
+msgstr "Endelea?"
+
+msgid "You are about to record a"
+msgstr "Unakaribia kurekodi"
+
+msgid "payment of"
+msgstr "malipo ya"
+
+msgid "Reference"
+msgstr "Kumbukumbu"
+
+msgid "New Members"
+msgstr "Wanachama Wapya"
+
+msgid "No new members."
+msgstr "Hakuna wanachama wapya."
+
+msgid "No late payments."
+msgstr "Hakuna malipo ya kuchelewa."
+
+msgid "No active loans."
+msgstr "Hakuna mikopo inayoendelea."
+
+msgid "No unpaid fines."
+msgstr "Hakuna faini zisizolipwa."
+
+msgid "All payments verified."
+msgstr "Malipo yote yamethibitishwa."
+
+msgid "Search member or period..."
+msgstr "Tafuta mwanachama au kipindi..."
+
+msgid "Search results for"
+msgstr "Matokeo ya utafutaji kwa"
+
+msgid "Try a different search term."
+msgstr "Jaribu neno tofauti la utafutaji."
+
+msgid "Generate a contribution period to get started."
+msgstr "Tengeneza kipindi cha mchango kuanza."
+
+msgid "Enable / Disable Methods"
+msgstr "Wezesha / Zima Njia"
+
+msgid "Default Payment Method"
+msgstr "Njia Chaguomsingi ya Malipo"
+
+msgid "Pre-selected when recording a payment"
+msgstr "Imechaguliwa mapema wakati wa kurekodi malipo"
+
+msgid "Save Payment Settings"
+msgstr "Hifadhi Mipangilio ya Malipo"
+
+msgid "Please fix the errors below."
+msgstr "Tafadhali rekebisha makosa hapa chini."
+
+msgid "Invalid format"
+msgstr "Muundo usio sahihi"
+
+msgid "Duplicate code"
+msgstr "Nambari iliyorudiwa"
+
+msgid "Prefixes"
+msgstr "Viambishi"
+
+msgid "none"
+msgstr "hakuna"
+
+msgid "Detected Providers"
+msgstr "Watoa Huduma Waliotambuliwa"
+
+msgid "Unknown provider"
+msgstr "Mtoa huduma asiyejulikana"
+
+msgid "Test Phone Detection"
+msgstr "Jaribu Utambuzi wa Simu"
+
+msgid "Test phone number"
+msgstr "Nambari ya simu ya kujaribu"
+
+msgid "Type a phone number to see which provider is auto-detected"
+msgstr "Andika nambari ya simu kuona mtoa huduma atakayetambuliwa"
+
+msgid "Mobile Money Providers"
+msgstr "Watoa Huduma za Pesa za Simu"
+
+msgid "One per line. Format: code|Name|Prefixes"
+msgstr "Moja kwa kila mstari. Muundo: nambari|Jina|Viambishi"
+
+msgid "One per line. Format: code|Bank Name"
+msgstr "Moja kwa kila mstari. Muundo: nambari|Jina la Benki"
+
+msgid "Prefixes help auto-detect provider from phone number"
+msgstr "Viambishi husaidia kutambua mtoa huduma kutoka nambari ya simu"
+
+msgid "Configure which payment methods are available for contributions"
+msgstr "Sanidi njia za malipo zinazopatikana kwa michango"
+
+msgid "Mobile providers, banks, and payment options"
+msgstr "Watoa huduma za simu, mabenki, na chaguzi za malipo"
+
+msgid "Manage Payment Methods"
+msgstr "Simamia Njia za Malipo"
+
+msgid "Configure which payment methods are available, add mobile money providers, and manage bank options."
+msgstr "Sanidi njia za malipo, ongeza watoa huduma za simu, na simamia chaguzi za benki."
+
+msgid "Recent Contributions"
+msgstr "Michango ya Hivi Karibuni"
+
+msgid "All Members"
+msgstr "Wanachama Wote"
+
+msgid "Blocked"
+msgstr "Waliozuiliwa"
+
+msgid "All Clans"
+msgstr "Koo Zote"
+
+msgid "all clans"
+msgstr "koo zote"
+
+msgid "No members found"
+msgstr "Hakuna wanachama waliopatikana"
+
+msgid "No users found."
+msgstr "Hakuna watumiaji waliopatikana."
+
+msgid "This cannot be undone."
+msgstr "Hili haliwezi kutenguliwa."
+
+msgid "Yes"
+msgstr "Ndiyo"
+
+msgid "No"
+msgstr "Hapana"
+
+msgid "Warning"
+msgstr "Onyo"
+
+msgid "e.g., Paid in cash, Brought cement, Labor contribution"
+msgstr "mf., Imelipwa taslimu, Alileta saruji, Mchango wa kazi"
+
+msgid "e.g., T26ABC123 from M-Pesa SMS"
+msgstr "mf., T26ABC123 kutoka SMS ya M-Pesa"
+
+msgid "Summarize key discussions..."
+msgstr "Fupisha majadiliano muhimu..."
+
+msgid "Summarize the key discussions and points raised..."
+msgstr "Fupisha majadiliano muhimu na hoja zilizojitokeza..."
+
+msgid "List all decisions, resolutions, and action items..."
+msgstr "Orodhesha maamuzi, maazimio, na vitendo..."
+
+msgid "Tasks, responsible persons, deadlines..."
+msgstr "Kazi, watekelezaji, tarehe za mwisho..."
+
+msgid "Editing existing minutes recorded by"
+msgstr "Inahariri kumbukumbu zilizopo zilizorekodiwa na"
+
+msgid "Invite First Member"
+msgstr "Alika Mwanachama wa Kwanza"
+
+msgid "Invite members to join your clan."
+msgstr "Alika wanachama kujiunga na ukoo wako."
+
+msgid "Generate First Period"
+msgstr "Tengeneza Kipindi cha Kwanza"
+
+msgid "Generate a contribution period to get started"
+msgstr "Tengeneza kipindi cha mchango kuanza"
+
+msgid "Send SMS reminder"
+msgstr "Tuma kikumbusho cha SMS"
+
+msgid "Send SMS"
+msgstr "Tuma SMS"
+
+msgid "Resolve All"
+msgstr "Suluhisha Zote"
+
+msgid "Delete Announcement"
+msgstr "Futa Tangazo"
+
+msgid "Hide Announcement"
+msgstr "Ficha Tangazo"
+
+msgid "Hide this from your view? Others will still see it."
+msgstr "Ficha hili kwako? Wengine bado wataliona."
+
+msgid "Leave blank for immediate payment"
+msgstr "Acha wazi kwa malipo ya mara moja"
+
+msgid "paid"
+msgstr "imelipwa"
+
+msgid "unpaid"
+msgstr "haijalipwa"
+
+msgid "pending"
+msgstr "inasubiri"
+
+msgid "overdue members"
+msgstr "wanachama waliochelewa"
+
+msgid "members"
+msgstr "wanachama"
+
+msgid "members this period"
+msgstr "wanachama kipindi hiki"
+
+msgid "this period"
+msgstr "kipindi hiki"
+
+msgid "Type message to send to all active members..."
+msgstr "Andika ujumbe kutuma kwa wanachama wote hai..."
+
+msgid "System Administrator"
+msgstr "Msimamizi wa Mfumo"
+
+msgid "Superuser"
+msgstr "Mtumiaji Mkuu"
+
+msgid "Staff"
+msgstr "Wafanyakazi"
+
+msgid "System Users"
+msgstr "Watumiaji wa Mfumo"
+
+msgid "Full system access — handle with care"
+msgstr "Ufikiaji kamili wa mfumo — tumia kwa uangalifu"
+
+msgid "Resolved"
+msgstr "Imesuluhishwa"
+
+msgid "Member Status"
+msgstr "Hali ya Mwanachama"
+
+msgid "Status History"
+msgstr "Historia ya Hali"
+
+msgid "Roles"
+msgstr "Majukumu"
+
+msgid "My Role"
+msgstr "Jukumu Langu"
+
+msgid "My Balance Due"
+msgstr "Deni Langu"
+
+msgid "My Families"
+msgstr "Familia Zangu"
+
+msgid "Not assigned to a family house yet."
+msgstr "Bado haijawekwa kwenye nyumba ya familia."
+
+msgid "View Family Tree"
+msgstr "Tazama Mti wa Familia"
+
+msgid "No elders recorded yet."
+msgstr "Hakuna wazee waliorekodiwa bado."
+
+msgid "logged in as"
+msgstr "ameingia kama"
+
+msgid "from accessing the system."
+msgstr "kufikia mfumo."
+
+msgid "You are about to block"
+msgstr "Unakaribia kumzuia"
+
+msgid "Review Loan Application"
+msgstr "Kagua Ombi la Mkopo"
+
+msgid "Review Loan"
+msgstr "Kagua Mkopo"
+
+msgid "Approve Loan"
+msgstr "Idhinisha Mkopo"
+
+msgid "Reject Loan"
+msgstr "Kataa Mkopo"
+
+msgid "Disburse Loan"
+msgstr "Toa Mkopo"
+
+msgid "Disburse Funds"
+msgstr "Toa Fedha"
+
+msgid "Approved Amount"
+msgstr "Kiasi Kilichoidhinishwa"
+
+msgid "Amount to Approve"
+msgstr "Kiasi cha Kuidhinisha"
+
+msgid "Are you sure you want to reject this loan application?"
+msgstr "Una uhakika unataka kukataa ombi hili la mkopo?"
+
+msgid "Loan has been disbursed."
+msgstr "Mkopo umetolewa."
+
+msgid "This loan has been rejected."
+msgstr "Mkopo huu umekataliwa."
+
+msgid "Make sure sufficient funds are available before disbursing."
+msgstr "Hakikisha fedha za kutosha zinapatikana kabla ya kutoa."
+
+msgid "Maximum loan amount"
+msgstr "Kiasi cha juu cha mkopo"
+
+msgid "Owing List"
+msgstr "Orodha ya Wadeni"
+
+msgid "Download"
+msgstr "Pakua"
+
+
+msgid "Recorded By"
+msgstr "Imerekodiwa na"
+
+msgid "Verified by"
+msgstr "Imethibitishwa na"
+
+msgid "BUBABI Members"
+msgstr "Wanachama wa BUBABI"
+
+msgid "Search members..."
+msgstr "Tafuta wanachama..."
+
+msgid "Select a member"
+msgstr "Chagua mwanachama"
+
+msgid "Select relationship"
+msgstr "Chagua uhusiano"
+
+msgid "Biological relationship"
+msgstr "Uhusiano wa kibiolojia"
+
+msgid "Hold Ctrl/Cmd to select multiple parents"
+msgstr "Shikilia Ctrl/Cmd kuchagua wazazi wengi"
+
+msgid "Select person"
+msgstr "Chagua mtu"
+
+msgid "Choose a person..."
+msgstr "Chagua mtu..."
+
+msgid "The founding ancestor or head of this family house"
+msgstr "Mwanzilishi au mkuu wa nyumba hii ya familia"
+
+msgid "After creating the family, you can add members (children, parents, spouses) from the Family Tree page."
+msgstr "Baada ya kutengeneza familia, unaweza kuongeza wanachama (watoto, wazazi, wenzi) kutoka ukurasa wa Mti wa Familia."
+
+msgid "Document"
+msgstr "Hati"
+
+msgid "File"
+msgstr "Faili"
+
+msgid "Version"
+msgstr "Toleo"
+
+msgid "Uploaded"
+msgstr "Imepakiwa"
+
+msgid "Filed"
+msgstr "Imewasilishwa"
+
+msgid "Filed by"
+msgstr "Imewasilishwa na"
+
+msgid "Case #"
+msgstr "Kesi #"
+
+msgid "Ruling / Decision"
+msgstr "Uamuzi"
+
+msgid "Update Judicial Case"
+msgstr "Sasisha Kesi ya Kisheria"
+
+msgid "Upload Clan Document"
+msgstr "Pakia Hati ya Ukoo"
+
+msgid "Clan Constitution"
+msgstr "Katiba ya Ukoo"
+
+msgid "Documents & Judicial"
+msgstr "Nyaraka na Kisheria"
+
+msgid "Reports are reviewed by clan moderators. False reports may result in penalties."
+msgstr "Ripoti zinakaguliwa na wasimamizi wa ukoo. Ripoti za uongo zinaweza kusababisha adhabu."
+
+msgid "Provide more information..."
+msgstr "Toa maelezo zaidi..."
+
+msgid "Issue Fine"
+msgstr "Toza Faini"
+
+msgid "Issuing a fine will automatically notify the member via SMS if they have a phone number on file."
+msgstr "Kutoza faini kutamtaarifu mwanachama moja kwa moja kwa SMS kama ana nambari ya simu."
+
+msgid "Late Payment"
+msgstr "Malipo ya Kuchelewa"
+
+msgid "Amount Due (TSh)"
+msgstr "Kiasi Kinachostahili (TSh)"
+
+msgid "Amount (TSh)"
+msgstr "Kiasi (TSh)"
+
+msgid "Period Label"
+msgstr "Lebo ya Kipindi"
+
+msgid "e.g., January 2026, Q1 2026, Mwezi wa 5"
+msgstr "mf., Januari 2026, Q1 2026, Mwezi wa 5"
+
+msgid "Amount each active member should pay."
+msgstr "Kiasi kila mwanachama hai anapaswa kulipa."
+
+msgid "Deadline for payment."
+msgstr "Tarehe ya mwisho ya malipo."
+
+msgid "Creates contribution records for all active clan members. Members who already have a record for this period will be skipped."
+msgstr "Inatengeneza rekodi za michango kwa wanachama wote hai. Wanachama ambao tayari wana rekodi ya kipindi hiki watarukwa."
+
+msgid "Members who already have a contribution record for this period will not be duplicated."
+msgstr "Wanachama ambao tayari wana rekodi ya mchango kwa kipindi hiki hawatarudiwa."
+
+msgid "Generate contributions for ALL active members?"
+msgstr "Tengeneza michango kwa wanachama WOTE hai?"
+
+msgid "Generate Monthly Contributions"
+msgstr "Tengeneza Michango ya Kila Mwezi"
+
+
+msgid "Internal Notes"
+msgstr "Maelezo ya Ndani"
+
+msgid "Optional notes..."
+msgstr "Maelezo ya ziada..."
+
+msgid "Details (optional)"
+msgstr "Maelezo (si lazima)"
+
+msgid "Remove photo"
+msgstr "Ondoa picha"
+
+msgid "Remove profile photo?"
+msgstr "Ondoa picha ya profaili?"
+
+msgid "Change Password"
+msgstr "Badilisha Nenosiri"
+
+msgid "Save Changes"
+msgstr "Hifadhi Mabadiliko"
+
+msgid "Take Action"
+msgstr "Chukua Hatua"
+
+msgid "Quick Actions"
+msgstr "Vitendo vya Haraka"
+
+msgid "View Profile"
+msgstr "Tazama Profaili"
+
+msgid "Clan Members"
+msgstr "Wanachama wa Ukoo"
+
+msgid "Clan Overview"
+msgstr "Muhtasari wa Ukoo"
+
+msgid "Clan Fund Balance"
+msgstr "Salio la Mfuko wa Ukoo"
+
+msgid "Total Contributions"
+msgstr "Jumla ya Michango"
+
+msgid "Financial Control"
+msgstr "Udhibiti wa Fedha"
+
+msgid "System Control Panel"
+msgstr "Paneli ya Udhibiti wa Mfumo"
+
+msgid "System-wide Audit Trail"
+msgstr "Njia ya Ukaguzi ya Mfumo Mzima"
+
+msgid "immutable records"
+msgstr "rekodi zisizobadilika"
+
+msgid "all contributions"
+msgstr "michango yote"
+
+msgid "outstanding contributions"
+msgstr "michango inayodaiwa"
+
+msgid "not repaid"
+msgstr "haijalipwa"
+
+msgid "active loans"
+msgstr "mikopo hai"
+
+msgid "permanent"
+msgstr "kudumu"
+
+msgid "require sign-off"
+msgstr "zinahitaji kuthibitishwa"
+
+msgid "living & ancestors"
+msgstr "walio hai na wahenga"
+
+msgid "registered lineages"
+msgstr "nasaba zilizosajiliwa"
+
+msgid "current"
+msgstr "sasa"
+
+msgid "awaiting decision"
+msgstr "inasubiri uamuzi"
+
+msgid "aged"
+msgstr "wenye umri"
+
+msgid "invited"
+msgstr "alikwa"
+
+msgid "registered"
+msgstr "imesajiliwa"
+
+msgid "e.g., House of Mensah, Asante Line"
+msgstr "mf., Nyumba ya Mensah, Ukoo wa Asante"
+
+msgid "Family relationship"
+msgstr "Uhusiano wa kifamilia"
+
+
+msgid "governance"
+msgstr "utawala"
+
+msgid "House"
+msgstr "Nyumba"
+
+msgid "Founded"
+msgstr "Ilianzishwa"
+
+msgid "Families"
+msgstr "Familia"
+
+msgid "Persons"
+msgstr "Watu"
+
+msgid "Vote"
+msgstr "Piga Kura"
+
+msgid "Biography"
+msgstr "Wasifu"
+
+msgid "Login"
+msgstr "Ingia"
+
+msgid "Super"
+msgstr "Mkuu"
+
+msgid "Can"
+msgstr "Anaweza"
+
+msgid "Method"
+msgstr "Njia"
+
+msgid "Present"
+msgstr "Yupo"
+
+msgid "Absenteeism"
+msgstr "Utoro"
+
+msgid "Type"
+msgstr "Aina"
+
+msgid "Active"
+msgstr "Hai"
+
+msgid "From"
+msgstr "Kutoka"
+
+msgid "To"
+msgstr "Kwa"
+
+msgid "Title"
+msgstr "Kichwa"
+
+msgid "Primary"
+msgstr "Msingi"
+
+msgid "Max"
+msgstr "Juu"
+
+
+
+
+
+
+msgid "Not assigned"
+msgstr "Haijawekwa"
+
+msgid "No loans found"
+msgstr "Hakuna mikopo iliyopatikana"
+
+msgid "No loans yet."
+msgstr "Hakuna mikopo bado."
+
+msgid "No loan applications have been submitted yet."
+msgstr "Hakuna maombi ya mkopo yaliyowasilishwa bado."
+
+msgid "No pending members."
+msgstr "Hakuna wanachama wanaosubiri."
+
+msgid "No suspended members."
+msgstr "Hakuna wanachama waliosimamishwa."
+
+msgid "No open votes."
+msgstr "Hakuna kura wazi."
+
+msgid "No past events."
+msgstr "Hakuna matukio yaliyopita."
+
+msgid "Add Family Member"
+msgstr "Ongeza Mwanachama wa Familia"
+
+msgid "Add Family Relationship"
+msgstr "Ongeza Uhusiano wa Familia"
+
+msgid "Related To"
+msgstr "Anahusiana na"
+
+msgid "Relationship"
+msgstr "Uhusiano"
+
+
+msgid "Event"
+msgstr "Tukio"
+
+msgid "Logout"
+msgstr "Toka"
+
+
+msgid "All Contributions"
+msgstr "Michango Yote"
+
+msgid "Member of"
+msgstr "Mwanachama wa"
+
+msgid "Logged in as"
+msgstr "Ameingia kama"
+
+msgid "Treasurer View"
+msgstr "Muonekano wa Mweka Hazina"
+
+msgid "Back to Loans"
+msgstr "Rudi kwenye Mikopo"
+
+msgid "Back to Members"
+msgstr "Rudi kwenye Wanachama"
+
+msgid "Edit Post"
+msgstr "Hariri Chapisho"
+
+msgid "Delete Post"
+msgstr "Futa Chapisho"
+
+msgid "Applied"
+msgstr "Imewekwa"
+
+msgid "Disburse"
+msgstr "Toa"
+
+msgid "Disbursed"
+msgstr "Imetolewa"
+
+msgid "Reject"
+msgstr "Kataa"
+
+msgid "Don"
+msgstr "A"
+
+msgid "I"
+msgstr "Mimi"
+
+msgid "You haven"
+msgstr "Huja"
+
+msgid "your@email.com"
+msgstr "baruapepe@mfano.com"
+
+msgid "No blocked members"
+msgstr "Hakuna wanachama waliozuiliwa"
+
+
+
+
+
+msgid "Invited"
+msgstr "Alikwa"
+
+msgid "Invited By"
+msgstr "Alikwa na"
+
+msgid "Pending"
+msgstr "Inasubiri"
+
+
+msgid "Treasurer"
+msgstr "Mweka Hazina"
+
+msgid "History"
+msgstr "Historia"
+
+msgid "Join the Clan"
+msgstr "Jiunge na Ukoo"
+
+
+
+
+# ── System Cleanup ──
+msgid "System Cleanup"
+msgstr "Usafishaji wa Mfumo"
+
+msgid "Delete old data, reset finances, or clear test data. Your password is required for all actions."
+msgstr "Futa data ya zamani, weka upya fedha, au futa data ya majaribio. Nenosiri lako linahitajika kwa vitendo vyote."
+
+msgid "Current Data Overview"
+msgstr "Muhtasari wa Data ya Sasa"
+
+msgid "Ledger"
+msgstr "Leja"
+
+msgid "Audit"
+msgstr "Ukaguzi"
+
+msgid "Authentication Required"
+msgstr "Uthibitisho Unahitajika"
+
+msgid "All cleanup actions require your account password for security."
+msgstr "Vitendo vyote vya usafishaji vinahitaji nenosiri la akaunti yako kwa usalama."
+
+msgid "Enter your password to enable actions"
+msgstr "Ingiza nenosiri lako kuwezesha vitendo"
+
+msgid "Unlock"
+msgstr "Fungua"
+
+msgid "Enter your password"
+msgstr "Ingiza nenosiri lako"
+
+msgid "Actions unlocked — auto-locks in 5 minutes"
+msgstr "Vitendo vimefunguliwa — vitafungwa tena baada ya dakika 5"
+
+msgid "Locked (timeout)"
+msgstr "Imefungwa (muda umeisha)"
+
+msgid "Quick Cleanup Actions"
+msgstr "Vitendo vya Haraka vya Usafishaji"
+
+msgid "Reset ALL financial data?"
+msgstr "Weka upya data YOTE ya kifedha?"
+
+msgid "Reset Finances"
+msgstr "Weka Upya Fedha"
+
+msgid "Delete ALL posts and comments?"
+msgstr "Futa machapisho na maoni YOTE?"
+
+msgid "Clear Posts"
+msgstr "Futa Machapisho"
+
+msgid "Delete ALL notifications?"
+msgstr "Futa taarifa ZOTE?"
+
+msgid "Clear Notifications"
+msgstr "Futa Taarifa"
+
+msgid "Delete ALL announcements?"
+msgstr "Futa matangazo YOTE?"
+
+msgid "Clear Announcements"
+msgstr "Futa Matangazo"
+
+msgid "Delete ALL events?"
+msgstr "Futa matukio YOTE?"
+
+msgid "Clear Events"
+msgstr "Futa Matukio"
+
+msgid "Delete ALL audit logs?"
+msgstr "Futa kumbukumbu ZOTE za ukaguzi?"
+
+msgid "Clear Audit Logs"
+msgstr "Futa Kumbukumbu za Ukaguzi"
+
+msgid "Delete ALL votes?"
+msgstr "Futa kura ZOTE?"
+
+msgid "Clear Votes"
+msgstr "Futa Kura"
+
+msgid "Delete ALL uploaded media?"
+msgstr "Futa media YOTE iliyopakiwa?"
+
+msgid "Clear Media"
+msgstr "Futa Media"
+
+msgid "Time-Based Cleanup"
+msgstr "Usafishaji kwa Muda"
+
+msgid "Delete data older than a specified number of days."
+msgstr "Futa data ya zamani kuliko idadi maalum ya siku."
+
+msgid "Delete data older than selected period?"
+msgstr "Futa data ya zamani kuliko kipindi kilichochaguliwa?"
+
+msgid "Clean Old Data"
+msgstr "Futa Data ya Zamani"
+
+msgid "Complete financial reset. Make sure you have a backup."
+msgstr "Uwekaji upya kamili wa fedha. Hakikisha una nakala rudufu."
+
+msgid "⚠️ This will reset ALL financial records. This CANNOT be undone."
+msgstr "⚠️ Hii itaweka upya rekodi ZOTE za kifedha. Hili HALIWEZI kutenguliwa."
+
+msgid "Reset ALL Finances"
+msgstr "Weka Upya Fedha ZOTE"
+
+msgid "Please enter your password first."
+msgstr "Tafadhali ingiza nenosiri lako kwanza."
+
+msgid "Delete ALL uploaded media files? This removes images, videos, and documents."
+msgstr "Futa mafaili YOTE ya media yaliyopakiwa? Hii itaondoa picha, video, na nyaraka."
+
+msgid "Clear Media Files"
+msgstr "Futa Mafaili ya Media"
+
+msgid "Reset ALL financial data? This cannot be undone."
+msgstr "Weka upya data YOTE ya kifedha? Hii haiwezi kutenguliwa."
+
+msgid "Delete data older than"
+msgstr "Futa data ya zamani kuliko"
+
+msgid "Cleans: old notifications, audit logs, inactive announcements, and deleted posts."
+msgstr "Husafisha: taarifa za zamani, kumbukumbu za ukaguzi, matangazo yasiyo hai, na machapisho yaliyofutwa."
+
+msgid "These actions affect ALL data in the system. Make sure you have a backup."
+msgstr "Vitendo hivi vinaathiri data YOTE kwenye mfumo. Hakikisha una nakala rudufu."
+
+# ── Event Date Restrictions ──
+msgid "Cannot RSVP to a cancelled event."
+msgstr "Huwezi kujibu tukio lililofutwa."
+
+msgid "Cannot RSVP to a past event."
+msgstr "Huwezi kujibu tukio lililopita."
+
+msgid "Cannot edit a past event."
+msgstr "Huwezi kuhariri tukio lililopita."
+
+msgid "Cannot cancel a past event."
+msgstr "Huwezi kufuta tukio lililopita."
+
+msgid "Cannot record minutes for a future event. Wait until the meeting has started."
+msgstr "Huwezi kurekodi kumbukumbu za tukio la baadaye. Subiri hadi mkutano uanze."
+
+msgid "Cannot modify attendance for events older than 7 days. This event was"
+msgstr "Huwezi kubadilisha mahudhurio kwa matukio ya zaidi ya siku 7. Tukio hili lilikuwa"
+
+msgid "days ago."
+msgstr "siku zilizopita."
+
+msgid "Only Secretary, Leader, or Super Admin can record minutes."
+msgstr "Katibu, Kiongozi, au Msimamizi Mkuu pekee ndiye anayeweza kurekodi kumbukumbu."
+
+msgid "Only Secretary, Leader, or Super Admin can manage attendance."
+msgstr "Katibu, Kiongozi, au Msimamizi Mkuu pekee ndiye anayeweza kusimamia mahudhurio."
+
+msgid "Only Secretary, Leader, or Super Admin can create events."
+msgstr "Katibu, Kiongozi, au Msimamizi Mkuu pekee ndiye anayeweza kutengeneza matukio."
+
+msgid "Only Secretary, Leader, or Super Admin can edit events."
+msgstr "Katibu, Kiongozi, au Msimamizi Mkuu pekee ndiye anayeweza kuhariri matukio."
+
+msgid "Only Secretary, Leader, or Super Admin can cancel events."
+msgstr "Katibu, Kiongozi, au Msimamizi Mkuu pekee ndiye anayeweza kufuta matukio."
+
+msgid "Only Leader or Super Admin can delete events."
+msgstr "Kiongozi au Msimamizi Mkuu pekee ndiye anayeweza kufuta matukio kabisa."
+
+msgid "Only Moderators, Leaders, or Super Admin can upload documents."
+msgstr "Wasimamizi, Viongozi, au Msimamizi Mkuu pekee ndiye anayeweza kupakia nyaraka."
+
+# ── Payment Permissions ──
+msgid "Only the Treasurer can verify payments."
+msgstr "Mweka Hazina pekee ndiye anayeweza kuthibitisha malipo."
+
+msgid "Only the Treasurer or Leader can record payments."
+msgstr "Mweka Hazina au Kiongozi pekee ndiye anayeweza kurekodi malipo."
+
+# ── Event Status ──
+msgid "upcoming"
+msgstr "inakuja"
+
+msgid "ongoing"
+msgstr "inaendelea"
+
+msgid "past"
+msgstr "imepita"
+
+msgid "cancelled"
+msgstr "imefutwa"
+
+msgid "You are now marked as attending."
+msgstr "Umeandikwa kama utahudhuria."
+
+msgid "You are now marked as not attending."
+msgstr "Umeandikwa kama hautahudhuria."
+
+# ── Cleanup Messages ──
+msgid "Payment verified."
+msgstr "Malipo yamethibitishwa."
+
+msgid "Payment recorded successfully."
+msgstr "Malipo yamerekodiwa kwa mafanikio."
+
+msgid "Financial data reset:"
+msgstr "Data ya kifedha imewekwa upya:"
+
+msgid "records cleaned."
+msgstr "rekodi zimesafishwa."
+
+msgid "All posts, comments, and reactions deleted"
+msgstr "Machapisho, maoni, na maoni yote yamefutwa"
+
+msgid "posts"
+msgstr "machapisho"
+
+msgid "Deleted"
+msgstr "Imefutwa"
+
+msgid "notifications."
+msgstr "taarifa."
+
+msgid "announcements."
+msgstr "matangazo."
+
+msgid "events and related data."
+msgstr "matukio na data zinazohusiana."
+
+msgid "audit log entries."
+msgstr "rekodi za ukaguzi."
+
+msgid "votes."
+msgstr "kura."
+
+msgid "files and"
+msgstr "mafaili na"
+
+msgid "directories from media."
+msgstr "folda kutoka kwenye media."
+
+msgid "Cleaned up data older than"
+msgstr "Imesafisha data ya zamani kuliko"
+
+msgid "days:"
+msgstr "siku:"
+
+msgid "records."
+msgstr "rekodi."
+
+msgid "Registration Currently Closed"
+msgstr "Usajili Umefungwa Kwa Sasa"
+
+msgid "This clan is not accepting public registrations at this time. Please contact the leadership below for an invitation."
+msgstr "Ukoo huu haupokei usajili wa umma kwa sasa. Tafadhali wasiliana na uongozi hapa chini kwa mwaliko."
+
+msgid "Leadership"
+msgstr "Uongozi"
+
+msgid "No contact information available"
+msgstr "Hakuna taarifa za mawasiliano"
+
+msgid "Please reach out to your clan elders or leadership directly."
+msgstr "Tafadhali wasiliana na wazee wa ukoo au uongozi moja kwa moja."
+
+msgid "Already a member? Sign In"
+msgstr "Tayari ni mwanachama? Ingia"
+
+# ── Upload Constitution ──
+
+msgid "Upload Clan Constitution"
+msgstr "Pakia Katiba ya Ukoo"
+
+msgid "The constitution is the supreme governing document of the clan. Only one version is active at a time."
+msgstr "Katiba ni hati kuu ya uongozi ya ukoo. Toleo moja tu linafanya kazi kwa wakati mmoja."
+
+msgid "An existing constitution will be replaced:"
+msgstr "Katiba iliyopo itabadilishwa:"
+
+msgid "Constitution File"
+msgstr "Faili ya Katiba"
+
+msgid "Accepted: PDF, Word documents"
+msgstr "Inakubalika: PDF, Nyaraka za Word"
+
+msgid "e.g., 1.0, 2.0, 2024 Revision"
+msgstr "mf., 1.0, 2.0, Marejeo ya 2024"
+
+msgid "Brief description of this version..."
+msgstr "Maelezo mafupi ya toleo hili..."
+
+msgid "Constitution uploaded successfully!"
+msgstr "Katiba imepakiwa kwa mafanikio!"
+
+# ── Sidebar & Branding ──
+msgid "Sidebar Colour"
+msgstr "Rangi ya Upau wa Pembeni"
+
+msgid "Used in sidebar, login page, and registration forms"
+msgstr "Inatumika kwenye upau wa pembeni, ukurasa wa kuingia, na fomu za usajili"
+
+msgid "Sidebar Blur"
+msgstr "Ufifishaji wa Upau"
+
+msgid "Glass effect intensity for sidebar"
+msgstr "Kiwango cha athari ya kioo kwa upau wa pembeni"
+
+msgid "No Blur"
+msgstr "Hakuna Ufifishaji"
+
+msgid "Light (4px)"
+msgstr "Mwanga (4px)"
+
+msgid "Medium (8px)"
+msgstr "Wastani (8px)"
+
+msgid "Strong (16px)"
+msgstr "Nguvu (16px)"
+
+msgid "Heavy (24px)"
+msgstr "Nzito (24px)"
+
+# ── Contact Info ──
+msgid "Contact Email"
+msgstr "Barua Pepe ya Mawasiliano"
+
+msgid "Contact Phone"
+msgstr "Simu ya Mawasiliano"
+
+msgid "Shown to users when registration is closed"
+msgstr "Inaonyeshwa kwa watumiaji wakati usajili umefungwa"
+
+msgid "For registration inquiries"
+msgstr "Kwa maswali ya usajili"
+
+# ── Registration Closed ──
+msgid "No contact information available."
+msgstr "Hakuna taarifa za mawasiliano."
+
+
+msgid "Registration Closed"
+msgstr "Usajili Umefungwa"
+
+msgid "This clan is not accepting public registrations at this time."
+msgstr "Ukoo huu haupokei usajili wa umma kwa wakati huu."
+
+msgid "Please contact your clan leadership for an invitation."
+msgstr "Tafadhali wasiliana na uongozi wa ukoo wako kwa mwaliko."
+
+
+# ── Sidebar Color Default ──
+
+
+
+
+
+
+
+
+
+
+msgid "Description (optional)"
+msgstr "Maelezo (si lazima)"
+
+
+
+# ── Account Blocked Page ──
+msgid "Account Blocked"
+msgstr "Akaunti Imezuiliwa"
+
+msgid "Your account has been blocked by a clan leader. You cannot access the system at this time."
+msgstr "Akaunti yako imezuiliwa na kiongozi wa ukoo. Huwezi kufikia mfumo kwa wakati huu."
+
+msgid "If you believe this is a mistake, please contact your clan leadership."
+msgstr "Kama unaamini hili ni kosa, tafadhali wasiliana na uongozi wa ukoo wako."
+
+msgid "Blocked Since"
+msgstr "Imezuiliwa Tangu"
+
+# ── Login Page (new) ──
+msgid "By logging in, you agree to the"
+msgstr "Kwa kuingia, unakubali"
+
+msgid "Terms of Service"
+msgstr "Masharti ya Huduma"
+
+msgid "and"
+msgstr "na"
+
+msgid "Privacy Policy"
+msgstr "Sera ya Faragha"
+
+msgid "Forgot Password?"
+msgstr "Umesahau Nenosiri?"
+
+msgid "Contact your clan administrator to reset your password."
+msgstr "Wasiliana na msimamizi wa ukoo wako kubadilisha nenosiri lako."
+
+msgid "Close"
+msgstr "Funga"
+
+msgid "New to the Clan?"
+msgstr "Mgeni kwenye Ukoo?"
+
+msgid "Request Access Portal"
+msgstr "Omba Kujiunga na Mfumo"
+
+msgid "Account Authentication"
+msgstr "Uthibitisho wa Akaunti"
+
+msgid "Clan ID / Email"
+msgstr "ID ya Ukoo / Barua Pepe"
+
+msgid "Keep me logged in"
+msgstr "Nikumbuke kwenye kifaa hiki"
+
+msgid "Secure Sign In"
+msgstr "Ingia Salama"
+
+# ── Privacy Policy Page ──
+msgid "Information We Collect"
+msgstr "Taarifa Tunazokusanya"
+
+msgid "We collect only the information necessary to manage your clan membership, including your name, email address, phone number, gender, birth date, and clan affiliation. Profile photos are optional."
+msgstr "Tunakusanya tu taarifa muhimu kusimamia uanachama wako wa ukoo, ikiwemo jina lako, anwani ya barua pepe, nambari ya simu, jinsia, tarehe ya kuzaliwa, na ushiriki wa ukoo. Picha za profaili ni hiari."
+
+msgid "How We Use Your Information"
+msgstr "Jinsi Tunavyotumia Taarifa Zako"
+
+msgid "Your information is used solely for clan management purposes: membership records, contribution tracking, family tree genealogy, event coordination, and clan communication. We never sell or share your data with third parties."
+msgstr "Taarifa zako zinatumika kwa madhumuni ya usimamizi wa ukoo pekee: rekodi za uanachama, ufuatiliaji wa michango, nasaba ya mti wa familia, uratibu wa matukio, na mawasiliano ya ukoo. Hatujawahi kuuza au kushirikisha data yako na watu wengine."
+
+msgid "Data Security"
+msgstr "Usalama wa Data"
+
+msgid "Your data is protected with industry-standard security measures. Access to personal information is restricted to authorized clan leaders and administrators based on their assigned roles."
+msgstr "Data yako inalindwa kwa hatua za usalama za kiwango cha sekta. Ufikiaji wa taarifa binafsi umezuiwa kwa viongozi walioidhinishwa na wasimamizi kulingana na majukumu waliyopewa."
+
+msgid "Your Rights"
+msgstr "Haki Zako"
+
+msgid "You have the right to view, update, or request deletion of your personal data. Contact your clan leadership or system administrator for assistance."
+msgstr "Una haki ya kuona, kusasisha, au kuomba kufutwa kwa data yako binafsi. Wasiliana na uongozi wa ukoo wako au msimamizi wa mfumo kwa usaidizi."
+
+msgid "Contact"
+msgstr "Mawasiliano"
+
+msgid "For privacy-related inquiries, please contact your clan administrator."
+msgstr "Kwa maswali yanayohusu faragha, tafadhali wasiliana na msimamizi wa ukoo wako."
+
+msgid "Data Controller"
+msgstr "Mdhibiti wa Data"
+
+msgid "This system is operated by the Clan Administration Team. All data collected is managed under their authority. For any privacy-related inquiries, contact your clan leadership."
+msgstr "Mfumo huu unaendeshwa na Timu ya Utawala wa Ukoo. Data zote zilizokusanywa zinasimamiwa chini ya mamlaka yao. Kwa maswali yoyote ya faragha, wasiliana na uongozi wa ukoo wako."
+
+msgid "We collect and process the following categories of information:"
+msgstr "Tunakusanya na kuchakata aina zifuatazo za taarifa:"
+
+msgid "Third-party services used for authentication, hosting, or analytics (if applicable)"
+msgstr "Huduma za watu wengine zinazotumika kwa uthibitisho, upangishaji, au uchambuzi (kama inatumika)"
+
+msgid "While we implement strong security measures, no digital system can guarantee absolute security. Users are encouraged to protect their login credentials."
+msgstr "Ingawa tunatumia hatua kali za usalama, hakuna mfumo wa kidigitali unaoweza kuhakikisha usalama kamili. Watumiaji wanashauriwa kulinda vitambulisho vyao vya kuingia."
+
+msgid "Request a copy of your data (data portability)"
+msgstr "Omba nakala ya data yako (uhamishaji wa data)"
+
+msgid "Request deletion of your account data (subject to legal retention rules)"
+msgstr "Omba kufutwa kwa data ya akaunti yako (kwa kuzingatia sheria za uhifadhi)"
+
+msgid "Eligibility"
+msgstr "Ustahiki"
+
+msgid "This system is intended for authorized clan members only. Users must comply with internal clan membership rules and governance policies."
+msgstr "Mfumo huu unakusudiwa kwa wanachama wa ukoo walioidhinishwa pekee. Watumiaji lazima wafuate sheria za uanachama wa ukoo na sera za utawala."
+
+msgid "Last Updated: May 2026"
+msgstr "Imesasishwa Mwisho: Mei 2026"
+
+msgid "Acceptance of Terms"
+msgstr "Kukubali Masharti"
+
+msgid "By using the BUBABI Clan Management System, you agree to these terms of service and the clan constitution. If you do not agree, please discontinue use of the system."
+msgstr "Kwa kutumia Mfumo wa Usimamizi wa Ukoo wa BUBABI, unakubali masharti haya ya huduma na katiba ya ukoo. Kama hukubali, tafadhali acha kutumia mfumo."
+
+msgid "Account Responsibilities"
+msgstr "Majukumu ya Akaunti"
+
+msgid "You are responsible for maintaining the confidentiality of your account credentials. You agree to provide accurate information and keep it updated. You are responsible for all activities under your account."
+msgstr "Unawajibika kudumisha usiri wa vitambulisho vya akaunti yako. Unakubali kutoa taarifa sahihi na kuzisasisha. Unawajibika kwa shughuli zote chini ya akaunti yako."
+
+msgid "Acceptable Use"
+msgstr "Matumizi Yanayokubalika"
+
+msgid "You agree to use the system in accordance with clan rules and regulations. Harassment, fraud, misrepresentation, or any behavior that violates clan governance is prohibited and may result in account suspension or removal."
+msgstr "Unakubali kutumia mfumo kwa kufuata sheria na kanuni za ukoo. Unyanyasaji, udanganyifu, upotoshaji, au tabia yoyote inayokiuka utawala wa ukoo ni marufuku na inaweza kusababisha kusimamishwa au kuondolewa kwa akaunti."
+
+msgid "Financial Transactions"
+msgstr "Miamala ya Kifedha"
+
+msgid "All financial contributions, loans, and fines recorded in this system are subject to clan governance rules. The system provides tracking and verification but does not process actual payments. Disputes should be resolved through clan leadership."
+msgstr "Michango yote ya kifedha, mikopo, na faini zilizorekodiwa kwenye mfumo huu zinategemea sheria za utawala wa ukoo. Mfumo unatoa ufuatiliaji na uthibitisho lakini hauchakati malipo halisi. Migogoro inapaswa kutatuliwa kupitia uongozi wa ukoo."
+
+msgid "Modifications"
+msgstr "Mabadiliko"
+
+msgid "These terms may be updated by clan leadership. Continued use of the system after changes constitutes acceptance of the modified terms."
+msgstr "Masharti haya yanaweza kusasishwa na uongozi wa ukoo. Kuendelea kutumia mfumo baada ya mabadiliko kunamaanisha kukubali masharti yaliyobadilishwa."
+
+msgid "Governing Rules"
+msgstr "Sheria za Utawala"
+
+msgid "This system operates under the BUBABI clan constitution and governance framework. In case of conflict, the clan constitution takes precedence."
+msgstr "Mfumo huu unafanya kazi chini ya katiba ya ukoo wa BUBABI na mfumo wa utawala. Katika kesi ya mgongano, katiba ya ukoo inachukua nafasi ya kwanza."
+
+msgid "Accept & Continue"
+msgstr "Kubali & Endelea"
+
+msgid "I agree to the Terms of Service and Privacy Policy"
+msgstr "Nakubali Masharti ya Huduma na Sera ya Faragha"
+
+msgid "View Terms of Service"
+msgstr "Tazama Masharti ya Huduma"
+
+msgid "View Privacy Policy"
+msgstr "Tazama Sera ya Faragha"
+
+msgid "Before continuing, you must accept our Terms of Service and Privacy Policy."
+msgstr "Kabla ya kuendelea, lazima ukubali Masharti yetu ya Huduma na Sera ya Faragha."
+
+# ── Privacy Policy Full ──
+msgid "0. Data Controller"
+msgstr "0. Mdhibiti wa Data"
+
+msgid "Welcome to our Clan Management System. Your privacy is important to us. This Privacy Policy explains how we collect, use, and protect your information."
+msgstr "Karibu kwenye Mfumo wetu wa Usimamizi wa Ukoo. Faragha yako ni muhimu kwetu. Sera hii ya Faragha inaeleza jinsi tunavyokusanya, kutumia, na kulinda taarifa zako."
+
+msgid "1. Information We Collect"
+msgstr "1. Taarifa Tunazokusanya"
+
+msgid "Personal details (e.g. name, phone number, email)"
+msgstr "Maelezo binafsi (mf. jina, nambari ya simu, barua pepe)"
+
+msgid "Account credentials (username and encrypted password)"
+msgstr "Vitambulisho vya akaunti (jina la mtumiaji na nenosiri lililosimbwa)"
+
+msgid "Clan-related data (membership, contributions, roles)"
+msgstr "Data zinazohusiana na ukoo (uanachama, michango, majukumu)"
+
+msgid "Payment records (amounts, dates, methods — no sensitive PINs)"
+msgstr "Rekodi za malipo (kiasi, tarehe, njia — hakuna PIN nyeti)"
+
+msgid "Device and usage data (IP address, login activity)"
+msgstr "Data ya kifaa na matumizi (anwani ya IP, shughuli za kuingia)"
+
+msgid "2. How We Use Your Information"
+msgstr "2. Jinsi Tunavyotumia Taarifa Zako"
+
+msgid "We use your data to:"
+msgstr "Tunatumia data yako kwa:"
+
+msgid "Manage your account and authentication"
+msgstr "Kusimamia akaunti yako na uthibitisho"
+
+msgid "Track contributions and financial records"
+msgstr "Kufuatilia michango na rekodi za kifedha"
+
+msgid "Communicate important updates"
+msgstr "Kuwasiliana na sasisho muhimu"
+
+msgid "Improve system performance and security"
+msgstr "Kuboresha utendaji na usalama wa mfumo"
+
+msgid "Maintain audit logs for accountability"
+msgstr "Kudumisha kumbukumbu za ukaguzi kwa uwajibikaji"
+
+msgid "3. Data Sharing"
+msgstr "3. Kushiriki Data"
+
+msgid "We do not sell or rent your data."
+msgstr "Hatuuzi wala kukodisha data yako."
+
+msgid "Your data may only be shared with:"
+msgstr "Data yako inaweza kushirikishwa tu na:"
+
+msgid "Authorized clan administrators"
+msgstr "Wasimamizi wa ukoo walioidhinishwa"
+
+msgid "System administrators (for support and maintenance)"
+msgstr "Wasimamizi wa mfumo (kwa usaidizi na matengenezo)"
+
+msgid "Legal authorities (if required by law)"
+msgstr "Mamlaka za kisheria (kama inavyotakiwa na sheria)"
+
+msgid "4. Data Security"
+msgstr "4. Usalama wa Data"
+
+msgid "We implement strong safeguards:"
+msgstr "Tunatumia ulinzi imara:"
+
+msgid "Encrypted passwords"
+msgstr "Nenosiri zilizosimbwa"
+
+msgid "Role-based access control (RBAC)"
+msgstr "Udhibiti wa ufikiaji kwa majukumu (RBAC)"
+
+msgid "Activity logging and audit trails"
+msgstr "Kumbukumbu za shughuli na njia za ukaguzi"
+
+msgid "Secure server practices"
+msgstr "Mbinu salama za seva"
+
+msgid "5. Data Retention"
+msgstr "5. Uhifadhi wa Data"
+
+msgid "We retain your data:"
+msgstr "Tunahifadhi data yako:"
+
+msgid "As long as your account is active"
+msgstr "Kwa muda ambao akaunti yako inafanya kazi"
+
+msgid "As required for legal or financial records"
+msgstr "Kama inavyotakiwa kwa rekodi za kisheria au kifedha"
+
+msgid "Until explicitly deleted by administrators (where applicable)"
+msgstr "Hadi ifutwe moja kwa moja na wasimamizi (inapotumika)"
+
+msgid "6. Your Rights"
+msgstr "6. Haki Zako"
+
+msgid "You have the right to:"
+msgstr "Una haki ya:"
+
+msgid "Access your personal data"
+msgstr "Kufikia data yako binafsi"
+
+msgid "Request corrections"
+msgstr "Kuomba marekebisho"
+
+msgid "Request account deactivation (via admin)"
+msgstr "Kuomba kusimamishwa kwa akaunti (kupitia msimamizi)"
+
+msgid "7. Cookies & Tracking"
+msgstr "7. Vidakuzi na Ufuatiliaji"
+
+msgid "We may use basic cookies for:"
+msgstr "Tunaweza kutumia vidakuzi vya msingi kwa:"
+
+msgid "Session management"
+msgstr "Usimamizi wa kikao"
+
+msgid "Login persistence"
+msgstr "Kudumu kwa kuingia"
+
+msgid "No invasive tracking is performed."
+msgstr "Hakuna ufuatiliaji vamizi unaofanywa."
+
+msgid "8. Changes to This Policy"
+msgstr "8. Mabadiliko ya Sera Hii"
+
+msgid "We may update this Privacy Policy at any time. Continued use of the system means you accept the updated version. Users will be notified of significant changes."
+msgstr "Tunaweza kusasisha Sera hii ya Faragha wakati wowote. Kuendelea kutumia mfumo kunamaanisha unakubali toleo lililosasishwa. Watumiaji wataarifiwa kuhusu mabadiliko makubwa."
+
+msgid "9. Contact"
+msgstr "9. Mawasiliano"
+
+msgid "For privacy concerns, contact your clan administrator."
+msgstr "Kwa masuala ya faragha, wasiliana na msimamizi wa ukoo wako."
+
+msgid "10. Eligibility"
+msgstr "10. Ustahiki"
+
+# ── Terms of Service Full ──
+msgid "1. Acceptance of Terms"
+msgstr "1. Kukubali Masharti"
+
+msgid "By using this system, you confirm that:"
+msgstr "Kwa kutumia mfumo huu, unathibitisha kuwa:"
+
+msgid "You are an authorized member of a clan"
+msgstr "Wewe ni mwanachama aliyeidhinishwa wa ukoo"
+
+msgid "You agree to comply with all rules and policies"
+msgstr "Unakubali kufuata sheria na sera zote"
+
+msgid "2. User Responsibilities"
+msgstr "2. Majukumu ya Mtumiaji"
+
+msgid "You agree to:"
+msgstr "Unakubali:"
+
+msgid "Provide accurate information"
+msgstr "Kutoa taarifa sahihi"
+
+msgid "Keep your login credentials secure"
+msgstr "Kuweka vitambulisho vyako vya kuingia salama"
+
+msgid "Not share your account"
+msgstr "Kutoshiriki akaunti yako"
+
+msgid "Use the system only for intended purposes"
+msgstr "Kutumia mfumo kwa madhumuni yaliyokusudiwa pekee"
+
+msgid "3. Prohibited Activities"
+msgstr "3. Shughuli Zilizokatazwa"
+
+msgid "You must NOT:"
+msgstr "HUPASWI:"
+
+msgid "Attempt to hack or disrupt the system"
+msgstr "Kujaribu kudukua au kuvuruga mfumo"
+
+msgid "Access data without permission"
+msgstr "Kufikia data bila ruhusa"
+
+msgid "Manipulate financial or contribution records"
+msgstr "Kudanganya rekodi za kifedha au michango"
+
+msgid "Impersonate another user"
+msgstr "Kujifanya mtumiaji mwingine"
+
+msgid "4. Account Management"
+msgstr "4. Usimamizi wa Akaunti"
+
+msgid "Accounts are created and managed by administrators"
+msgstr "Akaunti zinaundwa na kusimamiwa na wasimamizi"
+
+msgid "Administrators may suspend or remove accounts if necessary"
+msgstr "Wasimamizi wanaweza kusimamisha au kuondoa akaunti ikibidi"
+
+msgid "Access may be revoked for misuse"
+msgstr "Ufikiaji unaweza kubatilishwa kwa matumizi mabaya"
+
+msgid "5. Financial Records Disclaimer"
+msgstr "5. Kanusho la Rekodi za Kifedha"
+
+msgid "While the system tracks contributions:"
+msgstr "Wakati mfumo unafuatilia michango:"
+
+msgid "It does not replace official financial institutions"
+msgstr "Hauchukui nafasi ya taasisi rasmi za kifedha"
+
+msgid "Users should verify records independently where necessary"
+msgstr "Watumiaji wanapaswa kuthibitisha rekodi kwa kujitegemea inapobidi"
+
+msgid "6. System Availability"
+msgstr "6. Upatikanaji wa Mfumo"
+
+msgid "We aim for reliability but do not guarantee:"
+msgstr "Tunalenga uaminifu lakini hatuhakikishi:"
+
+msgid "Continuous uptime"
+msgstr "Uendelezaji endelevu"
+
+msgid "Error-free operation"
+msgstr "Uendeshaji bila makosa"
+
+msgid "The system may be updated, modified, or temporarily unavailable."
+msgstr "Mfumo unaweza kusasishwa, kubadilishwa, au kutopatikana kwa muda."
+
+msgid "7. Limitation of Liability"
+msgstr "7. Kikomo cha Dhima"
+
+msgid "We are not liable for:"
+msgstr "Hatuna dhima kwa:"
+
+msgid "Data loss due to user actions"
+msgstr "Upotevu wa data kutokana na vitendo vya mtumiaji"
+
+msgid "Unauthorized access caused by poor password security"
+msgstr "Ufikiaji usioidhinishwa unaosababishwa na usalama duni wa nenosiri"
+
+msgid "Indirect or incidental damages"
+msgstr "Uharibifu usio wa moja kwa moja au wa bahati mbaya"
+
+msgid "9. Termination"
+msgstr "9. Kusitishwa"
+
+msgid "We reserve the right to:"
+msgstr "Tunahifadhi haki ya:"
+
+msgid "Suspend accounts"
+msgstr "Kusimamisha akaunti"
+
+msgid "Restrict access"
+msgstr "Kuzuia ufikiaji"
+
+msgid "Remove users violating these terms"
+msgstr "Kuondoa watumiaji wanaokiuka masharti haya"
+
+msgid "10. Governing Use"
+msgstr "10. Matumizi ya Utawala"

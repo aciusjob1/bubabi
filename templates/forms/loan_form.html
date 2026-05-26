@@ -1,0 +1,23 @@
+{% extends "forms/base_form.html" %}
+{% block page_title %}Request Loan{% endblock %}
+{% block form_title %}Request a Loan{% endblock %}
+{% block form_subtitle %}
+  Your request will be reviewed by the Treasurer and Leader.
+{% endblock %}
+
+{% block form_fields %}
+<div class="field">
+  <label>Amount Requested (GHS)</label>
+  {{ form.amount }}
+</div>
+
+<div class="field">
+  <label>Purpose</label>
+  {{ form.purpose }}
+  <div class="help">
+    Be specific — this helps the committee decide faster.
+  </div>
+</div>
+{% endblock %}
+
+{% block submit_label %}Submit Loan Request{% endblock %}

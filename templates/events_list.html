@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+{% load i18n clan_filters %}
+
+{% block page_title %}{% trans "Events" %}{% endblock %}
+
+{% block content %}
+<div style="max-width:1200px; margin:0 auto; position: relative; z-index: 1;">
+
+  <!-- Header & Primary Controls Matrix -->
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; gap: 1rem; flex-wrap: wrap;">
+    <div class="section-title toggle-header" style="margin:0; width: auto; flex: initial; padding: 0.5rem 1rem;">
+      <span style="display:flex; align-items:center; gap:0.4rem; font-weight: 700;">📅 {% trans "Clan Events" %}</span>
+    </div>
+    <a href="{% url 'create-event' %}" class="panel-btn-link" style="background:rgba(var(--clan-primary-raw, 16, 185, 129), 1);">
+      + {% trans "New Event" %}
+    </a>
+  </div>
+
+  <!-- ═══════════════════════════════ -->
+  <!-- UPCOMING EVENTS SCHEDULE        -->
+  <!-- ═══════════════════════════════ -->
+  <div class="section-title toggle-header" onclick="toggleSection('upcoming-section')">
+    <span style="display:flex; align-items:center; gap:0.4rem;">🔔 {% trans "Upcoming Schedule" %} <span style="font-size:0.8rem; background:rgba(0,0,0,0.06); padding:0.1rem 0.4rem; border-radius:6px;">{{ upcoming|length|default:0 }}</span></span>
+    <span class="toggle-arrow open" id="upcoming-section-arrow">▶</span>
+  </div>
+
+  <div id="upcoming-section" class="toggle-body open">
+    <div class="settings-card" style="padding:0.5rem; border-radius:12px; overflow:hidden;">
+      <div style="overflow-x:auto; width:100%;">
+        {% if upcoming %}
+        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.875rem;">
+          <thead>
+            <tr style="border-bottom:2px solid #f1f5f9; background:rgba(248,250,252,0.6);">
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Event Details" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Type" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Timeline" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;" class="hide-mobile">{% trans "Location / Venue" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for e in upcoming %}
+            <tr style="border-bottom:1px solid #f1f5f9; transition:background 0.15s;" class="ledger-row">
+              <td style="padding:0.85rem 1rem;">
+                <strong style="color:#1e293b; display:block; font-weight:600;">{{ e.title }}</strong>
+              </td>
+              <td style="padding:0.85rem 1rem; white-space:nowrap;">
+                <span class="badge {{ e.event_type }}" style="display:inline-block; padding:0.2rem 0.5rem; border-radius:6px; font-size:0.68rem; font-weight:700; text-transform:uppercase; background:#e2e8f0; color:#334155;">
+                  {{ e.event_type }}
+                </span>
+              </td>
+              <td style="padding:0.85rem 1rem; white-space:nowrap; color:#475569; font-weight:500; font-family:monospace;">
+                {{ e.scheduled_at|date:"d M Y · H:i" }}
+              </td>
+              <td style="padding:0.85rem 1rem; color:#64748b;" class="hide-mobile">
+                {{ e.location|default:"—" }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div style="text-align:center; padding:3rem 2rem; color:#94a3b8;">
+          <div style="font-size:2.2rem; margin-bottom:0.4rem;">🔔</div>
+          <div style="font-weight:600; font-size:0.9rem; color:#475569;">{% trans "No upcoming events scheduled." %}</div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ -->
+  <!-- HISTORICAL / PAST ARCHIVES      -->
+  <!-- ═══════════════════════════════ -->
+  <div class="section-title toggle-header" onclick="toggleSection('past-section')">
+    <span style="display:flex; align-items:center; gap:0.4rem;">⏳ {% trans "Past Events" %} <span style="font-size:0.8rem; background:rgba(0,0,0,0.06); padding:0.1rem 0.4rem; border-radius:6px;">{{ past|length|default:0 }}</span></span>
+    <span class="toggle-arrow open" id="past-section-arrow">▶</span>
+  </div>
+
+  <div id="past-section" class="toggle-body open">
+    <div class="settings-card" style="padding:0.5rem; border-radius:12px; overflow:hidden;">
+      <div style="overflow-x:auto; width:100%;">
+        {% if past %}
+        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.875rem;">
+          <thead>
+            <tr style="border-bottom:2px solid #f1f5f9; background:rgba(248,250,252,0.6);">
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Event Title" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Type" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Date Concluded" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for e in past %}
+            <tr style="border-bottom:1px solid #f1f5f9; transition:background 0.15s;" class="ledger-row">
+              <td style="padding:0.85rem 1rem; color:#475569; font-weight:500;">{{ e.title }}</td>
+              <td style="padding:0.85rem 1rem; white-space:nowrap;">
+                <span class="badge {{ e.event_type }}" style="display:inline-block; padding:0.2rem 0.5rem; border-radius:6px; font-size:0.68rem; font-weight:600; text-transform:uppercase; background:#f1f5f9; color:#64748b;">
+                  {{ e.event_type }}
+                </span>
+              </td>
+              <td style="padding:0.85rem 1rem; white-space:nowrap; color:#64748b; font-size:0.8rem;">
+                {{ e.scheduled_at|date:"d M Y" }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div style="text-align:center; padding:3rem 2rem; color:#94a3b8;">
+          <div style="font-size:2.2rem; margin-bottom:0.4rem;">⏳</div>
+          <div style="font-weight:600; font-size:0.9rem; color:#475569;">{% trans "No historical events recorded." %}</div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<style>
+  /* Global Dynamic Glassmorphism Variables Context */
+  :root {
+    --clan-primary-raw: 16, 185, 129;
+    --clan-accent-raw: 99, 102, 241;
+    --blur-intensity: 6px;
+  }
+
+  body {
+    background: linear-gradient(
+      135deg, 
+      rgba(var(--clan-primary-raw), 0.04) 0%, 
+      rgba(var(--clan-accent-raw), 0.02) 50%, 
+      #f8fafc 100%
+    ) !important;
+    background-attachment: fixed !important;
+  }
+
+  /* Premium Content Structural Cards */
+  .settings-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(var(--blur-intensity));
+    -webkit-backdrop-filter: blur(var(--blur-intensity));
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.01);
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  .settings-card:hover {
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03);
+  }
+
+  /* Structural Headers */
+  .section-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #475569;
+    background: rgba(255,255,255,0.6);
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.5);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .toggle-header {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .toggle-header:hover { background: rgba(255,255,255,0.9); }
+  .toggle-arrow { transition: transform 0.2s; font-size: 0.7rem; color: #94a3b8; }
+  .toggle-arrow.open { transform: rotate(90deg); }
+  .toggle-body { display: none; margin-bottom: 1.25rem; }
+  .toggle-body.open { display: block; }
+
+  /* Interactive Component Anchors */
+  .panel-btn-link {
+    padding: 0.55rem 1.25rem; 
+    color: #fff; 
+    border-radius: 8px; 
+    font-size: 0.82rem; 
+    font-weight: 600; 
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: opacity 0.15s, transform 0.1s;
+    white-space: nowrap;
+  }
+  .panel-btn-link:hover { opacity: 0.9; transform: translateY(-1px); }
+  .panel-btn-link:active { transform: translateY(0); }
+  .ledger-row:hover { background: rgba(248, 250, 252, 0.8) !important; }
+
+  /* Mobile Responsive View Safeguard */
+  @media (max-width: 768px) {
+    .hide-mobile { display: none !important; }
+  }
+</style>
+
+<script>
+function toggleSection(id) {
+  const body = document.getElementById(id);
+  const arrow = document.getElementById(id + '-arrow');
+  if (body && arrow) {
+    body.classList.toggle('open');
+    arrow.classList.toggle('open');
+  }
+}
+</script>
+{% endblock %}

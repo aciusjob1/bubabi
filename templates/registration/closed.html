@@ -1,0 +1,246 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="{{ clan.primary_color|default:'#10b981' }}">
+  <title>{% if clan %}{{ clan.name }}{% else %}BUBABI{% endif %} — {% trans "Registration Closed" %}</title>
+  <link rel="icon" href="{% if clan and clan.logo %}{{ clan.logo.url }}{% endif %}">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    
+    :root {
+      --primary: {{ clan.primary_color|default:'#10b981' }};
+      --primary-dark: {{ clan.accent_color|default:'#059669' }};
+    }
+    
+    body {
+      font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height:100vh; min-height:100dvh;
+      display:flex; align-items:center; justify-content:center;
+      padding:1rem;
+      {% if clan and clan.banner_image %}
+      background: linear-gradient({{ clan_sidebar_color|default:'#3d1a1a' }}dd, {{ clan_sidebar_color|default:'#3d1a1a' }}ee),
+                  url('{{ clan.banner_image.url }}') center/cover no-repeat fixed;
+      {% else %}
+      background: linear-gradient({{ clan_sidebar_color|default:'#3d1a1a' }}dd, {{ clan_sidebar_color|default:'#3d1a1a' }}ee),
+                  url('https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=1920&q=80') center/cover no-repeat fixed;
+      {% endif %}
+      position:relative;
+      -webkit-tap-highlight-color:transparent;
+    }
+    
+    body::after {
+      content:''; position:fixed; inset:0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.06) 0%, transparent 60%);
+      z-index:0; pointer-events:none;
+    }
+    
+    .container {
+      width:100%; max-width:460px; position:relative; z-index:1;
+      animation: fadeUp 0.5s cubic-bezier(0.16,1,0.3,1);
+    }
+    
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(20px); }
+      to { opacity:1; transform:translateY(0); }
+    }
+    
+    /* Logo */
+    .logo-area {
+      display:flex; align-items:center; justify-content:center;
+      gap:0.75rem; margin-bottom:1.25rem;
+    }
+    
+    .brand-icon {
+      width:52px; height:52px; min-width:52px;
+      background: linear-gradient(135deg, var(--primary), #34d399);
+      border-radius:14px; display:flex; align-items:center;
+      justify-content:center; font-size:1.4rem;
+      box-shadow:0 8px 24px rgba(16,185,129,0.3);
+    }
+    
+    .brand-icon img {
+      width:52px; height:52px; border-radius:14px; object-fit:cover;
+    }
+    
+    .brand-name {
+      font-size:1.5rem; font-weight:800; color:#fff;
+      letter-spacing:2px; text-shadow:0 2px 8px rgba(0,0,0,0.3);
+      max-width:240px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    }
+    
+    .brand-sub {
+      font-size:0.62rem; color:#94a3b8; letter-spacing:1px;
+      margin-top:2px; font-style:italic;
+    }
+    
+    /* Card */
+    .card {
+      background:rgba(30,41,59,0.85);
+      backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+      padding:2rem 1.75rem; border-radius:16px;
+      border:1px solid rgba(255,255,255,0.08);
+      box-shadow:0 16px 48px rgba(0,0,0,0.4);
+      text-align:center;
+    }
+    
+    .lock-icon {
+      font-size:3rem; margin-bottom:0.5rem;
+      width:72px; height:72px; line-height:72px;
+      background:rgba(16,185,129,0.1); border-radius:50%;
+      margin:0 auto 1rem;
+    }
+    
+    .card h2 {
+      font-size:1.05rem; font-weight:700; color:#fff;
+      margin:0 0 0.5rem;
+    }
+    
+    .card p {
+      font-size:0.85rem; color:#94a3b8;
+      margin:0 0 1.25rem; line-height:1.6;
+    }
+    
+    /* Contact cards */
+    .contact-list {
+      text-align:left; margin-bottom:1.25rem;
+    }
+    
+    .contact-item {
+      display:flex; align-items:center; gap:0.6rem;
+      padding:0.65rem 0.75rem; background:rgba(255,255,255,0.03);
+      border-radius:8px; margin-bottom:0.4rem;
+      border:1px solid rgba(255,255,255,0.05);
+    }
+    
+    .contact-avatar {
+      width:32px; height:32px; border-radius:50%;
+      background:var(--primary); display:flex;
+      align-items:center; justify-content:center;
+      color:#fff; font-weight:700; font-size:0.75rem;
+      flex-shrink:0;
+    }
+    
+    .contact-info { flex:1; min-width:0; }
+    .contact-name { font-size:0.8rem; font-weight:600; color:#e2e8f0; }
+    .contact-role { font-size:0.68rem; color:#64748b; }
+    .contact-detail { font-size:0.7rem; color:#94a3b8; margin-top:0.15rem; }
+    
+    /* Buttons */
+    .btn {
+      display:block; width:100%; padding:0.75rem;
+      background:var(--primary); color:#fff;
+      border:none; border-radius:10px; font-size:0.9rem;
+      font-weight:700; cursor:pointer; text-decoration:none;
+      text-align:center; transition:all 0.2s;
+      box-shadow:0 4px 16px rgba(16,185,129,0.3);
+    }
+    .btn:hover { background:var(--primary-dark); transform:translateY(-1px); }
+    
+    .btn-outline {
+      background:transparent; color:#94a3b8;
+      border:1px solid rgba(255,255,255,0.08);
+      box-shadow:none; margin-top:0.5rem;
+    }
+    .btn-outline:hover { background:rgba(255,255,255,0.04); color:#fff; }
+    
+    /* Language */
+    .lang-row {
+      display:flex; justify-content:center; gap:0.4rem;
+      margin-top:1rem; padding-top:1rem;
+      border-top:1px solid rgba(255,255,255,0.06);
+    }
+    .lang-btn {
+      padding:0.4rem 0.8rem; min-height:36px;
+      background:rgba(255,255,255,0.03); color:#94a3b8;
+      border:1px solid rgba(255,255,255,0.08); border-radius:8px;
+      font-size:0.7rem; cursor:pointer; transition:all 0.15s; font-weight:500;
+    }
+    .lang-btn:hover { color:#fff; background:rgba(255,255,255,0.06); }
+    .lang-btn.active-lang { background:var(--primary); color:#fff; border-color:var(--primary); font-weight:600; }
+    
+    .footer-text { text-align:center; font-size:0.65rem; color:rgba(148,163,184,0.5); margin-top:1.25rem; }
+    
+    @media (max-width:480px) {
+      .container { max-width:100%; }
+      .brand-icon { width:44px; height:44px; min-width:44px; font-size:1.2rem; border-radius:12px; }
+      .brand-icon img { width:44px; height:44px; border-radius:12px; }
+      .brand-name { font-size:1.3rem; }
+      .card { padding:1.5rem 1.25rem; border-radius:14px; }
+    }
+    @media (max-width:360px) {
+      .brand-icon { width:38px; height:38px; min-width:38px; font-size:1rem; }
+      .brand-name { font-size:1.15rem; }
+      .card { padding:1.25rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Logo -->
+  <div class="logo-area">
+    {% if clan and clan.logo %}
+    <div class="brand-icon"><img src="{{ clan.logo.url }}" alt="{{ clan.name }} Logo"></div>
+    {% else %}
+    <div class="brand-icon">⚔</div>
+    {% endif %}
+    <div>
+      <div class="brand-name">{% if clan %}{{ clan.name }}{% else %}BUBABI{% endif %}</div>
+      <div class="brand-sub">{% if clan and clan.motto %}{{ clan.motto }}{% else %}{% trans "Clan Management" %}{% endif %}</div>
+    </div>
+  </div>
+
+  <!-- Card -->
+  <div class="card">
+    <div class="lock-icon">🔒</div>
+    <h2>{% trans "Registration Currently Closed" %}</h2>
+    <p>{% trans "This clan is not accepting public registrations at this time. Please contact the leadership below for an invitation." %}</p>
+    
+    {% if clan %}
+    <div class="contact-list">
+      {% if clan.contact_email or clan.contact_phone %}
+      <div class="contact-item">
+        <div class="contact-avatar">📞</div>
+        <div class="contact-info">
+          <div class="contact-name">{{ clan.name }} {% trans "Leadership" %}</div>
+          <div class="contact-detail">
+            {% if clan.contact_email %}📧 {{ clan.contact_email }}{% endif %}
+            {% if clan.contact_email and clan.contact_phone %}<br>{% endif %}
+            {% if clan.contact_phone %}📱 {{ clan.contact_phone }}{% endif %}
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="contact-item">
+        <div class="contact-avatar">ℹ️</div>
+        <div class="contact-info">
+          <div class="contact-name">{% trans "No contact information available" %}</div>
+          <div class="contact-detail">{% trans "Please reach out to your clan elders or leadership directly." %}</div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+    
+    <a href="{% url 'login' %}" class="btn">🔐 {% trans "Back to Login" %}</a>
+    <a href="{% url 'login' %}" class="btn btn-outline">{% trans "Already a member? Sign In" %}</a>
+  </div>
+  
+  <!-- Language -->
+  {% get_current_language as CURRENT_LANG %}
+  <div class="lang-row">
+    <form action="{% url 'set_language' %}" method="post" style="display:flex;gap:0.4rem;">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.path }}">
+      <button type="submit" name="language" value="en" class="lang-btn {% if CURRENT_LANG == 'en' %}active-lang{% endif %}">🇬🇧 EN</button>
+      <button type="submit" name="language" value="sw" class="lang-btn {% if CURRENT_LANG == 'sw' %}active-lang{% endif %}">🇹🇿 SW</button>
+    </form>
+  </div>
+  
+  <div class="footer-text">© {% now "Y" %} {% if clan %}{{ clan.name }}{% else %}BUBABI{% endif %}</div>
+</div>
+</body>
+</html>

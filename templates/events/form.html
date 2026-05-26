@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block page_title %}{% if event %}✏️ {% trans "Edit Event" %}{% else %}➕ {% trans "Create Event" %}{% endif %}{% endblock %}
+
+{% block content %}
+
+<div style="max-width:650px; margin:0 auto;">
+
+  <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1.5rem;">
+    <div style="width:40px; height:40px; border-radius:8px; background:#dbeafe; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
+      {% if event %}✏️{% else %}➕{% endif %}
+    </div>
+    <div>
+      <h2 style="margin:0; font-size:1rem;">
+        {% if event %}{% trans "Edit Event" %}{% else %}{% trans "Create New Event" %}{% endif %}
+      </h2>
+      <p style="font-size:0.75rem; color:#64748b; margin:0.15rem 0 0;">
+        {% trans "Fill in the event details below" %}
+      </p>
+    </div>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <div style="background:#fff; border-radius:12px; border:1px solid #e2e8f0; padding:1.5rem; margin-bottom:1rem;">
+      
+      <!-- Title -->
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block; font-size:0.72rem; font-weight:600; color:#374151; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.4rem;">
+          📝 {% trans "Event Title" %} *
+        </label>
+        <input type="text" name="title" required 
+               value="{{ form.title.value|default:'' }}"
+               placeholder="{% trans 'e.g., Monthly Clan Meeting' %}"
+               style="width:100%; padding:0.7rem; border:1px solid #e2e8f0; border-radius:8px; font-size:0.9rem; outline:none;"
+               onfocus="this.style.borderColor='#10b981'" onblur="this.style.borderColor='#e2e8f0'">
+      </div>
+
+      <!-- Event Type -->
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block; font-size:0.72rem; font-weight:600; color:#374151; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.4rem;">
+          🏷️ {% trans "Event Type" %}
+        </label>
+        <select name="event_type" 
+                style="width:100%; padding:0.7rem; border:1px solid #e2e8f0; border-radius:8px; font-size:0.9rem; outline:none; background:#fff; cursor:pointer;">
+          {% for value, label in form.event_type.field.choices %}
+          <option value="{{ value }}" {% if form.event_type.value == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Date & Time -->
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block; font-size:0.72rem; font-weight:600; color:#374151; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.4rem;">
+          📅 {% trans "Date & Time" %} *
+        </label>
+        <input type="datetime-local" name="scheduled_at" required
+               value="{{ form.scheduled_at.value|date:'Y-m-d\TH:i'|default:'' }}"
+               style="width:100%; padding:0.7rem; border:1px solid #e2e8f0; border-radius:8px; font-size:0.9rem; outline:none;"
+               onfocus="this.style.borderColor='#10b981'" onblur="this.style.borderColor='#e2e8f0'">
+      </div>
+
+      <!-- Location -->
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block; font-size:0.72rem; font-weight:600; color:#374151; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.4rem;">
+          📍 {% trans "Location" %}
+        </label>
+        <input type="text" name="location"
+               value="{{ form.location.value|default:'' }}"
+               placeholder="{% trans 'e.g., Community Hall, or Google Meet link' %}"
+               style="width:100%; padding:0.7rem; border:1px solid #e2e8f0; border-radius:8px; font-size:0.9rem; outline:none;"
+               onfocus="this.style.borderColor='#10b981'" onblur="this.style.borderColor='#e2e8f0'">
+      </div>
+
+      <!-- Organized By -->
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block; font-size:0.72rem; font-weight:600; color:#374151; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.4rem;">
+          👤 {% trans "Organized By" %}
+        </label>
+        <input type="text" name="organized_by"
+               value="{{ form.organized_by.value|default:request.user.person.full_name }}"
+               placeholder="{% trans 'Who is organizing this event?' %}"
+               style="width:100%; padding:0.7rem; border:1px solid #e2e8f0; border-radius:8px; font-size:0.9rem; outline:none;"
+               onfocus="this.style.borderColor='#10b981'" onblur="this.style.borderColor='#e2e8f0'">
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label style="display:block; font-size:0.72rem; font-weight:600; color:#374151; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.4rem;">
+          📄 {% trans "Description" %}
+        </label>
+        <textarea name="description" rows="5"
+                  placeholder="{% trans 'Describe the event, agenda, or any important details...' %}"
+                  style="width:100%; padding:0.7rem; border:1px solid #e2e8f0; border-radius:8px; font-size:0.9rem; outline:none; resize:vertical;"
+                  onfocus="this.style.borderColor='#10b981'" onblur="this.style.borderColor='#e2e8f0'">{{ form.description.value|default:'' }}</textarea>
+        <div style="font-size:0.68rem; color:#64748b; margin-top:0.25rem;">
+          <span id="descCount">0</span>/500 {% trans "characters" %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div style="display:flex; gap:0.75rem; justify-content:flex-end; flex-wrap:wrap;">
+      <a href="{% if event %}{% url 'event-detail' event.pk %}{% else %}{% url 'events' %}{% endif %}"
+         style="padding:0.65rem 1.5rem; background:#f1f5f9; color:#374151; border-radius:8px; font-size:0.85rem; font-weight:600; text-decoration:none; text-align:center;">
+        ❌ {% trans "Cancel" %}
+      </a>
+      <button type="submit"
+              style="padding:0.65rem 2rem; background:#10b981; color:#fff; border:none; border-radius:8px; font-size:0.85rem; font-weight:600; cursor:pointer;">
+        💾 {% if event %}{% trans "Update Event" %}{% else %}{% trans "Create Event" %}{% endif %}
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  // Character counter
+  const desc = document.querySelector('textarea[name="description"]');
+  const counter = document.getElementById('descCount');
+  if (desc && counter) {
+    counter.textContent = desc.value.length;
+    desc.addEventListener('input', function() {
+      counter.textContent = this.value.length;
+    });
+  }
+</script>
+
+{% endblock %}

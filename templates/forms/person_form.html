@@ -1,0 +1,36 @@
+{% extends "forms/base_form.html" %}
+{% block page_title %}Add Person{% endblock %}
+{% block form_title %}Add Person to Records{% endblock %}
+{% block form_subtitle %}
+  This person will be permanently recorded in the BUBABI system.
+{% endblock %}
+
+{% block form_fields %}
+<div class="field">
+  <label>Full Name</label>
+  {{ form.full_name }}
+</div>
+
+<div class="field">
+  <label>Gender</label>
+  {{ form.gender }}
+</div>
+
+<div class="field">
+  <label>Date of Birth</label>
+  {{ form.birth_date }}
+</div>
+
+<div class="field">
+  <label>Date of Death</label>
+  {{ form.death_date }}
+  <div class="help">Leave blank if person is living</div>
+</div>
+
+<div class="field">
+  <label>Biography</label>
+  {{ form.biography }}
+</div>
+{% endblock %}
+
+{% block submit_label %}Add Person{% endblock %}

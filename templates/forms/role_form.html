@@ -1,0 +1,16 @@
+{% extends "forms/base_form.html" %}
+{% block page_title %}Assign Role{% endblock %}
+{% block form_title %}Assign Role{% endblock %}
+{% block form_subtitle %}
+  Assigning role to: {{ member.person.full_name }}
+{% endblock %}
+
+{% block form_fields %}
+{{ form.member_id }}
+<div class="field">
+  <label>Role</label>
+  {{ form.role }}
+</div>
+{% endblock %}
+
+{% block submit_label %}Assign Role{% endblock %}

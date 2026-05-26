@@ -1,0 +1,327 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="{{ clan.primary_color|default:'#10b981' }}">
+  <title>{% if clan %}{{ clan.name }}{% else %}BUBABI{% endif %} — {% trans "Register" %}</title>
+  <link rel="icon" href="{% if clan and clan.logo %}{{ clan.logo.url }}{% endif %}">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    
+    :root {
+      --primary: {{ clan.primary_color|default:'#10b981' }};
+      --primary-dark: {{ clan.accent_color|default:'#059669' }};
+    }
+    
+    body {
+      font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height:100vh; min-height:100dvh;
+      display:flex; align-items:center; justify-content:center;
+      padding:1rem;
+      {% if clan and clan.banner_image %}
+      background: linear-gradient({{ clan_sidebar_color|default:'#3d1a1a' }}dd, {{ clan_sidebar_color|default:'#3d1a1a' }}ee),
+                  url('{{ clan.banner_image.url }}') center/cover no-repeat fixed;
+      {% else %}
+      background: linear-gradient({{ clan_sidebar_color|default:'#3d1a1a' }}dd, {{ clan_sidebar_color|default:'#3d1a1a' }}ee),
+                  url('https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=1920&q=80') center/cover no-repeat fixed;
+      {% endif %}
+      position:relative;
+      -webkit-tap-highlight-color:transparent;
+    }
+    
+    body::after {
+      content:''; position:fixed; inset:0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.06) 0%, transparent 60%);
+      z-index:0; pointer-events:none;
+    }
+    
+    .register-container {
+      max-width:540px; width:100%; position:relative; z-index:1;
+      animation: fadeUp 0.5s cubic-bezier(0.16,1,0.3,1);
+    }
+    
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(20px); }
+      to { opacity:1; transform:translateY(0); }
+    }
+    
+    /* Logo */
+    .logo-area {
+      display:flex; align-items:center; justify-content:center;
+      gap:0.75rem; margin-bottom:1.25rem;
+    }
+    .brand-icon {
+      width:52px; height:52px; min-width:52px;
+      background: linear-gradient(135deg, var(--primary), #34d399);
+      border-radius:14px; display:flex; align-items:center;
+      justify-content:center; font-size:1.4rem;
+      box-shadow:0 8px 24px rgba(16,185,129,0.3);
+    }
+    .brand-icon img { width:52px; height:52px; border-radius:14px; object-fit:cover; }
+    .brand-name {
+      font-size:1.4rem; font-weight:800; color:#fff;
+      letter-spacing:2px; text-shadow:0 2px 8px rgba(0,0,0,0.3);
+      max-width:240px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    }
+    .brand-sub {
+      font-size:0.62rem; color:#94a3b8; letter-spacing:1px;
+      margin-top:2px; font-style:italic;
+    }
+    
+    /* Card */
+    .form-card {
+      background:rgba(30,41,59,0.85);
+      backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+      padding:1.75rem; border-radius:16px;
+      border:1px solid rgba(255,255,255,0.08);
+      box-shadow:0 16px 48px rgba(0,0,0,0.4);
+    }
+    
+    .form-group { margin-bottom:1rem; }
+    
+    .form-label {
+      display:block; font-size:0.68rem; font-weight:600;
+      color:#94a3b8; text-transform:uppercase;
+      letter-spacing:1.2px; margin-bottom:0.35rem;
+    }
+    
+    .form-input, .form-select {
+      width:100%; padding:0.75rem 0.9rem;
+      background:rgba(15,23,42,0.7);
+      border:1.5px solid rgba(255,255,255,0.12);
+      border-radius:10px; color:#e2e8f0;
+      font-size:0.875rem; outline:none;
+      transition:all 0.2s ease;
+    }
+    
+    .form-input:focus, .form-select:focus {
+      border-color:var(--primary);
+      box-shadow:0 0 0 3px rgba(16,185,129,0.15);
+      background:rgba(15,23,42,0.9);
+    }
+    
+    .form-input::placeholder { color:#475569; }
+    
+    .form-select {
+      cursor:pointer; appearance:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat:no-repeat; background-position:right 0.7rem center;
+      padding-right:2rem;
+    }
+    
+    .form-select option { background:#1e293b; color:#e2e8f0; }
+    
+    .password-wrapper { position:relative; }
+    .password-wrapper .form-input { padding-right:2.5rem; }
+    
+    .password-toggle {
+      position:absolute; right:0.5rem; top:50%;
+      transform:translateY(-50%); background:none;
+      border:none; cursor:pointer; font-size:1rem; color:#94a3b8;
+    }
+    .password-toggle:hover { color:#cbd5e1; }
+    
+    .btn-submit {
+      width:100%; padding:0.85rem; min-height:48px;
+      background:linear-gradient(135deg, var(--primary), #34d399);
+      color:#fff; border:none; border-radius:10px;
+      font-size:0.9rem; font-weight:700; cursor:pointer;
+      transition:all 0.2s ease; margin-top:0.5rem;
+      box-shadow:0 4px 16px rgba(16,185,129,0.3);
+    }
+    .btn-submit:hover { transform:translateY(-1px); box-shadow:0 6px 24px rgba(16,185,129,0.4); }
+    .btn-submit:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+    
+    .error-box {
+      background:rgba(239,68,68,0.12); padding:0.75rem 1rem;
+      border-radius:8px; margin-bottom:1rem; font-size:0.78rem;
+      color:#fca5a5; border-left:3px solid #ef4444;
+    }
+    .error-box ul { margin:0.3rem 0 0 1.2rem; padding:0; }
+    
+    .help-text { font-size:0.68rem; color:#64748b; margin-top:0.25rem; }
+    
+    .login-link {
+      text-align:center; margin-top:1.25rem;
+      font-size:0.82rem; color:#94a3b8;
+    }
+    .login-link a { color:var(--primary); font-weight:600; text-decoration:none; }
+    .login-link a:hover { text-decoration:underline; }
+    
+    .row-2 { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; }
+    
+    /* Notification banner */
+    .closed-banner {
+      background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3);
+      border-radius:12px; padding:1.5rem; text-align:center; margin-bottom:1rem;
+      backdrop-filter:blur(12px);
+    }
+    
+    .footer-text { text-align:center; font-size:0.65rem; color:rgba(148,163,184,0.5); margin-top:1.25rem; }
+    
+    @media (max-width:480px) {
+      .row-2 { grid-template-columns:1fr; }
+      .register-container { max-width:100%; }
+      .brand-icon { width:44px; height:44px; min-width:44px; font-size:1.2rem; border-radius:12px; }
+      .brand-icon img { width:44px; height:44px; border-radius:12px; }
+      .brand-name { font-size:1.2rem; }
+      .form-card { padding:1.25rem 1rem; border-radius:14px; }
+      .form-input, .form-select { padding:0.85rem; font-size:16px; }
+    }
+    @media (max-width:360px) {
+      .brand-icon { width:38px; height:38px; min-width:38px; font-size:1rem; }
+      .brand-name { font-size:1.1rem; }
+      .form-card { padding:1rem 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="register-container">
+
+  <!-- Brand Header -->
+  <div class="logo-area">
+    {% if clan and clan.logo %}
+    <div class="brand-icon"><img src="{{ clan.logo.url }}" alt="{{ clan.name }} Logo"></div>
+    {% else %}
+    <div class="brand-icon">⚔</div>
+    {% endif %}
+    <div>
+      <div class="brand-name">{% if clan %}{{ clan.name }}{% else %}BUBABI{% endif %}</div>
+      <div class="brand-sub">{% if clan and clan.motto %}{{ clan.motto }}{% else %}{% trans "Clan Management" %}{% endif %}</div>
+    </div>
+  </div>
+
+  <!-- Registration Closed Banner -->
+  {% if not clans %}
+  <div class="closed-banner">
+    <div style="font-size:2.5rem; margin-bottom:0.5rem;">🔒</div>
+    <h3 style="font-size:1rem; font-weight:700; color:#fbbf24; margin:0 0 0.5rem;">{% trans "Registration Currently Closed" %}</h3>
+    <p style="font-size:0.85rem; color:#fcd34d; margin:0 0 0.75rem;">{% trans "No clans are currently accepting public registrations." %}</p>
+    <p style="font-size:0.8rem; color:#94a3b8;">📞 {% trans "Please contact your clan leadership for an invitation." %}</p>
+    {% if clan and clan.contact_email %}
+    <div style="margin-top:0.75rem; padding:0.6rem; background:rgba(255,255,255,0.05); border-radius:8px; font-size:0.8rem; color:#cbd5e1;">
+      📧 {{ clan.contact_email }}{% if clan.contact_phone %} · 📱 {{ clan.contact_phone }}{% endif %}
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <!-- Registration Form -->
+  <div class="form-card">
+
+    {% if form.errors %}
+    <div class="error-box">
+      <strong>{% trans "Please fix the errors below:" %}</strong>
+      <ul>
+        {% for field, error_list in form.errors.items %}
+          {% for error in error_list %}<li>{{ error }}</li>{% endfor %}
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <form method="post" onsubmit="this.querySelector('button').disabled=true; this.querySelector('button').style.opacity='0.7'">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label class="form-label">{% trans "Full Name" %} *</label>
+        <input type="text" name="full_name" required class="form-input"
+               value="{{ form.full_name.value|default:'' }}"
+               placeholder="{% trans 'Enter your full name' %}">
+      </div>
+
+      <div class="row-2">
+        <div class="form-group">
+          <label class="form-label">{% trans "Email" %} *</label>
+          <input type="email" name="email" required class="form-input"
+                 value="{{ form.email.value|default:'' }}"
+                 placeholder="{% trans 'your@email.com' %}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">{% trans "Phone" %}</label>
+          <input type="tel" name="phone" class="form-input"
+                 value="{{ form.phone.value|default:'' }}"
+                 placeholder="{% trans '0712345678' %}">
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div class="form-group">
+          <label class="form-label">{% trans "Gender" %}</label>
+          <select name="gender" class="form-select">
+            <option value="">{% trans "Select" %}</option>
+            <option value="male">👨 {% trans "Male" %}</option>
+            <option value="female">👩 {% trans "Female" %}</option>
+            <option value="other">🧑 {% trans "Other" %}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">{% trans "Birth Date" %}</label>
+          <input type="date" name="birth_date" class="form-input">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">🏛️ {% trans "Clan" %} *</label>
+        <select name="clan_id" class="form-select" required>
+          <option value="">{% trans "Select your clan" %}</option>
+          {% for c in clans %}
+          <option value="{{ c.id }}" {% if form.clan_id.value == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
+          {% endfor %}
+        </select>
+        <div class="help-text">{% trans "Choose the clan you belong to" %}</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">🌳 {% trans "Family" %}</label>
+        <select name="family_id" class="form-select">
+          <option value="">{% trans "Select your family (optional)" %}</option>
+          {% for f in families %}
+          <option value="{{ f.id }}" {% if form.family_id.value == f.id|stringformat:"s" %}selected{% endif %}>{{ f.name }}</option>
+          {% endfor %}
+        </select>
+        <div class="help-text">{% trans "Your family lineage within the clan" %}</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">{% trans "Password" %} *</label>
+        <div class="password-wrapper">
+          <input type="password" name="password1" required id="password1" class="form-input"
+                 placeholder="{% trans 'Create a strong password (min 6 characters)' %}">
+          <button type="button" onclick="togglePassword('password1', this)" class="password-toggle">👁</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">{% trans "Confirm Password" %} *</label>
+        <div class="password-wrapper">
+          <input type="password" name="password2" required id="password2" class="form-input"
+                 placeholder="{% trans 'Repeat your password' %}">
+          <button type="button" onclick="togglePassword('password2', this)" class="password-toggle">👁</button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit">⚔ {% trans "Join BUBABI" %}</button>
+    </form>
+  </div>
+
+  <div class="login-link">
+    {% trans "Already have an account?" %}
+    <a href="{% url 'login' %}">{% trans "Sign in" %}</a>
+  </div>
+  
+  <div class="footer-text">© {% now "Y" %} {% if clan %}{{ clan.name }}{% else %}BUBABI{% endif %}</div>
+</div>
+
+<script>
+function togglePassword(id, btn) {
+  const input = document.getElementById(id);
+  if (input.type === 'password') { input.type = 'text'; btn.textContent = '🙈'; }
+  else { input.type = 'password'; btn.textContent = '👁'; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+{% extends "base.html" %}{% load i18n %}
+{% block page_title %}{% trans "Events" %}{% endblock %}
+{% block content %}
+<div style="max-width:900px; margin:0 auto;">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:0.5rem;">
+    <h2 style="margin:0;">📅 {% trans "Clan Events" %}</h2>
+    {% if can_manage %}
+    <a href="{% url 'create-event' %}" style="padding:0.5rem 1.5rem; background:#10b981; color:#fff; border-radius:8px; text-decoration:none; font-weight:600;">➕ {% trans "Create Event" %}</a>
+    {% endif %}
+  </div>
+  <div class="section-title">🔜 {% trans "Upcoming Events" %}</div>
+  {% if upcoming_events %}
+  <div class="table-card" style="margin-bottom:1.5rem;">
+    <table><thead><tr><th>{% trans "Event" %}</th><th>{% trans "Date" %}</th><th>{% trans "Location" %}</th><th>{% trans "Type" %}</th></tr></thead>
+    <tbody>{% for e in upcoming_events %}<tr>
+      <td><a href="{% url 'event-detail' e.pk %}" style="font-weight:600; color:#1e293b; text-decoration:none;">{{ e.title }}</a></td>
+      <td style="font-size:0.8rem;">{{ e.scheduled_at|date:"d M Y, H:i" }}</td>
+      <td>{{ e.location|default:"—" }}</td>
+      <td><span class="badge">{{ e.get_event_type_display }}</span></td>
+    </tr>{% endfor %}</tbody></table>
+  </div>{% else %}<div class="empty">{% trans "No upcoming events." %}</div>{% endif %}
+  {% if past_events %}
+  <div class="section-title">📜 {% trans "Past Events" %}</div>
+  <div class="table-card"><table><thead><tr><th>{% trans "Event" %}</th><th>{% trans "Date" %}</th><th>{% trans "Location" %}</th></tr></thead>
+    <tbody>{% for e in past_events %}<tr>
+      <td><a href="{% url 'event-detail' e.pk %}" style="color:#64748b; text-decoration:none;">{{ e.title }}</a></td>
+      <td style="font-size:0.8rem;">{{ e.scheduled_at|date:"d M Y" }}</td>
+      <td>{{ e.location|default:"—" }}</td>
+    </tr>{% endfor %}</tbody></table>
+  </div>{% endif %}
+</div>{% endblock %}

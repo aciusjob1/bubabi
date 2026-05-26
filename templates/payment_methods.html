@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block page_title %}{% trans "Payment Methods" %}{% endblock %}
+
+{% block content %}
+<div style="max-width:700px; margin:0 auto;">
+  <h2>💳 {% trans "Payment Methods" %}</h2>
+  <p class="text-sm text-muted mb-4">{% trans "Configure which payment methods are available for contributions" %}</p>
+
+  {% if form.errors %}
+  <div class="alert alert-error" role="alert" style="padding:0.75rem; background:#fee2e2; color:#991b1b; border-radius:8px; margin-bottom:1rem;">
+    ⚠️ {% trans "Please fix the errors below." %}
+    {% for field, errors in form.errors.items %}
+      {% for error in errors %}<div style="font-size:0.8rem;">{{ error }}</div>{% endfor %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <form method="post" id="paymentMethodsForm">
+    {% csrf_token %}
+    
+    <div class="table-card" style="padding:1.5rem; margin-bottom:1rem;">
+      <h4 style="margin:0 0 1rem;">🔘 {% trans "Enable / Disable Methods" %}</h4>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:0.75rem;">
+        <label class="method-toggle">{{ form.cash_enabled }}<span>💵 {% trans "Cash" %}</span></label>
+        <label class="method-toggle">{{ form.mobile_money_enabled }}<span>📱 {% trans "Mobile Money" %}</span></label>
+        <label class="method-toggle">{{ form.bank_transfer_enabled }}<span>🏦 {% trans "Bank Transfer" %}</span></label>
+      </div>
+    </div>
+
+    <div class="table-card mobile-section" style="padding:1.5rem; margin-bottom:1rem;">
+      <h4 style="margin:0 0 0.5rem;">📱 {% trans "Mobile Money Providers" %}</h4>
+      <p class="text-sm text-muted">{% trans "One per line. Format: code|Name|Prefixes" %}</p>
+      <textarea name="mobile_providers" rows="6" class="pay-textarea" aria-label="{% trans 'Mobile money providers' %}"
+                placeholder="mpesa|M-Pesa|074,075,076&#10;tigo|Tigo Pesa|065,067,071&#10;airtel|Airtel Money|068,069,078&#10;halotel|Halotel|061,062&#10;ttcl|TTCL|073&#10;zantel|Zantel|077">{{ form.mobile_providers.value|default:'' }}</textarea>
+      <div class="field-hint">💡 {% trans "Prefixes help auto-detect provider from phone number" %}</div>
+      <div id="mobilePreview" class="preview-box" style="display:none; margin-top:0.75rem; padding:0.75rem; background:#f0fdf4; border-radius:8px; font-size:0.78rem;">
+        <strong>✅ {% trans "Detected Providers" %}</strong>
+        <div id="mobilePreviewList"></div>
+      </div>
+    </div>
+
+    <div class="table-card bank-section" style="padding:1.5rem; margin-bottom:1rem;">
+      <h4 style="margin:0 0 0.5rem;">🏦 {% trans "Banks" %}</h4>
+      <p class="text-sm text-muted">{% trans "One per line. Format: code|Bank Name" %}</p>
+      <textarea name="banks" rows="5" class="pay-textarea" aria-label="{% trans 'Banks' %}"
+                placeholder="crdb|CRDB Bank&#10;nmb|NMB Bank&#10;nbc|NBC Bank&#10;equity|Equity Bank">{{ form.banks.value|default:'' }}</textarea>
+      <div id="bankPreview" class="preview-box" style="display:none; margin-top:0.75rem; padding:0.75rem; background:#dbeafe; border-radius:8px; font-size:0.78rem;">
+        <strong>🏦 {% trans "Banks" %}</strong>
+        <div id="bankPreviewList"></div>
+      </div>
+    </div>
+
+    <div class="table-card" style="padding:1.5rem; margin-bottom:1rem;">
+      <h4 style="margin:0 0 0.5rem;">🧪 {% trans "Test Phone Detection" %}</h4>
+      <p class="text-sm text-muted">{% trans "Type a phone number to see which provider is auto-detected" %}</p>
+      <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+        <input type="tel" id="testPhone" class="pay-input" style="flex:1; min-width:200px;" placeholder="0754 123 456" aria-label="{% trans 'Test phone number' %}">
+        <div id="testResult" style="display:flex; align-items:center; padding:0.5rem 1rem; border-radius:8px; font-weight:600; font-size:0.85rem;"></div>
+      </div>
+    </div>
+
+    <div class="table-card" style="padding:1.5rem; margin-bottom:1rem;">
+      <h4 style="margin:0 0 0.5rem;">⭐ {% trans "Default Payment Method" %}</h4>
+      <p class="text-sm text-muted">{% trans "Pre-selected when recording a payment" %}</p>
+      {{ form.default_method }}
+    </div>
+
+    <button type="submit" class="btn btn-green" style="width:100%;">💾 {% trans "Save Payment Settings" %}</button>
+  </form>
+</div>
+
+<style>
+  .method-toggle { display:flex; align-items:center; gap:0.5rem; padding:0.75rem; border:2px solid #e2e8f0; border-radius:8px; cursor:pointer; transition:all 0.15s; background:#fff; }
+  .method-toggle:hover { border-color:#10b981; }
+  .method-toggle input[type="checkbox"] { width:18px; height:18px; accent-color:#10b981; cursor:pointer; }
+  .method-toggle input:checked + span { font-weight:700; color:#059669; }
+  .method-toggle:has(input:checked) { border-color:#10b981; background:#f0fdf4; }
+  .pay-textarea { width:100%; font-family:monospace; font-size:0.85rem; padding:0.75rem; border:1px solid #e2e8f0; border-radius:8px; resize:vertical; background:#f8fafc; line-height:1.6; min-height:100px; }
+  .pay-textarea:focus { border-color:#10b981; outline:none; box-shadow:0 0 0 3px rgba(16,185,129,0.1); }
+  .pay-input { padding:0.65rem 0.85rem; border:1px solid #e2e8f0; border-radius:8px; font-size:0.9rem; outline:none; background:#fff; }
+  .pay-input:focus { border-color:#10b981; box-shadow:0 0 0 3px rgba(16,185,129,0.1); }
+  select { width:100%; padding:0.7rem; border:1px solid #e2e8f0; border-radius:8px; font-size:0.9rem; cursor:pointer; }
+  .field-hint { font-size:0.7rem; color:#64748b; margin-top:0.25rem; }
+  @media (max-width:480px) { .method-toggle { padding:0.6rem; } .pay-textarea { font-size:0.8rem; min-height:120px; } }
+</style>
+
+<script>
+  // ─── Dynamic Section Toggle ───
+  function updateSections() {
+    var mobileEnabled = document.querySelector('[name="mobile_money_enabled"]').checked;
+    var bankEnabled = document.querySelector('[name="bank_transfer_enabled"]').checked;
+    var mobileSection = document.querySelector('.mobile-section');
+    var bankSection = document.querySelector('.bank-section');
+    mobileSection.style.opacity = mobileEnabled ? '1' : '0.4';
+    mobileSection.querySelectorAll('textarea').forEach(function(el) { el.disabled = !mobileEnabled; });
+    bankSection.style.opacity = bankEnabled ? '1' : '0.4';
+    bankSection.querySelectorAll('textarea').forEach(function(el) { el.disabled = !bankEnabled; });
+    var cashOpt = document.querySelector('select[name="default_method"] option[value="cash"]');
+    var mobileOpt = document.querySelector('select[name="default_method"] option[value="mobile_money"]');
+    var bankOpt = document.querySelector('select[name="default_method"] option[value="bank"]');
+    if (cashOpt) cashOpt.style.display = document.querySelector('[name="cash_enabled"]').checked ? '' : 'none';
+    if (mobileOpt) mobileOpt.style.display = mobileEnabled ? '' : 'none';
+    if (bankOpt) bankOpt.style.display = bankEnabled ? '' : 'none';
+  }
+  document.querySelectorAll('.method-toggle input[type="checkbox"]').forEach(function(cb) { cb.addEventListener('change', updateSections); });
+  updateSections();
+
+  // ─── Unsaved Changes Warning ───
+  var formChanged = false;
+  document.querySelectorAll('#paymentMethodsForm input, #paymentMethodsForm textarea, #paymentMethodsForm select').forEach(function(el) {
+    el.addEventListener('change', function() { formChanged = true; });
+    el.addEventListener('input', function() { formChanged = true; });
+  });
+  document.getElementById('paymentMethodsForm').addEventListener('submit', function() { formChanged = false; });
+  window.addEventListener('beforeunload', function(e) { if (formChanged) { e.preventDefault(); e.returnValue = ''; } });
+
+  // ─── XSS-Safe DOM Helpers ───
+  function makeDiv(text, color) {
+    var d = document.createElement('div'); d.style.marginTop = '0.25rem';
+    if (color) d.style.color = color; d.textContent = text; return d;
+  }
+  function makeProviderRow(icon, name, extra) {
+    var d = document.createElement('div'); d.style.marginTop = '0.25rem';
+    var s = document.createElement('strong'); s.textContent = name;
+    d.appendChild(document.createTextNode(icon + ' ')); d.appendChild(s);
+    d.appendChild(document.createTextNode(' ' + extra)); return d;
+  }
+
+  // ─── i18n ───
+  var I = { invalid: '{% trans "Invalid format" %}', duplicate: '{% trans "Duplicate code" %}', prefixes: '{% trans "Prefixes" %}', none: '{% trans "none" %}' };
+
+  // ─── Mobile Preview ───
+  var mt = document.querySelector('textarea[name="mobile_providers"]');
+  var mp = document.getElementById('mobilePreview'), mpl = document.getElementById('mobilePreviewList');
+  if (mt) {
+    mt.addEventListener('input', function() {
+      var lines = this.value.trim().split('\n').filter(function(l) { return l.trim(); });
+      mpl.replaceChildren();
+      if (!lines.length) { mp.style.display = 'none'; return; }
+      mp.style.display = 'block';
+      var seen = {};
+      lines.forEach(function(line) {
+        var parts = line.split('|');
+        if (parts.length >= 2) {
+          var code = parts[0].trim(), name = parts[1].trim();
+          var prefixes = parts[2] ? parts[2].split(',').map(function(p) { return p.trim(); }).join(', ') : I.none;
+          if (seen[code]) { mpl.appendChild(makeDiv('⚠️ ' + I.duplicate + ': "' + code + '" — ' + name, '#f59e0b')); }
+          else { seen[code] = true; mpl.appendChild(makeProviderRow('📱', name, '→ ' + I.prefixes + ': ' + prefixes)); }
+        } else { mpl.appendChild(makeDiv('⚠️ ' + I.invalid + ': "' + line + '"', '#ef4444')); }
+      });
+    });
+    mt.dispatchEvent(new Event('input'));
+  }
+
+  // ─── Bank Preview ───
+  var bt = document.querySelector('textarea[name="banks"]');
+  var bp = document.getElementById('bankPreview'), bpl = document.getElementById('bankPreviewList');
+  if (bt) {
+    bt.addEventListener('input', function() {
+      var lines = this.value.trim().split('\n').filter(function(l) { return l.trim(); });
+      bpl.replaceChildren();
+      if (!lines.length) { bp.style.display = 'none'; return; }
+      bp.style.display = 'block';
+      var seen = {};
+      lines.forEach(function(line) {
+        var parts = line.split('|');
+        if (parts.length === 2) {
+          var code = parts[0].trim(), name = parts[1].trim();
+          if (seen[code]) { bpl.appendChild(makeDiv('⚠️ ' + I.duplicate + ': "' + code + '" — ' + name, '#f59e0b')); }
+          else { seen[code] = true; bpl.appendChild(makeProviderRow('🏦', name, '(' + code + ')')); }
+        } else { bpl.appendChild(makeDiv('⚠️ ' + I.invalid + ': "' + line + '"', '#ef4444')); }
+      });
+    });
+    bt.dispatchEvent(new Event('input'));
+  }
+
+  // ─── Test Phone Detection ───
+  var testPhone = document.getElementById('testPhone'), testResult = document.getElementById('testResult');
+  function parseProviders() {
+    if (!mt) return [];
+    return mt.value.trim().split('\n').filter(function(l) { return l.trim(); }).map(function(line) {
+      var parts = line.split('|');
+      if (parts.length >= 2) return { code: parts[0].trim(), name: parts[1].trim(), prefixes: parts[2] ? parts[2].split(',').map(function(p) { return p.trim(); }) : [] };
+      return null;
+    }).filter(Boolean);
+  }
+  function normalizePhone(phone) {
+    phone = phone.replace(/\s+/g, '').replace(/-/g, '');
+    if (phone.startsWith('+')) phone = phone.slice(1);
+    if (phone.startsWith('0')) phone = '255' + phone.slice(1);
+    return phone;
+  }
+  if (testPhone) {
+    testPhone.addEventListener('input', function() {
+      var phone = this.value.trim();
+      if (!phone || phone.length < 9) { testResult.textContent = ''; testResult.style.background = ''; return; }
+      var normalized = normalizePhone(phone), providers = parseProviders(), found = null;
+      for (var i = 0; i < providers.length; i++) {
+        for (var j = 0; j < providers[i].prefixes.length; j++) {
+          if (normalized.startsWith(providers[i].prefixes[j])) { found = providers[i]; break; }
+        }
+        if (found) break;
+      }
+      if (found) { testResult.textContent = '✅ ' + found.name; testResult.style.background = '#f0fdf4'; testResult.style.color = '#065f46'; }
+      else { testResult.textContent = '❌ {% trans "Unknown provider" %}'; testResult.style.background = '#fee2e2'; testResult.style.color = '#991b1b'; }
+    });
+  }
+</script>
+{% endblock %}

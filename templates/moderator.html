@@ -1,0 +1,451 @@
+{% extends "base.html" %}
+{% load i18n clan_filters %}
+
+{% block page_title %}{% trans "Moderation" %}{% endblock %}
+
+{% block content %}
+
+<!-- Clan Banner -->
+{% if request.user.clan and request.user.clan.banner_image %}
+<div style="border-radius:12px; overflow:hidden; margin-bottom:1.5rem; height:120px;">
+  <img src="{{ request.user.clan.banner_image.url }}" style="width:100%; height:100%; object-fit:cover;">
+</div>
+{% endif %}
+
+<style>
+  .toggle-header { cursor:pointer; display:flex; align-items:center; justify-content:space-between; user-select:none; padding-right:0.5rem; }
+  .toggle-header:hover { opacity:0.75; }
+  .toggle-arrow { transition:transform 0.2s; font-size:0.7rem; color:#64748b; }
+  .toggle-arrow.open { transform:rotate(90deg); }
+  .toggle-body { display:none; }
+  .toggle-body.open { display:block; }
+  .action-btns { display:flex; gap:0.4rem; flex-wrap:wrap; }
+  .action-btn { padding:0.3rem 0.7rem; border-radius:6px; font-size:0.72rem; font-weight:600; text-decoration:none; cursor:pointer; border:none; white-space:nowrap; }
+  .action-btn.dismiss { background:#10b981; color:#fff; }
+  .action-btn.delete { background:#ef4444; color:#fff; }
+  .action-btn.view { background:#6366f1; color:#fff; }
+  .action-btn:hover { opacity:0.85; }
+  .modal-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center; }
+  .modal-overlay.active { display:flex; }
+  .modal-box { background:#fff; border-radius:12px; padding:1.5rem; max-width:600px; width:90%; max-height:85vh; overflow-y:auto; }
+  .modal-box h3 { margin-top:0; }
+  .modal-actions { display:flex; gap:0.5rem; margin-top:1rem; justify-content:flex-end; }
+  .status-badge { padding:0.2rem 0.5rem; border-radius:4px; font-size:0.7rem; font-weight:600; }
+  .status-badge.resolved { background:#d1fae5; color:#065f46; }
+  .status-badge.pending { background:#fef3c7; color:#92400e; }
+  .post-media { margin:0.75rem 0; border-radius:8px; overflow:hidden; max-height:300px; }
+  .post-media img, .post-media video { width:100%; max-height:250px; object-fit:contain; background:#000; }
+  .post-content { background:#f8fafc; padding:0.75rem; border-radius:8px; margin-bottom:0.75rem; font-size:0.85rem; white-space:pre-wrap; word-break:break-word; }
+</style>
+
+<!-- Summary Cards -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div>
+      <div class="stat-label">{% trans "Pending Reports" %}</div>
+      <div class="stat-value" style="color:#ef4444;">{{ pending_reports_count }}</div>
+      <div class="stat-sub">{% trans "awaiting review" %}</div>
+    </div>
+    <div class="stat-icon icon-red">🚩</div>
+  </div>
+  <div class="stat-card">
+    <div>
+      <div class="stat-label">{% trans "Hidden Posts" %}</div>
+      <div class="stat-value" style="color:#f59e0b;">{{ hidden_posts_count }}</div>
+      <div class="stat-sub">{% trans "by reports" %}</div>
+    </div>
+    <div class="stat-icon icon-yellow">🙈</div>
+  </div>
+  <div class="stat-card">
+    <div>
+      <div class="stat-label">{% trans "Blocked" %}</div>
+      <div class="stat-value" style="color:#ef4444;">{{ blocked_count }}</div>
+      <div class="stat-sub">{% trans "members" %}</div>
+    </div>
+    <div class="stat-icon icon-red">🚫</div>
+  </div>
+  <div class="stat-card">
+    <div>
+      <div class="stat-label">{% trans "Suspended" %}</div>
+      <div class="stat-value" style="color:#f59e0b;">{{ suspended_count }}</div>
+      <div class="stat-sub">{% trans "members" %}</div>
+    </div>
+    <div class="stat-icon icon-yellow">⏸️</div>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.5rem;">
+  <a href="{% url 'posts' %}" style="padding:0.5rem 1rem; background:var(--primary); color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none;">📰 {% trans "Clan Feed" %}</a>
+  <a href="{% url 'members' %}" style="padding:0.5rem 1rem; background:#3b82f6; color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none;">👥 {% trans "Members" %}</a>
+  <a href="{% url 'audit' %}" style="padding:0.5rem 1rem; background:#6366f1; color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none;">📜 {% trans "Audit Log" %}</a>
+  <button onclick="resolveAllReports()" style="padding:0.5rem 1rem; background:#10b981; color:#fff; border:none; border-radius:8px; font-size:0.8rem; font-weight:600; cursor:pointer;">✅ {% trans "Resolve All" %}</button>
+</div>
+
+<!-- Pending Reports -->
+<div class="section-title toggle-header" onclick="toggleSection('reports-section')">
+  <span>🚩 {% trans "Pending Reports" %} ({{ pending_reports|length }})</span>
+  <span class="toggle-arrow open" id="reports-section-arrow">▶</span>
+</div>
+<div id="reports-section" class="toggle-body open">
+  {% if pending_reports %}
+  <div class="table-slider-wrapper">
+    <button onclick="slideTable('reportTable', -1)" class="table-slider-btn left">◀</button>
+    <button onclick="slideTable('reportTable', 1)" class="table-slider-btn right">▶</button>
+    <div class="table-card" id="reportTable" style="overflow-x:auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>{% trans "Post" %}</th>
+          <th>{% trans "Reported By" %}</th>
+          <th>{% trans "Reason" %}</th>
+          <th>{% trans "Date" %}</th>
+          <th>{% trans "Actions" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for report in pending_reports %}
+        <tr id="report-row-{{ report.id }}">
+          <td>
+            <strong>{{ report.post.author.person.full_name|default:report.post.author.email }}</strong>
+            {% if report.post.content %}
+            <div style="font-size:0.75rem; color:#64748b; max-width:200px; overflow:hidden; text-overflow:ellipsis;">{{ report.post.content|truncatechars:50 }}</div>
+            {% endif %}
+            {% if report.post.image and report.post.image.name %}
+            <div style="font-size:0.7rem; color:#6366f1;">🖼️ {% trans "Has image" %}</div>
+            {% endif %}
+            {% if report.post.video and report.post.video.name %}
+            <div style="font-size:0.7rem; color:#6366f1;">🎬 {% trans "Has video" %}</div>
+            {% endif %}
+            {% if report.details %}
+            <div style="font-size:0.7rem; color:#94a3b8; margin-top:2px;">📝 {{ report.details|truncatechars:40 }}</div>
+            {% endif %}
+          </td>
+          <td style="font-size:0.8rem;">{{ report.reported_by.person.full_name|default:report.reported_by.email }}</td>
+          <td><span class="badge due">{{ report.get_reason_display }}</span></td>
+          <td style="font-size:0.78rem;">{{ report.created_at|date:"d M H:i" }}</td>
+          <td>
+            <div class="action-btns">
+              <button onclick="openResolveModal('{{ report.id }}', '{{ report.post.content|default:""|truncatechars:200|escapejs }}', '{{ report.post.author.person.full_name|default:report.post.author.email|escapejs }}', '{% if report.post.image and report.post.image.name %}{{ report.post.image.url }}{% endif %}', '{% if report.post.video and report.post.video.name %}{{ report.post.video.url }}{% endif %}', '{% if report.post.image and report.post.image.name %}image{% elif report.post.video and report.post.video.name %}video{% elif report.post.content %}text{% else %}other{% endif %}')" class="action-btn view">📋 {% trans "Review" %}</button>
+              <form method="post" action="{% url 'resolve-report' report.id %}" style="display:inline;" onsubmit="return confirm('{% trans "Dismiss this report? The post will remain." %}');">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="dismiss">
+                <button type="submit" class="action-btn dismiss">✅ {% trans "Dismiss" %}</button>
+              </form>
+              <form method="post" action="{% url 'resolve-report' report.id %}" style="display:inline;" onsubmit="return confirm('{% trans "DELETE this post permanently? This cannot be undone." %}');">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="delete_post">
+                <button type="submit" class="action-btn delete">🗑️ {% trans "Delete Post" %}</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div></div>
+  {% else %}
+  <div class="empty">✅ {% trans "No pending reports. Great job!" %}</div>
+  {% endif %}
+</div>
+
+<!-- Review Modal -->
+<div class="modal-overlay" id="reviewModal">
+  <div class="modal-box">
+    <h3>📋 {% trans "Review Reported Post" %}</h3>
+    
+    <!-- Author Info -->
+    <div style="margin-bottom:0.75rem;">
+      <strong>{% trans "Posted by:" %}</strong> <span id="modalAuthor"></span>
+      <span style="font-size:0.7rem; color:#64748b;" id="modalType"></span>
+    </div>
+    
+    <!-- Text Content -->
+    <div class="post-content" id="modalTextContent" style="display:none;">
+      <strong>{% trans "Text:" %}</strong>
+      <p id="modalContent" style="margin:0.25rem 0 0 0;"></p>
+    </div>
+    
+    <!-- Image Content -->
+    <div class="post-media" id="modalImageContainer" style="display:none;">
+      <strong>{% trans "Image:" %}</strong>
+      <img id="modalImage" src="" alt="{% trans 'Post image' %}" style="width:100%; max-height:250px; object-fit:contain; background:#f1f5f9; border-radius:8px;">
+    </div>
+    
+    <!-- Video Content -->
+    <div class="post-media" id="modalVideoContainer" style="display:none;">
+      <strong>{% trans "Video:" %}</strong>
+      <video id="modalVideo" controls style="width:100%; max-height:250px; background:#000; border-radius:8px;">
+        {% trans "Your browser does not support video playback." %}
+      </video>
+    </div>
+    
+    <!-- No Content -->
+    <div id="modalNoContent" style="display:none; padding:1rem; text-align:center; color:#94a3b8;">
+      {% trans "This post has no text, image, or video content." %}
+    </div>
+    
+    <!-- Resolution Note -->
+    <div style="margin-top:1rem;">
+      <label style="font-size:0.8rem; font-weight:600;">{% trans "Resolution Note (optional):" %}</label>
+      <input type="text" id="modalNote" placeholder="{% trans 'Reason for your decision...' %}" style="width:100%; padding:0.5rem; border:1px solid #e2e8f0; border-radius:6px; margin-top:0.25rem;">
+    </div>
+    
+    <div class="modal-actions">
+      <button onclick="closeModal()" class="action-btn" style="background:#94a3b8; color:#fff;">{% trans "Cancel" %}</button>
+      <button onclick="submitResolution('dismiss')" class="action-btn dismiss">✅ {% trans "Dismiss Report" %}</button>
+      <button onclick="submitResolution('delete_post')" class="action-btn delete">🗑️ {% trans "Delete Post" %}</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden Posts -->
+<div class="section-title toggle-header" onclick="toggleSection('hidden-section')">
+  <span>🙈 {% trans "Hidden Posts" %} ({{ hidden_posts|length }})</span>
+  <span class="toggle-arrow" id="hidden-section-arrow">▶</span>
+</div>
+<div id="hidden-section" class="toggle-body">
+  {% if hidden_posts %}
+  <div class="table-slider-wrapper">
+    <button onclick="slideTable('hiddenTable', -1)" class="table-slider-btn left">◀</button>
+    <button onclick="slideTable('hiddenTable', 1)" class="table-slider-btn right">▶</button>
+    <div class="table-card" id="hiddenTable" style="overflow-x:auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>{% trans "Author" %}</th>
+          <th>{% trans "Content" %}</th>
+          <th>{% trans "Reports" %}</th>
+          <th>{% trans "Date" %}</th>
+          <th>{% trans "Status" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for post in hidden_posts %}
+        <tr>
+          <td><strong>{{ post.author.person.full_name|default:post.author.email }}</strong></td>
+          <td style="max-width:250px; overflow:hidden; text-overflow:ellipsis;">
+            {% if post.image and post.image.name %}🖼️ {% endif %}
+            {% if post.video and post.video.name %}🎬 {% endif %}
+            {{ post.content|truncatechars:60 }}
+          </td>
+          <td style="color:#ef4444; font-weight:600;">{{ post.report_count }}</td>
+          <td style="font-size:0.8rem;">{{ post.created_at|date:"d M Y" }}</td>
+          <td><span class="status-badge pending">{% trans "Hidden" %}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div></div>
+  {% else %}
+  <div class="empty">✅ {% trans "No hidden posts." %}</div>
+  {% endif %}
+</div>
+
+<!-- Blocked Members -->
+<div class="section-title toggle-header" onclick="toggleSection('blocked-section')">
+  <span>🚫 {% trans "Blocked Members" %} ({{ blocked_members|length }})</span>
+  <span class="toggle-arrow" id="blocked-section-arrow">▶</span>
+</div>
+<div id="blocked-section" class="toggle-body">
+  {% if blocked_members %}
+  <div class="table-slider-wrapper">
+    <button onclick="slideTable('blockedTable', -1)" class="table-slider-btn left">◀</button>
+    <button onclick="slideTable('blockedTable', 1)" class="table-slider-btn right">▶</button>
+    <div class="table-card" id="blockedTable" style="overflow-x:auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>{% trans "Member" %}</th>
+          <th>{% trans "Blocked By" %}</th>
+          <th>{% trans "Date" %}</th>
+          <th>{% trans "Reason" %}</th>
+          <th>{% trans "Action" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in blocked_members %}
+        <tr>
+          <td><strong>{{ m.person.full_name|default:m.email }}</strong></td>
+          <td>{{ m.blocked_by.person.full_name|default:"—" }}</td>
+          <td style="font-size:0.8rem;">{{ m.blocked_at|date:"d M Y" }}</td>
+          <td>{{ m.block_reason|truncatechars:40|default:"—" }}</td>
+          <td>
+            <form method="post" action="{% url 'unblock-member' m.id %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="action-btn dismiss">🔓 {% trans "Unblock" %}</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div></div>
+  {% else %}
+  <div class="empty">✅ {% trans "No blocked members." %}</div>
+  {% endif %}
+</div>
+
+<!-- Suspended Members -->
+<div class="section-title toggle-header" onclick="toggleSection('suspended-section')">
+  <span>⏸️ {% trans "Suspended Members" %} ({{ suspended_members|length }})</span>
+  <span class="toggle-arrow" id="suspended-section-arrow">▶</span>
+</div>
+<div id="suspended-section" class="toggle-body">
+  {% if suspended_members %}
+  <div class="table-slider-wrapper">
+    <button onclick="slideTable('suspendedTable', -1)" class="table-slider-btn left">◀</button>
+    <button onclick="slideTable('suspendedTable', 1)" class="table-slider-btn right">▶</button>
+    <div class="table-card" id="suspendedTable" style="overflow-x:auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>{% trans "Member" %}</th>
+          <th>{% trans "Email" %}</th>
+          <th>{% trans "Status" %}</th>
+          <th>{% trans "Action" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in suspended_members %}
+        <tr>
+          <td><strong>{{ m.person.full_name|default:m.email }}</strong></td>
+          <td style="font-size:0.8rem;">{{ m.email }}</td>
+          <td><span class="status-badge pending">{% trans "Suspended" %}</span></td>
+          <td>
+            <a href="{% url 'change-member-status' m.id %}" class="action-btn dismiss">🔄 {% trans "Change Status" %}</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div></div>
+  {% else %}
+  <div class="empty">✅ {% trans "No suspended members." %}</div>
+  {% endif %}
+</div>
+
+<script>
+let currentReportId = null;
+
+function toggleSection(id) {
+  const body = document.getElementById(id);
+  const arrow = document.getElementById(id + '-arrow');
+  if (body && arrow) {
+    body.classList.toggle('open');
+    arrow.classList.toggle('open');
+  }
+}
+
+function slideTable(tableId, direction) {
+  const table = document.getElementById(tableId);
+  if (table) {
+    table.scrollBy({ left: direction * 300, behavior: 'smooth' });
+  }
+}
+
+function openResolveModal(reportId, content, author, imageUrl, videoUrl, postType) {
+  currentReportId = reportId;
+  
+  // Set author
+  document.getElementById('modalAuthor').textContent = author;
+  document.getElementById('modalType').textContent = ' (' + postType + ' post)';
+  
+  // Hide all content containers first
+  document.getElementById('modalTextContent').style.display = 'none';
+  document.getElementById('modalImageContainer').style.display = 'none';
+  document.getElementById('modalVideoContainer').style.display = 'none';
+  document.getElementById('modalNoContent').style.display = 'none';
+  
+  let hasContent = false;
+  
+  // Show text content
+  if (content && content.trim()) {
+    document.getElementById('modalContent').textContent = content;
+    document.getElementById('modalTextContent').style.display = 'block';
+    hasContent = true;
+  }
+  
+  // Show image
+  if (imageUrl && imageUrl.trim()) {
+    document.getElementById('modalImage').src = imageUrl;
+    document.getElementById('modalImageContainer').style.display = 'block';
+    hasContent = true;
+  }
+  
+  // Show video
+  if (videoUrl && videoUrl.trim()) {
+    document.getElementById('modalVideo').src = videoUrl;
+    document.getElementById('modalVideoContainer').style.display = 'block';
+    hasContent = true;
+  }
+  
+  // If no content at all
+  if (!hasContent) {
+    document.getElementById('modalNoContent').style.display = 'block';
+  }
+  
+  // Clear note
+  document.getElementById('modalNote').value = '';
+  
+  // Show modal
+  document.getElementById('reviewModal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('reviewModal').classList.remove('active');
+  // Stop video playback
+  const video = document.getElementById('modalVideo');
+  if (video) video.pause();
+  currentReportId = null;
+}
+
+function submitResolution(action) {
+  if (!currentReportId) return;
+  const note = document.getElementById('modalNote').value;
+  
+  const form = document.createElement('form');
+  form.method = 'post';
+  form.action = '/reports/' + currentReportId + '/resolve/';
+  
+  const csrfInput = document.createElement('input');
+  csrfInput.type = 'hidden';
+  csrfInput.name = 'csrfmiddlewaretoken';
+  csrfInput.value = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  form.appendChild(csrfInput);
+  
+  const actionInput = document.createElement('input');
+  actionInput.type = 'hidden';
+  actionInput.name = 'action';
+  actionInput.value = action;
+  form.appendChild(actionInput);
+  
+  const noteInput = document.createElement('input');
+  noteInput.type = 'hidden';
+  noteInput.name = 'note';
+  noteInput.value = note;
+  form.appendChild(noteInput);
+  
+  document.body.appendChild(form);
+  form.submit();
+}
+
+function resolveAllReports() {
+  if (confirm('{% trans "Dismiss ALL pending reports? This will restore any hidden posts that drop below the report threshold." %}')) {
+    const form = document.createElement('form');
+    form.method = 'post';
+    form.action = '/resolve-all-reports/';
+    
+    const csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'csrfmiddlewaretoken';
+    csrfInput.value = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    form.appendChild(csrfInput);
+    
+    document.body.appendChild(form);
+    form.submit();
+  }
+}
+</script>
+
+{% endblock %}

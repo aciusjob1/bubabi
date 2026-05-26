@@ -1,0 +1,38 @@
+{% extends "forms/base_form.html" %}
+{% block page_title %}Create Vote{% endblock %}
+{% block form_title %}Initiate Clan Vote{% endblock %}
+{% block form_subtitle %}
+  All active members will be notified to cast their vote.
+{% endblock %}
+
+{% block form_fields %}
+<div class="field">
+  <label>Topic</label>
+  {{ form.topic }}
+</div>
+
+<div class="field">
+  <label>Description</label>
+  {{ form.description }}
+</div>
+
+<div class="field">
+  <label>Quorum Required (%)</label>
+  {{ form.quorum_percent }}
+  <div class="help">
+    Minimum participation percentage for vote to be valid
+  </div>
+</div>
+
+<div class="field">
+  <label>Opens At</label>
+  {{ form.opens_at }}
+</div>
+
+<div class="field">
+  <label>Closes At</label>
+  {{ form.closes_at }}
+</div>
+{% endblock %}
+
+{% block submit_label %}Create Vote{% endblock %}

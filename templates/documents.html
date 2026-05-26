@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+{% load i18n clan_filters %}
+
+{% block page_title %}{% trans "Documents & Judicial" %}{% endblock %}
+
+{% block content %}
+<div style="max-width:1200px; margin:0 auto; position: relative; z-index: 1;">
+
+  <!-- Clan Banner Component -->
+  {% if request.user.clan and request.user.clan.banner_image %}
+  <div id="bannerContainer" style="border-radius:12px; overflow:hidden; margin-bottom:1.5rem; height:140px; position:relative; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+    <img src="{{ request.user.clan.banner_image.url }}" style="width:100%; height:100%; object-fit:cover;" alt="Clan Banner">
+    <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.6)); padding:1rem 1.5rem;">
+      <span style="color:#fff; font-weight:700; font-size:1.1rem;">{{ request.user.clan.name }}</span>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Strategic Action Matrix Controls -->
+  <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.5rem;">
+    {% if request.user.is_superuser %}
+    <a href="{% url 'upload-constitution' %}" class="panel-btn-link" style="background:#f59e0b; color:#0f172a; box-shadow: 0 2px 4px rgba(245,158,11,0.15);">📜 {% trans "Upload Constitution" %}</a>
+    {% endif %}
+    {% if can_upload %}
+    <a href="{% url 'upload-document' %}" class="panel-btn-link" style="background:#3b82f6; box-shadow: 0 2px 4px rgba(59,130,246,0.15);">📄 {% trans "Upload Document" %}</a>
+    {% endif %}
+    <a href="{% url 'file-case' %}" class="panel-btn-link" style="background:#ef4444; box-shadow: 0 2px 4px rgba(239,68,68,0.15);">⚖️ {% trans "File Case" %}</a>
+  </div>
+
+  <!-- ═══════════════════════════════ -->
+  <!-- SUPREME CONSTITUTION PANEL      -->
+  <!-- ═══════════════════════════════ -->
+  {% if documents_by_type.Constitution %}
+  <div style="background:linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border-radius:14px; padding:1.75rem; margin-bottom:1.75rem; color:#f8fafc; border:1px solid rgba(255,255,255,0.08); box-shadow:0 10px 25px -5px rgba(15,23,42,0.3);">
+    <div style="display:flex; align-items:center; gap:1.25rem; flex-wrap:wrap;">
+      <div style="font-size:2.5rem; background:rgba(255,255,255,0.06); width:64px; height:64px; border-radius:10px; display:flex; align-items:center; justify-content:center;">📜</div>
+      <div style="flex:1; min-width:260px;">
+        <div style="font-size:0.7rem; color:#f59e0b; text-transform:uppercase; letter-spacing:2px; font-weight:700;">{% trans "Clan Constitution" %}</div>
+        {% for doc in documents_by_type.Constitution %}
+        <div style="font-size:1.3rem; font-weight:700; margin-top:0.25rem; color:#ffffff;">{{ doc.title }}</div>
+        <div style="font-size:0.8rem; color:#94a3b8; margin-top:0.25rem; font-weight:500;">
+          {% trans "Version" %} <span style="color:#f59e0b; font-weight:700;">{{ doc.version }}</span> · {{ doc.uploaded_by.person.full_name }} · {{ doc.created_at|date:"d M Y" }}
+        </div>
+        <div style="margin-top:1rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <a href="{% url 'view-document' doc.id %}" class="panel-btn-link" style="background:rgba(255,255,255,0.15); color:#ffffff; font-size:0.75rem; padding:0.45rem 1rem;">👁 {% trans "View" %}</a>
+          <a href="{{ doc.file.url }}" download class="panel-btn-link" style="background:#f59e0b; color:#0f172a; font-size:0.75rem; padding:0.45rem 1rem;">📥 {% trans "Download" %}</a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div style="background:rgba(254,243,199,0.4); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); border:1px dashed rgba(245,158,11,0.4); border-radius:14px; padding:2rem; margin-bottom:1.75rem; text-align:center;">
+    <div style="font-size:2.5rem; margin-bottom:0.5rem;">📜</div>
+    <div style="font-weight:700; color:#92400e; font-size:1rem;">{% trans "Constitution Not Yet Uploaded" %}</div>
+    <div style="font-size:0.85rem; color:#b45309; margin-top:0.25rem; max-width:400px; margin-left:auto; margin-right:auto;">{% trans "The official clan administrative structure framework has not been initialized." %}</div>
+    {% if request.user.is_superuser %}
+    <a href="{% url 'upload-constitution' %}" class="panel-btn-link" style="background:#f59e0b; color:#0f172a; margin-top:1rem; padding:0.5rem 1.25rem;">📤 {% trans "Upload Constitution" %}</a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <!-- ═══════════════════════════════ -->
+  <!-- CLAN DOCUMENTS REPOSITORY       -->
+  <!-- ═══════════════════════════════ -->
+  <div class="section-title toggle-header" onclick="toggleSection('docs-section')">
+    <span style="display:flex; align-items:center; gap:0.4rem;">📄 {% trans "Clan Documents" %} <span style="font-size:0.8rem; background:rgba(0,0,0,0.06); padding:0.1rem 0.4rem; border-radius:6px;">{{ documents|length }}</span></span>
+    <span class="toggle-arrow open" id="docs-section-arrow">▶</span>
+  </div>
+  
+  <div id="docs-section" class="toggle-body open">
+    <div class="settings-card" style="padding:0.5rem; border-radius:12px; overflow:hidden;">
+      <div style="overflow-x:auto; width:100%;">
+        {% if documents %}
+        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.875rem;">
+          <thead>
+            <tr style="border-bottom:2px solid #f1f5f9; background:rgba(248,250,252,0.6);">
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Document" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Type" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Version" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Uploaded" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase; text-align:right;">{% trans "Actions" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for doc in documents %}
+            <tr style="border-bottom:1px solid #f1f5f9; transition:background 0.15s;" class="ledger-row">
+              <td style="padding:0.85rem 1rem;">
+                <strong style="color:#1e293b; display:block; font-weight:600;">{{ doc.title }}</strong>
+                {% if doc.description %}
+                <div style="font-size:0.75rem; color:#64748b; margin-top:0.15rem;">{{ doc.description|truncatechars:60 }}</div>
+                {% endif %}
+              </td>
+              <td style="padding:0.85rem 1rem; white-space:nowrap;">
+                <span class="badge {{ doc.document_type }}" style="display:inline-block; padding:0.2rem 0.5rem; border-radius:6px; font-size:0.68rem; font-weight:700; text-transform:uppercase; background:#e2e8f0; color:#334155;">
+                  {{ doc.get_document_type_display }}
+                </span>
+              </td>
+              <td style="padding:0.85rem 1rem; color:#475569; font-weight:600; font-family:monospace;">{{ doc.version }}</td>
+              <td style="padding:0.85rem 1rem; white-space:nowrap; color:#64748b; font-size:0.8rem;">{{ doc.created_at|date:"d M Y" }}</td>
+              <td style="padding:0.85rem 1rem; text-align:right; white-space:nowrap;">
+                <div style="display:inline-flex; gap:0.35rem;">
+                  <a href="{% url 'view-document' doc.id %}" class="panel-btn-link" style="background:#6366f1; font-size:0.7rem; padding:0.25rem 0.6rem; border-radius:6px;">👁 {% trans "View" %}</a>
+                  <a href="{{ doc.file.url }}" download class="panel-btn-link" style="background:#3b82f6; font-size:0.7rem; padding:0.25rem 0.6rem; border-radius:6px;">📥 {% trans "Download" %}</a>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div style="text-align:center; padding:3rem 2rem; color:#94a3b8;">
+          <div style="font-size:2.2rem; margin-bottom:0.4rem;">📄</div>
+          <div style="font-weight:600; font-size:0.9rem; color:#475569;">{% trans "No documents uploaded yet." %}</div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ -->
+  <!-- JUDICIAL ARCHIVES               -->
+  <!-- ═══════════════════════════════ -->
+  <div class="section-title toggle-header" onclick="toggleSection('cases-section')">
+    <span style="display:flex; align-items:center; gap:0.4rem;">⚖️ {% trans "Judicial Cases" %} <span style="font-size:0.8rem; background:rgba(0,0,0,0.06); padding:0.1rem 0.4rem; border-radius:6px;">{{ cases|length }}</span></span>
+    <span class="toggle-arrow open" id="cases-section-arrow">▶</span>
+  </div>
+  
+  <div id="cases-section" class="toggle-body open">
+    <div class="settings-card" style="padding:0.5rem; border-radius:12px; overflow:hidden;">
+      <div style="overflow-x:auto; width:100%;">
+        {% if cases %}
+        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.875rem;">
+          <thead>
+            <tr style="border-bottom:2px solid #f1f5f9; background:rgba(248,250,252,0.6);">
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Case #" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Title" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Type" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Status" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Filed" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase; text-align:right;">{% trans "Action" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for case in cases %}
+            <tr style="border-bottom:1px solid #f1f5f9; transition:background 0.15s;" class="ledger-row">
+              <td style="padding:0.85rem 1rem; font-family:monospace; font-size:0.8rem; font-weight:700; color:#64748b;">
+                {{ case.case_number }}
+              </td>
+              <td style="padding:0.85rem 1rem; font-weight:600; color:#1e293b;">{{ case.title }}</td>
+              <td style="padding:0.85rem 1rem; white-space:nowrap;">
+                <span class="badge {{ case.case_type }}" style="display:inline-block; padding:0.2rem 0.5rem; border-radius:6px; font-size:0.68rem; font-weight:700; text-transform:uppercase; background:#f1f5f9; color:#475569;">
+                  {{ case.get_case_type_display }}
+                </span>
+              </td>
+              <td style="padding:0.85rem 1rem; white-space:nowrap;">
+                <span class="badge {{ case.status }}" style="display:inline-block; padding:0.2rem 0.5rem; border-radius:6px; font-size:0.68rem; font-weight:700; text-transform:uppercase; {% if case.status == 'resolved' %}background:#d1fae5;color:#065f46;{% else %}background:#fee2e2;color:#991b1b;{% endif %}">
+                  {{ case.get_status_display }}
+                </span>
+              </td>
+              <td style="padding:0.85rem 1rem; white-space:nowrap; color:#64748b; font-size:0.8rem;">
+                {{ case.created_at|date:"d M Y" }}
+              </td>
+              <td style="padding:0.85rem 1rem; text-align:right; white-space:nowrap;">
+                {% if case.status != 'resolved' and case.status != 'dismissed' and can_upload %}
+                <a href="{% url 'update-case' case.id %}" class="panel-btn-link" style="background:#f59e0b; color:#0f172a; font-size:0.7rem; padding:0.25rem 0.6rem; border-radius:6px;">⚖️ {% trans "Rule" %}</a>
+                {% elif case.status == 'resolved' or case.status == 'dismissed' %}
+                <span style="font-size:0.75rem; color:#10b981; font-weight:700; display:inline-flex; align-items:center; gap:0.2rem;">✅ {% trans "Resolved" %}</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div style="text-align:center; padding:3rem 2rem; color:#94a3b8;">
+          <div style="font-size:2.2rem; margin-bottom:0.4rem;">⚖️</div>
+          <div style="font-weight:600; font-size:0.9rem; color:#475569;">{% trans "No judicial cases filed." %}</div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<style>
+  /* Interlocking Dynamic Theme Bindings */
+  :root {
+    --clan-primary-raw: 16, 185, 129;
+    --clan-accent-raw: 99, 102, 241;
+    --blur-intensity: 6px;
+  }
+
+  body {
+    background: linear-gradient(
+      135deg, 
+      rgba(var(--clan-primary-raw), 0.04) 0%, 
+      rgba(var(--clan-accent-raw), 0.02) 50%, 
+      #f8fafc 100%
+    ) !important;
+    background-attachment: fixed !important;
+  }
+
+  /* Structural Panel Containers */
+  .settings-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(var(--blur-intensity));
+    -webkit-backdrop-filter: blur(var(--blur-intensity));
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.01);
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  .settings-card:hover {
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03);
+  }
+
+  /* Collapsible Group Elements */
+  .section-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #475569;
+    background: rgba(255,255,255,0.6);
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.5);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .toggle-header {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .toggle-header:hover { background: rgba(255,255,255,0.9); }
+  .toggle-arrow { transition: transform 0.2s; font-size: 0.7rem; color: #94a3b8; }
+  .toggle-arrow.open { transform: rotate(90deg); }
+  .toggle-body { display: none; margin-bottom: 1.25rem; }
+  .toggle-body.open { display: block; }
+
+  /* Premium Control Anchors */
+  .panel-btn-link {
+    padding: 0.55rem 1.25rem; 
+    color: #fff; 
+    border-radius: 8px; 
+    font-size: 0.82rem; 
+    font-weight: 600; 
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .panel-btn-link:hover { opacity: 0.9; transform: translateY(-1px); }
+  .panel-btn-link:active { transform: translateY(0); }
+  .ledger-row:hover { background: rgba(248, 250, 252, 0.8) !important; }
+</style>
+
+<script>
+function toggleSection(id) {
+  const body = document.getElementById(id);
+  const arrow = document.getElementById(id + '-arrow');
+  if (body && arrow) {
+    body.classList.toggle('open');
+    arrow.classList.toggle('open');
+  }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% load i18n clan_filters %}
+
+{% block page_title %}{% trans "Fines Ledger" %}{% endblock %}
+
+{% block content %}
+<div style="max-width:1200px; margin:0 auto; position: relative; z-index: 1;">
+
+  <!-- Header Section -->
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; gap: 1rem; flex-wrap: wrap;">
+    <div class="section-title toggle-header" style="margin:0; width: auto; flex: initial; padding: 0.5rem 1rem;">
+      <span style="display:flex; align-items:center; gap:0.4rem; font-weight: 700;">⚠️ {% trans "Clan Fines & Penalties" %}</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ -->
+  <!-- ALL FINES RECORD REGISTRY       -->
+  <!-- ═══════════════════════════════ -->
+  <div class="section-title toggle-header" onclick="toggleSection('fines-section')">
+    <span style="display:flex; align-items:center; gap:0.4rem;">📋 {% trans "Active Ledger" %} <span style="font-size:0.8rem; background:rgba(0,0,0,0.06); padding:0.1rem 0.4rem; border-radius:6px;">{{ fines|length|default:0 }}</span></span>
+    <span class="toggle-arrow open" id="fines-section-arrow">▶</span>
+  </div>
+
+  <div id="fines-section" class="toggle-body open">
+    <div class="settings-card" style="padding:0.5rem; border-radius:12px; overflow:hidden;">
+      <div style="overflow-x:auto; width:100%;">
+        {% if fines %}
+        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.875rem;">
+          <thead>
+            <tr style="border-bottom:2px solid #f1f5f9; background:rgba(248,250,252,0.6);">
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Member" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Reason" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Amount" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Status" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;" class="hide-mobile">{% trans "Issued By" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;" class="hide-mobile">{% trans "Date" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for f in fines %}
+            <tr style="border-bottom:1px solid #f1f5f9; transition:background 0.15s;" class="ledger-row">
+              <td style="padding:0.85rem 1rem;">
+                <strong style="color:#1e293b; font-weight:600;">{{ f.member.person.full_name }}</strong>
+              </td>
+              <td style="padding:0.85rem 1rem; color:#475569; max-width:240px; white-space:normal; line-height:1.4;">
+                {{ f.reason }}
+              </td>
+              <td style="padding:0.85rem 1rem; font-weight:700; color:#b91c1c; font-family:monospace;">
+                {{ f.amount|tsh }}
+              </td>
+              <td style="padding:0.85rem 1rem; white-space:nowrap;">
+                <span class="badge {{ f.status }}" style="display:inline-block; padding:0.2rem 0.5rem; border-radius:6px; font-size:0.68rem; font-weight:700; text-transform:uppercase; background:#f1f5f9; color:#475569;">
+                  {{ f.status }}
+                </span>
+              </td>
+              <td style="padding:0.85rem 1rem; color:#64748b;" class="hide-mobile">
+                {{ f.issued_by.person.full_name }}
+              </td>
+              <td style="padding:0.85rem 1rem; color:#64748b; font-size:0.8rem; font-family:monospace;" class="hide-mobile">
+                {{ f.created_at|date:"d M Y" }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div style="text-align:center; padding:3rem 2rem; color:#94a3b8;">
+          <div style="font-size:2.2rem; margin-bottom:0.4rem;">🕊️</div>
+          <div style="font-weight:600; font-size:0.9rem; color:#475569;">{% trans "No fines recorded. The ledger is clean!" %}</div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<style>
+  /* Dynamic Glassmorphism Variables Context */
+  :root {
+    --clan-primary-raw: 16, 185, 129;
+    --clan-accent-raw: 99, 102, 241;
+    --blur-intensity: 6px;
+  }
+
+  body {
+    background: linear-gradient(
+      135deg, 
+      rgba(var(--clan-primary-raw), 0.04) 0%, 
+      rgba(var(--clan-accent-raw), 0.02) 50%, 
+      #f8fafc 100%
+    ) !important;
+    background-attachment: fixed !important;
+  }
+
+  /* Content Cards */
+  .settings-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(var(--blur-intensity));
+    -webkit-backdrop-filter: blur(var(--blur-intensity));
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.01);
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  .settings-card:hover {
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03);
+  }
+
+  /* Header Architecture */
+  .section-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #475569;
+    background: rgba(255,255,255,0.6);
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.5);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .toggle-header {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .toggle-header:hover { background: rgba(255,255,255,0.9); }
+  .toggle-arrow { transition: transform 0.2s; font-size: 0.7rem; color: #94a3b8; }
+  .toggle-arrow.open { transform: rotate(90deg); }
+  .toggle-body { display: none; margin-bottom: 1.25rem; }
+  .toggle-body.open { display: block; }
+
+  /* Table Row Interactivity */
+  .ledger-row:hover { background: rgba(248, 250, 252, 0.8) !important; }
+
+  /* Custom Status Badges Compatibility Layer */
+  .badge.paid, .badge.cleared { background: #d1fae5 !important; color: #065f46 !important; }
+  .badge.unpaid, .badge.pending { background: #fee2e2 !important; color: #991b1b !important; }
+  .badge.overdue { background: #fef3c7 !important; color: #92400e !important; }
+
+  /* Mobile Responsive Framework View Safeguard */
+  @media (max-width: 768px) {
+    .hide-mobile { display: none !important; }
+  }
+</style>
+
+<script>
+function toggleSection(id) {
+  const body = document.getElementById(id);
+  const arrow = document.getElementById(id + '-arrow');
+  if (body && arrow) {
+    body.classList.toggle('open');
+    arrow.classList.toggle('open');
+  }
+}
+</script>
+{% endblock %}

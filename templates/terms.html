@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block sidebar %}{% endblock %}
+{% load i18n %}
+
+{% block page_title %}{% trans "Terms of Service" %}{% endblock %}
+
+{% block content %}
+<div style="max-width:800px; margin:0 auto; padding:1rem;">
+  <h1 style="font-size:1.5rem; font-weight:700; margin-bottom:0.5rem;">📜 {% trans "Terms of Service" %}</h1>
+  <p style="color:#64748b; font-size:0.85rem; margin-bottom:1.5rem;">{% trans "Last Updated: May 2026" %}</p>
+
+  <div style="background:#fff; border-radius:12px; border:1px solid #e2e8f0; padding:2rem; line-height:1.8; color:#374151;">
+    <p style="margin-bottom:1rem;">{% trans "By accessing or using this system, you agree to the following terms." %}</p>
+
+    <h2 style="font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.75rem;">{% trans "1. Acceptance of Terms" %}</h2>
+    <p style="margin-bottom:0.5rem;">{% trans "By using this system, you confirm that:" %}</p>
+    <ul style="padding-left:1.5rem; margin-bottom:1rem;">
+      <li>{% trans "You are an authorized member of a clan" %}</li>
+      <li>{% trans "You agree to comply with all rules and policies" %}</li>
+    </ul>
+
+    <h2 style="font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.75rem;">{% trans "2. User Responsibilities" %}</h2>
+    <p style="margin-bottom:0.5rem;">{% trans "You agree to:" %}</p>
+    <ul style="padding-left:1.5rem; margin-bottom:1rem;">
+      <li>{% trans "Provide accurate information" %}</li>
+      <li>{% trans "Keep your login credentials secure" %}</li>
+      <li>{% trans "Not share your account" %}</li>
+      <li>{% trans "Use the system only for intended purposes" %}</li>
+    </ul>
+
+    <h2 style="font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.75rem;">{% trans "3. Prohibited Activities" %}</h2>
+    <p style="margin-bottom:0.5rem;">{% trans "You must NOT:" %}</p>
+    <ul style="padding-left:1.5rem; margin-bottom:1rem;">
+      <li>{% trans "Attempt to hack or disrupt the system" %}</li>
+      <li>{% trans "Access data without permission" %}</li>
+      <li>{% trans "Manipulate financial or contribution records" %}</li>
+      <li>{% trans "Impersonate another user" %}</li>
+    </ul>
+
+    <h2 style="font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.75rem;">{% trans "4. Account Management" %}</h2>
+    <ul style="padding-left:1.5rem; margin-bottom:1rem;">
+      <li>{% trans "Accounts are created and managed by administrators" %}</li>
+      <li>{% trans "Administrators may suspend or remove accounts if necessary" %}</li>
+      <li>{% trans "Access may be revoked for misuse" %}</li>
+    </ul>
+
+    <h2 style="font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.75rem;">{% trans "5. Financial Records Disclaimer" %}</h2>
+    <p style="margin-bottom:0.5rem;">{% trans "While the system tracks contributions:" %}</p>
+    <ul style="padding-left:1.5rem; margin-bottom:1rem;">
+      <li>{% trans "It does not replace official financial institutions" %}</li>
+      <li>{% trans "Users should verify records independently where necessary" %}</li>
+    </ul>
+
+    <h2 style="font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.75rem;">{% trans "6. System Availability" %}</h2>
+    <p style="margin-bottom:0.5rem;">{% trans "We aim for reliability but do not guarantee:" %}</p>
+    <ul style="padding-left:1.5rem; margin-bottom:1rem;">
+      <li>{% trans "Continuous uptime" %}</li>
+      <li>{% trans "Error-free operation" %}</li>
+    </ul>
+    <p style="margin-bottom:1rem;">{% trans "The system may be updated, modified, or temporarily unavailable." %}</p>
+
+    <h2 style="font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.75rem;">{% trans "7. Limitation of Liability" %}</h2>
+    <p style="margin-bottom:0.5rem;">{% trans "We are not liable for:" %}</p>
+    <ul style="padding-left:1.5rem; margin-bottom:1rem;">
+      <li>{% trans "Data loss due to user actions" %}</li>
+      <li>{% trans "Unauthorized access caused by poor password security" %}</li>
+      <li>{% trans "Indirect or incidental damages" %}</li>
+    </ul>
+
+    <h2 style="font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.75rem;">{% trans "8. Modifications" %}</h2>
+    <p style="margin-bottom:1rem;">{% trans "We may update these Terms at any time. Continued use means acceptance of changes." %}</p>
+
+    <h2 style="font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.75rem;">{% trans "9. Termination" %}</h2>
+    <p style="margin-bottom:0.5rem;">{% trans "We reserve the right to:" %}</p>
+    <ul style="padding-left:1.5rem; margin-bottom:1rem;">
+      <li>{% trans "Suspend accounts" %}</li>
+      <li>{% trans "Restrict access" %}</li>
+      <li>{% trans "Remove users violating these terms" %}</li>
+    </ul>
+
+    <h2 style="font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.75rem;">{% trans "10. Governing Use" %}</h2>
+    <p>{% trans "This system is intended for internal clan management and must be used responsibly and ethically." %}</p>
+  </div>
+
+  <!-- Back Navigation -->
+  <div style="margin-top:1.5rem; text-align:center;">
+    <a href="{% url 'accept-terms' %}" style="display:inline-block; font-size:0.85rem; color:#6366f1; text-decoration:none; padding:0.5rem 1rem; background:#f1f5f9; border-radius:8px;">← {% trans "Go back" %}</a>
+  </div>
+</div>
+{% endblock %}

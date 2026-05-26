@@ -1,0 +1,392 @@
+{% extends "base.html" %}
+{% load i18n clan_filters %}
+
+{% block page_title %}{% trans "Clan Settings" %}{% endblock %}
+
+{% block content %}
+
+<div style="max-width:800px; margin:0 auto;">
+
+  <!-- Header Banner (if exists) -->
+  {% if clan.banner_image %}
+  <div style="border-radius:12px; overflow:hidden; margin-bottom:1.5rem; height:160px; position:relative;">
+    <img src="{{ clan.banner_image.url }}" style="width:100%; height:100%; object-fit:cover;">
+    <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.6)); padding:1rem 1.5rem;">
+      <span style="color:#fff; font-weight:700; font-size:1.1rem;">{{ clan.name }}</span>
+    </div>
+  </div>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <!-- Section 1: Identity -->
+    <div class="settings-card">
+      <div class="settings-header">
+        <div class="settings-icon" style="background:#dbeafe;">🏛️</div>
+        <div>
+          <h3 class="settings-title">{% trans "Clan Identity" %}</h3>
+          <p class="settings-subtitle">{% trans "Basic information about your clan" %}</p>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-col">
+          <label class="form-label">{% trans "Clan Name" %} *</label>
+          {{ form.name }}
+        </div>
+        <div class="form-col">
+          <label class="form-label">{% trans "Short Code / Acronym" %}</label>
+          {{ form.code }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">{% trans "Motto / Slogan" %}</label>
+        {{ form.motto }}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">{% trans "Description" %}</label>
+        {{ form.description }}
+      </div>
+    </div>
+
+    <!-- Section 2: Branding -->
+    <div class="settings-card">
+      <div class="settings-header">
+        <div class="settings-icon" style="background:#ede9fe;">🎨</div>
+        <div>
+          <h3 class="settings-title">{% trans "Branding & Appearance" %}</h3>
+          <p class="settings-subtitle">{% trans "Logo, banner and colour theme" %}</p>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-col">
+          <label class="form-label">{% trans "Clan Logo" %}</label>
+          {% if clan.logo %}
+          <img src="{{ clan.logo.url }}" class="logo-preview" alt="Logo">
+          {% endif %}
+          {{ form.logo }}
+          <div class="form-help">{% trans "Recommended: 512×512 px, PNG or JPG" %}</div>
+        </div>
+        <div class="form-col">
+          <label class="form-label">{% trans "Cover Banner" %}</label>
+          {% if clan.banner_image %}
+          <img src="{{ clan.banner_image.url }}" class="banner-preview" alt="Banner">
+          {% endif %}
+          {{ form.banner_image }}
+          <div class="form-help">{% trans "Recommended: 1200×400 px" %}</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-col">
+          <label class="form-label">{% trans "Primary Colour" %}</label>
+          {{ form.primary_color }}
+        </div>
+        <div class="form-col">
+          <label class="form-label">{% trans "Accent Colour" %}</label>
+          {{ form.accent_color }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Financial Configuration -->
+    <div class="settings-card">
+      <div class="settings-header">
+        <div class="settings-icon" style="background:#fef3c7;">💰</div>
+        <div>
+          <h3 class="settings-title">{% trans "Financial Settings" %}</h3>
+          <p class="settings-subtitle">{% trans "Currency, contribution defaults and fines" %}</p>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-col">
+          <label class="form-label">{% trans "Currency" %}</label>
+          {{ form.currency }}
+        </div>
+        <div class="form-col">
+          <label class="form-label">{% trans "Default Contribution Amount" %}</label>
+          {{ form.default_contribution }}
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-col">
+          <label class="form-label">{% trans "Late Payment Fine" %}</label>
+          {{ form.late_fine_amount }}
+        </div>
+        <div class="form-col">
+          <label class="form-label">{% trans "Max Loan Amount" %}</label>
+          {{ form.max_loan_amount }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 4: Advanced -->
+    <div class="settings-card">
+      <div class="settings-header">
+        <div class="settings-icon" style="background:#f1f5f9;">⚙️</div>
+        <div>
+          <h3 class="settings-title">{% trans "Advanced" %}</h3>
+          <p class="settings-subtitle">{% trans "Timezone, language and registration" %}</p>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-col">
+          <label class="form-label">{% trans "Timezone" %}</label>
+          {{ form.timezone }}
+        </div>
+        <div class="form-col">
+          <label class="form-label">{% trans "Default Language" %}</label>
+          {{ form.default_language }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-label">
+          {{ form.is_public }}
+          <span>{% trans "Allow public registration" %}</span>
+        </label>
+        <div class="form-help" style="margin-left:1.75rem;">{% trans "New members can register without an invitation" %}</div>
+      </div>
+    </div>
+
+    <!-- Save Button -->
+    <div class="form-actions">
+      <a href="{% url 'dashboard' %}" class="btn-cancel">{% trans "Cancel" %}</a>
+      <button type="submit" class="btn-save">
+        💾 {% trans "Save All Settings" %}
+      </button>
+    </div>
+
+  </form>
+</div>
+
+<style>
+  /* ── Card Layout ── */
+  .settings-card {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .settings-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .settings-icon {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .settings-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+  }
+
+  .settings-subtitle {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin: 0.15rem 0 0;
+  }
+
+  /* ── Form Grid ── */
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .form-col {
+    min-width: 0;
+  }
+
+  .form-group {
+    margin-top: 1rem;
+  }
+
+  /* ── Labels ── */
+  .form-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #374151;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.3rem;
+  }
+
+  .form-help {
+    font-size: 0.68rem;
+    color: #64748b;
+    margin-top: 0.25rem;
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #374151;
+    margin-top: 0.5rem;
+  }
+
+  /* ── Inputs ── */
+  input:not([type=checkbox]):not([type=color]),
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: #1e293b;
+    background: #f8fafc;
+    transition: border-color 0.15s;
+  }
+
+  input:not([type=checkbox]):not([type=color]):focus,
+  select:focus,
+  textarea:focus {
+    border-color: #10b981;
+    outline: none;
+    background: #fff;
+  }
+
+  input[type=color] {
+    padding: 0.2rem;
+    height: 42px;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+  }
+
+  input[type=file] {
+    width: 100%;
+    padding: 0.5rem;
+    background: #fff;
+    border: 2px dashed #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.8rem;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem center;
+    padding-right: 2rem;
+  }
+
+  /* ── Previews ── */
+  .logo-preview {
+    width: 80px; height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .banner-preview {
+    width: 100%; height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  /* ── Buttons ── */
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-cancel {
+    padding: 0.7rem 1.5rem;
+    background: #f1f5f9;
+    color: #374151;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+  }
+
+  .btn-save {
+    padding: 0.7rem 2rem;
+    background: #10b981;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .btn-save:hover {
+    background: #059669;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .form-row {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    .settings-card {
+      padding: 1rem;
+    }
+
+    .form-actions {
+      flex-direction: column;
+    }
+
+    .btn-cancel,
+    .btn-save {
+      width: 100%;
+      text-align: center;
+    }
+
+    .logo-preview {
+      width: 60px; height: 60px;
+    }
+
+    .settings-title {
+      font-size: 0.85rem;
+    }
+  }
+</style>
+
+{% endblock %}

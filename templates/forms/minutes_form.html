@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% load i18n clan_filters %}
+
+{% block page_title %}{% trans "Meeting Minutes" %}{% endblock %}
+
+{% block content %}
+
+<div style="max-width:800px; margin:0 auto;">
+
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+    <div class="section-title" style="margin-bottom:0;">📄 {% trans "Meeting Minutes" %}</div>
+    <a href="{% url 'events' %}" 
+       style="padding:0.5rem 1rem; background:#f1f5f9; color:#374151;
+              border-radius:8px; font-size:0.8rem; font-weight:600;
+              text-decoration:none;">
+      ← {% trans "Back to Events" %}
+    </a>
+  </div>
+
+  <!-- Event Header -->
+  <div style="background:linear-gradient(135deg,#0f172a,#1e293b); border-radius:12px;
+              padding:1.5rem; margin-bottom:1.5rem; color:#f8fafc;">
+    <h2 style="font-size:1.2rem; font-weight:700; margin-bottom:0.5rem;">
+      {{ minutes.event.title }}
+    </h2>
+    <div style="display:flex; flex-wrap:wrap; gap:1rem; font-size:0.8rem; color:#94a3b8;">
+      <span>📅 {{ minutes.event.scheduled_at|date:"l, d F Y · H:i" }}</span>
+      {% if minutes.event.location %}
+      <span>📍 {{ minutes.event.location }}</span>
+      {% endif %}
+      <span>🏷️ {{ minutes.event.get_event_type_display }}</span>
+    </div>
+    <div style="margin-top:0.75rem; font-size:0.75rem; color:#64748b;">
+      📝 {% trans "Recorded by" %}: {{ minutes.recorded_by.person.full_name }}
+      · {{ minutes.created_at|date:"d M Y H:i" }}
+    </div>
+  </div>
+
+  <!-- Attendance -->
+  <div style="background:#fff; border-radius:12px; border:1px solid #e2e8f0;
+              padding:1.2rem; margin-bottom:1.25rem;">
+    <div style="font-weight:700; font-size:0.85rem; color:#1e293b; margin-bottom:0.75rem;">
+      👥 {% trans "Attendance" %} ({{ attendees_present|length }} {% trans "present" %})
+    </div>
+    <div style="display:flex; flex-wrap:wrap; gap:0.4rem;">
+      {% for att in attendees %}
+      <span style="padding:0.3rem 0.7rem; border-radius:20px; font-size:0.78rem;
+                   {% if att.present %}background:#d1fae5;color:#065f46;
+                   {% else %}background:#fee2e2;color:#991b1b;{% endif %}">
+        {{ att.member.person.full_name|default:att.member.email }}
+        {% if not att.present %}({% trans "absent" %}){% endif %}
+      </span>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Agenda -->
+  {% if minutes.agenda %}
+  <div style="background:#fff; border-radius:12px; border:1px solid #e2e8f0;
+              padding:1.2rem; margin-bottom:1.25rem;">
+    <div style="font-weight:700; font-size:0.85rem; color:#1e293b; margin-bottom:0.5rem;">
+      📋 {% trans "Agenda" %}
+    </div>
+    <div style="font-size:0.85rem; color:#374151; line-height:1.7; white-space:pre-line;">
+      {{ minutes.agenda }}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Discussion -->
+  <div style="background:#fff; border-radius:12px; border:1px solid #e2e8f0;
+              padding:1.2rem; margin-bottom:1.25rem;">
+    <div style="font-weight:700; font-size:0.85rem; color:#1e293b; margin-bottom:0.5rem;">
+      💬 {% trans "Discussion Summary" %}
+    </div>
+    <div style="font-size:0.85rem; color:#374151; line-height:1.7; white-space:pre-line;">
+      {{ minutes.discussion }}
+    </div>
+  </div>
+
+  <!-- Decisions -->
+  {% if minutes.decisions %}
+  <div style="background:#fff; border-radius:12px; border:1px solid #e2e8f0;
+              padding:1.2rem; margin-bottom:1.25rem; border-left:4px solid #10b981;">
+    <div style="font-weight:700; font-size:0.85rem; color:#065f46; margin-bottom:0.5rem;">
+      ✅ {% trans "Decisions & Resolutions" %}
+    </div>
+    <div style="font-size:0.85rem; color:#374151; line-height:1.7; white-space:pre-line;">
+      {{ minutes.decisions }}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Action Items -->
+  {% if minutes.action_items %}
+  <div style="background:#fff; border-radius:12px; border:1px solid #e2e8f0;
+              padding:1.2rem; margin-bottom:1.25rem; border-left:4px solid #f59e0b;">
+    <div style="font-weight:700; font-size:0.85rem; color:#92400e; margin-bottom:0.5rem;">
+      📌 {% trans "Action Items" %}
+    </div>
+    <div style="font-size:0.85rem; color:#374151; line-height:1.7; white-space:pre-line;">
+      {{ minutes.action_items }}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Next Meeting -->
+  {% if minutes.next_meeting %}
+  <div style="background:#fff; border-radius:12px; border:1px solid #e2e8f0;
+              padding:1.2rem; margin-bottom:1.25rem;">
+    <div style="font-weight:700; font-size:0.85rem; color:#1e293b; margin-bottom:0.5rem;">
+      📅 {% trans "Next Meeting" %}
+    </div>
+    <div style="font-size:0.85rem; color:#374151;">
+      {{ minutes.next_meeting|date:"l, d F Y · H:i" }}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- PDF Download -->
+  <div style="text-align:center; margin-top:1rem;">
+    <a href="{% url 'pdf-minutes' minutes.id %}" 
+       style="display:inline-block; padding:0.6rem 1.5rem; background:#6366f1; color:#fff;
+              border-radius:8px; font-size:0.85rem; font-weight:600; text-decoration:none;">
+      📥 {% trans "Download PDF" %}
+    </a>
+  </div>
+</div>
+
+{% endblock %}

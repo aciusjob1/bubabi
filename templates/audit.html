@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load i18n clan_filters %}
+
+{% block page_title %}{% trans "Audit Log" %}{% endblock %}
+
+{% block content %}
+<style>
+  /* Layout Canvas Wrapper */
+  .audit-log-container {
+    max-width: 1100px; 
+    margin: 0 auto;
+  }
+  .audit-log-container .section-title {
+    margin-bottom: 1.25rem;
+  }
+
+  /* Table Scannability Helpers */
+  .table-cell-nowrap {
+    white-space: nowrap;
+  }
+  .table-cell-muted {
+    font-size: 0.8rem;
+    color: #64748b;
+  }
+  .table-cell-mono {
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: #334155;
+  }
+</style>
+
+<div class="audit-log-container">
+  <div class="section-title">
+    <span>📜 {% trans "Audit Log" %}</span>
+  </div>
+
+  {% if logs %}
+  <div class="table-slider-wrapper">
+    <button onclick="slideTable('auditTable', -1)" class="table-slider-btn left">◀</button>
+    <button onclick="slideTable('auditTable', 1)" class="table-slider-btn right">▶</button>
+    <div class="table-card" id="auditTable" style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>{% trans "Time" %}</th>
+            <th>{% trans "Actor" %}</th>
+            <th>{% trans "Action" %}</th>
+            <th>{% trans "Domain" %}</th>
+            <th>{% trans "Target" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for log in logs %}
+          <tr>
+            <td class="table-cell-nowrap table-cell-muted">
+              {{ log.timestamp|date:"d M Y H:i" }}
+            </td>
+            <td class="table-cell-nowrap">
+              <strong>{% if log.actor %}{{ log.actor.person.full_name|default:log.actor.email }}{% else %}{% trans "System" %}{% endif %}</strong>
+            </td>
+            <td>
+              {{ log.action }}
+            </td>
+            <td>
+              <span class="badge">{{ log.domain }}</span>
+            </td>
+            <td class="table-cell-mono">
+              {{ log.target|default:"—" }}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% else %}
+  <div class="table-card">
+    <div class="empty">{% trans "No audit logs available." %}</div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

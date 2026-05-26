@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block page_title %}{% trans "Update Case" %}{% endblock %}
+
+{% block content %}
+<div style="max-width:560px; margin:0 auto;">
+  <div class="section-title">⚖️ {% trans "Update Judicial Case" %}</div>
+  <div style="background:#fff; border-radius:12px; border:1px solid #e2e8f0; padding:1.5rem;">
+    <div style="background:#dbeafe; padding:1rem; border-radius:8px; margin-bottom:1.5rem;">
+      <div style="font-weight:700;">{{ case.case_number }}: {{ case.title }}</div>
+      <div style="font-size:0.8rem; color:#64748b;">{% trans "Filed by" %} {{ case.filed_by.person.full_name }}</div>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+            <div style="margin-bottom:1.25rem;">
+        <label style="display:block; font-size:0.75rem; font-weight:600; color:#374151; text-transform:uppercase; margin-bottom:0.4rem;">📎 {% trans "Add Attachment" %}</label>
+        <input type="file" name="attachment" accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.xls,.xlsx"
+               style="width:100%; padding:0.5rem; border:2px dashed #e2e8f0; border-radius:8px; font-size:0.85rem;">
+        <div style="font-size:0.7rem; color:#64748b; margin-top:0.25rem;">{% trans "Upload ruling document or additional evidence" %}</div>
+      </div>
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block; font-size:0.75rem; font-weight:600; color:#374151; text-transform:uppercase; margin-bottom:0.4rem;">{% trans "Status" %}</label>
+        <select name="status" style="width:100%; padding:0.7rem; border:1px solid #e2e8f0; border-radius:8px; font-size:0.9rem; background:#fff;">
+          {% for key, label in case_statuses %}
+          <option value="{{ key }}" {% if case.status == key %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+            <div style="margin-bottom:1.25rem;">
+        <label style="display:block; font-size:0.75rem; font-weight:600; color:#374151; text-transform:uppercase; margin-bottom:0.4rem;">📎 {% trans "Add Attachment" %}</label>
+        <input type="file" name="attachment" accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.xls,.xlsx"
+               style="width:100%; padding:0.5rem; border:2px dashed #e2e8f0; border-radius:8px; font-size:0.85rem;">
+        <div style="font-size:0.7rem; color:#64748b; margin-top:0.25rem;">{% trans "Upload ruling document or additional evidence" %}</div>
+      </div>
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block; font-size:0.75rem; font-weight:600; color:#374151; text-transform:uppercase; margin-bottom:0.4rem;">{% trans "Ruling / Decision" %}</label>
+        <textarea name="ruling" rows="4" style="width:100%; padding:0.7rem; border:1px solid #e2e8f0; border-radius:8px; font-size:0.85rem; resize:vertical;">{{ case.ruling|default:'' }}</textarea>
+      </div>
+      <button type="submit" style="width:100%; padding:0.85rem; background:#10b981; color:#fff; border:none; border-radius:8px; font-size:0.95rem; font-weight:600; cursor:pointer;">💾 {% trans "Update Case" %}</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load i18n clan_filters %}
+{% block page_title %}{% trans "Announcements" %}{% endblock %}
+{% block content %}
+
+<style>
+  .announcements-container { max-width: 800px; margin: 0 auto; padding: 2rem; border-radius: 16px; background: linear-gradient(#1e293b99, #0f172abb), var(--clan-banner) center/cover no-repeat fixed; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); }
+  .announcements-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.5rem; }
+  .announcements-container .section-title { margin: 0; color: #f8fafc; font-weight: 700; }
+  .btn-action { padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600; text-decoration: none; white-space: nowrap; display: inline-flex; align-items: center; }
+  .btn-create { background: #10b981; color: #fff; }
+  .announcements-feed { display: flex; flex-direction: column; gap: 1rem; }
+  .announcement-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); border-radius: 12px; border: 1px solid rgba(226, 232, 240, 0.8); overflow: hidden; }
+  .announcement-card.is-pinned { border-top: 3px solid #f59e0b; }
+  .announcement-card-body { padding: 1.2rem; }
+  .card-meta-row { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; }
+  .meta-badges-group { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+  .badge-indicator { font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 600; }
+  .badge-pinned { background: #fef3c7; color: #92400e; }
+  .badge-expired { background: #fee2e2; color: #991b1b; }
+  .meta-timestamp { font-size: 0.72rem; color: #64748b; text-align: right; }
+  .announcement-title-block { font-size: 1rem; font-weight: 700; color: #1e293b; margin: 0.6rem 0 0.4rem; }
+  .announcement-title-link { color: #1e293b; text-decoration: none; }
+  .announcement-preview-text { font-size: 0.875rem; color: #374151; line-height: 1.6; white-space: pre-line; }
+  .card-footer-row { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+  .author-subtext { font-size: 0.78rem; color: #64748b; }
+  .footer-actions-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .btn-sm-control { padding: 0.3rem 0.8rem; border-radius: 6px; font-size: 0.78rem; text-decoration: none; font-weight: 600; }
+  .btn-readmore { background: #f1f5f9; color: #374151; }
+  .btn-delete { background: #fee2e2; color: #991b1b; border: none; cursor: pointer; }
+  .btn-hide { background: #f1f5f9; color: #64748b; border: none; cursor: pointer; }
+  .empty-state-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); border-radius: 12px; border: 1px solid rgba(226, 232, 240, 0.8); padding: 3rem; text-align: center; }
+  .empty-state-icon { font-size: 3rem; margin-bottom: 0.75rem; }
+  .empty-state-title { font-weight: 600; font-size: 1rem; color: #374151; }
+  .empty-state-desc { font-size: 0.85rem; color: #94a3b8; margin-top: 0.3rem; }
+</style>
+
+<div class="announcements-container" style="--clan-banner: url('{% if clan_banner %}{{ clan_banner.url }}{% else %}https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=1920&q=80{% endif %}');">
+  <div class="announcements-header">
+    <div class="section-title">📢 {% trans "Announcements" %}</div>
+    {% if request.user.is_superuser or request.user.clan_roles.first.role.hierarchy_level|default:0 >= 2 %}
+    <a href="{% url 'create-announcement' %}" class="btn-action btn-create">+ {% trans "Post Announcement" %}</a>
+    {% endif %}
+  </div>
+
+  {% if announcements %}
+  <div class="announcements-feed">
+    {% for a in announcements %}
+    <div class="announcement-card {% if a.is_pinned %}is_pinned{% endif %}">
+      <div class="announcement-card-body">
+        <div class="card-meta-row">
+          <div class="meta-badges-group">
+            {% if a.is_pinned %}<span class="badge-indicator badge-pinned">📌 {% trans "PINNED" %}</span>{% endif %}
+            {% if a.category %}<span class="badge {{ a.category }}">{{ a.category }}</span>{% endif %}
+            {% if a.expires_at and a.expires_at < now %}<span class="badge-indicator badge-expired">⏰ {% trans "Expired" %}</span>{% endif %}
+          </div>
+          <div class="meta-timestamp">{{ a.created_at|date:"d M Y · H:i" }}{% if a.expires_at %}<br><span class="meta-expiration">{% trans "Expires" %}: {{ a.expires_at|date:"d M Y" }}</span>{% endif %}</div>
+        </div>
+        <div class="announcement-title-block"><a href="{% url 'announcement-detail' a.id %}" class="announcement-title-link">{{ a.title }}</a></div>
+        <div class="announcement-preview-text">{{ a.content|truncatechars:300 }}</div>
+        <div class="card-footer-row">
+          <div class="author-meta-block">
+            {% avatar a.author 28 %}
+            <div class="author-subtext"><strong>{{ a.author.person.full_name|default:a.author.email }}</strong> · {{ a.comments.count }} {% trans "comment" %}{{ a.comments.count|pluralize }}</div>
+          </div>
+          <div class="footer-actions-group">
+            <a href="{% url 'announcement-detail' a.id %}" class="btn-sm-control btn-readmore">{% trans "Read more" %} →</a>
+            {% if request.user == a.author or request.user.is_superuser %}
+            <form method="post" action="{% url 'delete-announcement' a.id %}" style="display:inline;">{% csrf_token %}<button type="submit" onclick="return confirm('Delete this announcement permanently?');" class="btn-sm-control btn-delete" title="{% trans 'Delete permanently' %}">🗑 {% trans "Delete" %}</button></form>
+            {% else %}
+            <form method="post" action="{% url 'delete-announcement' a.id %}" style="display:inline;">{% csrf_token %}<button type="submit" onclick="return confirm('Hide this announcement from your view?');" class="btn-sm-control btn-hide" title="{% trans 'Hide from my view only' %}">🙈 {% trans "Hide" %}</button></form>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state-panel">
+    <div class="empty-state-icon">📢</div>
+    <div class="empty-state-title">{% trans "No announcements yet" %}</div>
+    <div class="empty-state-desc">{% trans "Post the first one to keep everyone informed!" %}</div>
+    {% if request.user.is_superuser or request.user.clan_roles.first.role.hierarchy_level|default:0 >= 2 %}
+    <a href="{% url 'create-announcement' %}" class="btn-action btn-create" style="display:inline-block; margin-top:1rem; padding:0.6rem 1.5rem; font-size:0.85rem;">+ {% trans "Post Announcement" %}</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

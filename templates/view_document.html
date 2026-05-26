@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+
+{% block page_title %}{{ document.title }}{% endblock %}
+
+{% block content %}
+<div style="max-width:900px; margin:0 auto;">
+
+  <!-- Header -->
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+    <div>
+      <h2 style="margin:0; font-size:1.2rem;">
+        {% if is_image %}🖼️{% elif is_pdf %}📕{% elif is_text %}📝{% else %}📎{% endif %}
+        {{ document.title }}
+      </h2>
+      <p style="font-size:0.8rem; color:#64748b; margin:0.3rem 0 0 0;">
+        {% trans "Version" %} {{ document.version|default:"1.0" }} ·
+        {{ document.uploaded_by.person.full_name|default:document.uploaded_by.email }} ·
+        {{ document.created_at|date:"d M Y" }}
+        {% if document.file.size %}· {{ document.file.size|filesizeformat }}{% endif %}
+      </p>
+    </div>
+    <a href="{% url 'download-document' document.id %}" class="btn btn-green" style="white-space:nowrap;">
+      📥 {% trans "Download" %}
+    </a>
+  </div>
+
+  <!-- Preview Area -->
+  <div class="document-preview">
+
+    {% if is_image %}
+      <img src="{% url 'stream-document' document.id %}" alt="{{ document.title }}"
+           style="width:100%; max-height:80vh; object-fit:contain; cursor:zoom-in;"
+           class="preview-img">
+
+    {% elif is_pdf %}
+      <iframe src="{% url 'stream-document' document.id %}"
+              style="width:100%; height:min(80vh, 600px); border:none; opacity:0; transition:opacity 0.3s;"
+              onload="this.style.opacity=1">
+      </iframe>
+
+    {% elif is_text and file_content %}
+      <pre style="white-space:pre-wrap; font-family:monospace; font-size:0.85rem; line-height:1.6; padding:1.5rem; width:100%; margin:0; max-height:70vh; overflow-y:auto;">{{ file_content|escape|linebreaksbr }}</pre>
+
+    {% else %}
+      <div style="text-align:center; padding:3rem;">
+        <div style="font-size:3rem; margin-bottom:0.5rem;">📎</div>
+        <div style="font-weight:600; color:#374151; margin-bottom:0.3rem;">{{ document.title }}</div>
+        <div style="font-size:0.85rem; color:#64748b;">{% trans "Preview not available for this file type." %}</div>
+        <a href="{% url 'download-document' document.id %}" class="btn btn-green" style="margin-top:1rem;">
+          📥 {% trans "Download File" %}
+        </a>
+      </div>
+    {% endif %}
+
+  </div>
+
+  <!-- Back Navigation -->
+  <div style="margin-top:1rem;">
+    <a href="{% url 'documents' %}" style="font-size:0.85rem; color:#6366f1; text-decoration:none;">← {% trans "Back to Documents" %}</a>
+  </div>
+
+</div>
+
+<style>
+.document-preview {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+  .preview-img { transition: transform 0.25s ease; cursor: zoom-in; }
+  .preview-img.zoomed { transform: scale(1.8); cursor: zoom-out; }
+  @media (max-width: 640px) {
+    iframe { height: 50vh !important; }
+    img { max-height: 50vh !important; }
+  }
+</style>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll(".preview-img").forEach(img => {
+    img.addEventListener("click", () => {
+      img.classList.toggle("zoomed");
+    });
+  });
+});
+</script>
+{% endblock %}

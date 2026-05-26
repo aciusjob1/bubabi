@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% load i18n clan_filters %}
+
+{% block page_title %}{% trans "Review Loan" %}{% endblock %}
+
+{% block content %}
+
+<div style="max-width:640px; margin:0 auto;">
+
+  <div class="section-title">📋 {% trans "Review Loan Application" %}</div>
+
+  <!-- Loan Summary Card -->
+  <div style="background:linear-gradient(135deg, {{ clan_primary_color|default:'#0f172a' }}, {{ clan_accent_color|default:'#1e293b' }}); 
+              border-radius:12px; padding:1.5rem; margin-bottom:1.5rem; color:#f8fafc;">
+    <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1rem;">
+      {% avatar loan.borrower 48 %}
+      <div>
+        <div style="font-size:1rem; font-weight:700;">{{ loan.borrower.person.full_name|default:loan.borrower.email }}</div>
+        <div style="font-size:0.8rem; color:#94a3b8;">{{ loan.borrower.email }}</div>
+        <div style="font-size:0.8rem; color:#94a3b8;">{{ loan.borrower.phone|default:"" }}</div>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+      <div style="background:rgba(255,255,255,0.08); border-radius:8px; padding:0.75rem;">
+        <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; letter-spacing:1px;">{% trans "Requested" %}</div>
+        <div style="font-size:1.2rem; font-weight:700; margin-top:0.2rem;">{{ loan.amount_requested|clan_currency:request.user.clan }}</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.08); border-radius:8px; padding:0.75rem;">
+        <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; letter-spacing:1px;">{% trans "Status" %}</div>
+        <div style="font-size:1rem; margin-top:0.2rem;">
+          <span class="badge {{ loan.status }}">{{ loan.status }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:0.75rem; background:rgba(255,255,255,0.08); border-radius:8px; padding:0.75rem;">
+      <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; letter-spacing:1px;">{% trans "Purpose" %}</div>
+      <div style="font-size:0.9rem; margin-top:0.2rem;">{{ loan.purpose }}</div>
+    </div>
+
+    <div style="margin-top:0.5rem; font-size:0.75rem; color:#94a3b8;">
+      📅 {% trans "Applied" %}: {{ loan.created_at|date:"d M Y · H:i" }}
+      {% if loan.due_date %}· ⏰ {% trans "Due" %}: {{ loan.due_date|date:"d M Y" }}{% endif %}
+    </div>
+  </div>
+
+  {% if loan.status == 'requested' or loan.status == 'under_review' %}
+  <!-- Approval Form -->
+  <div style="background:#fff; border-radius:12px; border:1px solid #e2e8f0; padding:1.5rem; margin-bottom:1.5rem;">
+    <div style="font-weight:700; font-size:0.9rem; color:#1e293b; margin-bottom:1.25rem;">
+      ⚡ {% trans "Take Action" %}
+    </div>
+
+    <!-- Approve Section -->
+    <form method="post" id="approveForm">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="approve">
+
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block; font-size:0.75rem; font-weight:600; color:#374151; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.4rem;">
+          💰 {% trans "Amount to Approve" %}
+        </label>
+        <div style="position:relative;">
+          <span style="position:absolute; left:0.75rem; top:50%; transform:translateY(-50%); font-weight:700; color:#64748b; font-size:0.85rem;">
+            {{ request.user.clan.currency|default:"TSh" }}
+          </span>
+          <input type="number" name="amount_approved" required min="0" step="100"
+                 max="{{ loan.amount_requested }}"
+                 value="{{ loan.amount_requested }}"
+                 style="width:100%; padding:0.7rem 0.7rem 0.7rem 4rem; border:1px solid #e2e8f0; border-radius:8px; font-size:0.9rem; outline:none;"
+                 onfocus="this.style.borderColor='#10b981'"
+                 onblur="this.style.borderColor='#e2e8f0'">
+        </div>
+        <div style="font-size:0.72rem; color:#64748b; margin-top:0.3rem;">
+          {% trans "Max" %}: {{ loan.amount_requested|clan_currency:request.user.clan }}
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+        <button type="submit" onclick="this.form.action.value='approve'"
+                style="padding:0.7rem 1.5rem; background:#10b981; color:#fff; border:none; border-radius:8px; font-size:0.85rem; font-weight:600; cursor:pointer; flex:1; min-width:120px;">
+          ✅ {% trans "Approve Loan" %}
+        </button>
+
+        <button type="button" onclick="showConfirm('{% trans "Reject Loan" %}', '{% trans "Are you sure you want to reject this loan application?" %}', function(){ document.getElementById('rejectForm').submit(); });"
+                style="padding:0.7rem 1.5rem; background:#ef4444; color:#fff; border:none; border-radius:8px; font-size:0.85rem; font-weight:600; cursor:pointer; flex:1; min-width:120px;">
+          ❌ {% trans "Reject" %}
+        </button>
+      </div>
+    </form>
+
+    <!-- Hidden Reject Form -->
+    <form method="post" id="rejectForm" style="display:none;">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="reject">
+      <input type="hidden" name="notes" value="">
+    </form>
+  </div>
+  {% endif %}
+
+  {% if loan.status == 'approved' %}
+  <!-- Disburse Section -->
+  <div style="background:#fff; border-radius:12px; border:1px solid #e2e8f0; padding:1.5rem; margin-bottom:1.5rem;">
+    <div style="font-weight:700; font-size:0.9rem; color:#1e293b; margin-bottom:1rem;">
+      💸 {% trans "Disburse Loan" %}
+    </div>
+
+    <!-- Balance Check -->
+    <div style="background:#fef3c7; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1.25rem; font-size:0.85rem; color:#92400e;">
+      ⚠️ {% trans "Make sure sufficient funds are available before disbursing." %}
+      <br>
+      {% trans "Approved Amount" %}: <strong>{{ loan.amount_approved|clan_currency:request.user.clan }}</strong>
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="disburse">
+      <button type="button" onclick="showConfirm('{% trans "Disburse Loan" %}', '{% trans "Disburse" %} {{ loan.amount_approved|clan_currency:request.user.clan }} {% trans "to" %} {{ loan.borrower.person.full_name }}?', function(){ this.closest('form').submit(); }.bind(this));"
+              style="width:100%; padding:0.7rem 1.5rem; background:#f59e0b; color:#fff; border:none; border-radius:8px; font-size:0.85rem; font-weight:600; cursor:pointer;">
+        💸 {% trans "Disburse Funds" %}
+      </button>
+    </form>
+  </div>
+  {% endif %}
+
+  {% if loan.status == 'rejected' %}
+  <div style="background:#fee2e2; border-radius:12px; padding:1.5rem; text-align:center; margin-bottom:1.5rem;">
+    <div style="font-size:2rem; margin-bottom:0.5rem;">❌</div>
+    <div style="font-weight:700; font-size:1rem; color:#991b1b;">{% trans "This loan has been rejected." %}</div>
+    {% if loan.notes %}
+    <div style="font-size:0.85rem; color:#7f1d1d; margin-top:0.5rem;">{{ loan.notes }}</div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if loan.status == 'disbursed' %}
+  <div style="background:#d1fae5; border-radius:12px; padding:1.5rem; text-align:center; margin-bottom:1.5rem;">
+    <div style="font-size:2rem; margin-bottom:0.5rem;">✅</div>
+    <div style="font-weight:700; font-size:1rem; color:#065f46;">{% trans "Loan has been disbursed." %}</div>
+    <div style="font-size:0.85rem; color:#065f46; margin-top:0.3rem;">
+      {% trans "Amount" %}: {{ loan.amount_approved|clan_currency:request.user.clan }}
+      · {% trans "Disbursed" %}: {{ loan.disbursed_at|date:"d M Y" }}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Navigation -->
+  <div style="margin-top:1rem;">
+    <a href="{% url 'loans' %}" style="display:inline-block; font-size:0.8rem; color:#64748b; text-decoration:none; padding:0.5rem 1rem; background:#f1f5f9; border-radius:8px;">
+      ← {% trans "Back to Loans" %}
+    </a>
+  </div>
+</div>
+
+{% endblock %}

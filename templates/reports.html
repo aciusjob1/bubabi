@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+{% load i18n clan_filters %}
+
+{% block page_title %}{% trans "Reports" %}{% endblock %}
+
+{% block content %}
+
+<!-- Clan Banner -->
+{% if request.user.clan and request.user.clan.banner_image %}
+<div style="border-radius:12px; overflow:hidden; margin-bottom:1.5rem; height:120px;">
+  <img src="{{ request.user.clan.banner_image.url }}" style="width:100%; height:100%; object-fit:cover;">
+</div>
+{% endif %}
+
+<style>
+  .toggle-header {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+    padding-right: 0.5rem;
+  }
+  .toggle-header:hover { opacity: 0.75; }
+  .toggle-arrow {
+    transition: transform 0.2s;
+    font-size: 0.7rem;
+    color: #64748b;
+  }
+  .toggle-arrow.open { transform: rotate(90deg); }
+  .toggle-body { display: none; }
+  .toggle-body.open { display: block; }
+</style>
+
+<!-- Header with Download Buttons -->
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.75rem;">
+  <div class="section-title" style="margin:0;">📊 {% trans "Reports" %}</div>
+  <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+    <a href="{% url 'pdf-owing' %}" style="padding:0.5rem 1rem; background:#ef4444; color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none; white-space:nowrap;">📥 {% trans "Owing List" %}</a>
+    <a href="{% url 'pdf-annual' year=2026 %}" style="padding:0.5rem 1rem; background:#6366f1; color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none; white-space:nowrap;">📥 {% trans "Annual Report" %}</a>
+  </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div>
+      <div class="stat-label">{% trans "Current Balance" %}</div>
+      <div class="stat-value">{{ balance|clan_currency:request.user.clan }}</div>
+      <div class="stat-sub">{% trans "Clan Fund" %}</div>
+    </div>
+    <div class="stat-icon icon-green">💰</div>
+  </div>
+  <div class="stat-card">
+    <div>
+      <div class="stat-label">{% trans "Total Collected" %}</div>
+      <div class="stat-value">{{ total_collected|clan_currency:request.user.clan }}</div>
+      <div class="stat-sub">{% trans "all time" %}</div>
+    </div>
+    <div class="stat-icon icon-blue">📥</div>
+  </div>
+  <div class="stat-card">
+    <div>
+      <div class="stat-label">{% trans "Collection Rate" %}</div>
+      <div class="stat-value">{{ collection_rate }}%</div>
+      <div class="stat-sub">{% trans "overall" %}</div>
+    </div>
+    <div class="stat-icon icon-yellow">📊</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- MONTHLY COLLECTION CHART -->
+<!-- ═══════════════════════════════ -->
+{% if monthly_data %}
+<div class="section-title toggle-header" onclick="toggleSection('chart-section')">
+  <span>📈 {% trans "Monthly Collection" %}</span>
+  <span class="toggle-arrow open" id="chart-section-arrow">▶</span>
+</div>
+<div id="chart-section" class="toggle-body open">
+  <div class="chart-card" style="margin-bottom:1.5rem;">
+    <canvas id="monthlyChart" height="200"></canvas>
+  </div>
+</div>
+
+<script>
+new Chart(document.getElementById('monthlyChart'), {
+  type: 'bar',
+  data: {
+    labels: [{% for m in monthly_data %}'{{ m.period }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+    datasets: [
+      {
+        label: '{% trans "Expected" %}',
+        data: [{% for m in monthly_data %}{{ m.expected }}{% if not forloop.last %},{% endif %}{% endfor %}],
+        backgroundColor: '#dbeafe',
+        borderRadius: 4,
+      },
+      {
+        label: '{% trans "Collected" %}',
+        data: [{% for m in monthly_data %}{{ m.paid }}{% if not forloop.last %},{% endif %}{% endfor %}],
+        backgroundColor: '{{ clan_primary_color|default:"#10b981" }}',
+        borderRadius: 4,
+      }
+    ]
+  },
+  options: {
+    plugins: { legend: { position: 'top' } },
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: { color: '#f1f5f9' },
+        ticks: {
+          callback: function(value) {
+            if (value >= 1000000) return '{{ request.user.clan.currency|default:"TSh" }} ' + (value/1000000).toFixed(1) + 'M';
+            if (value >= 1000) return '{{ request.user.clan.currency|default:"TSh" }} ' + (value/1000).toFixed(0) + 'K';
+            return '{{ request.user.clan.currency|default:"TSh" }} ' + value;
+          }
+        }
+      },
+      x: { grid: { display: false } }
+    }
+  }
+});
+</script>
+{% endif %}
+
+<!-- ═══════════════════════════════ -->
+<!-- PERIOD BREAKDOWN -->
+<!-- ═══════════════════════════════ -->
+<div class="section-title toggle-header" onclick="toggleSection('period-section')">
+  <span>📋 {% trans "Period Breakdown" %}</span>
+  <span class="toggle-arrow open" id="period-section-arrow">▶</span>
+</div>
+<div id="period-section" class="toggle-body open">
+  <div style="position:relative; background:#fff; border-radius:12px; border:1px solid #e2e8f0; overflow:hidden;">
+    <div id="periodSlider" class="card-slider" style="display:flex; overflow-x:auto; scroll-snap-type:x mandatory; scroll-behavior:smooth; gap:0;">
+    {% if monthly_data %}
+    <table>
+      <thead>
+        <tr>
+          <th>{% trans "Period" %}</th>
+          <th>{% trans "Expected" %}</th>
+          <th>{% trans "Collected" %}</th>
+          <th>{% trans "Rate" %}</th>
+          <th>{% trans "Download" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in monthly_data %}
+        <tr>
+          <td><strong>{{ m.period }}</strong></td>
+          <td>{{ m.expected|clan_currency:request.user.clan }}</td>
+          <td>{{ m.paid|clan_currency:request.user.clan }}</td>
+          <td>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <div style="flex:1; height:6px; background:#f1f5f9; border-radius:3px; min-width:60px;">
+                <div style="width:{{ m.rate }}%; height:100%; background:{% if m.rate >= 80 %}#10b981{% elif m.rate >= 50 %}#f59e0b{% else %}#ef4444{% endif %}; border-radius:3px;"></div>
+              </div>
+              <span style="font-size:0.78rem; font-weight:600; color:{% if m.rate >= 80 %}#065f46{% elif m.rate >= 50 %}#92400e{% else %}#991b1b{% endif %};">{{ m.rate }}%</span>
+            </div>
+          </td>
+          <td>
+            <a href="{% url 'pdf-monthly' m.period %}" style="padding:0.25rem 0.6rem; background:var(--primary); color:#fff; border-radius:6px; font-size:0.72rem; font-weight:600; text-decoration:none; white-space:nowrap;">📥 PDF</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty">{% trans "No contribution data yet." %}</div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- EXPENSES BY CATEGORY -->
+<!-- ═══════════════════════════════ -->
+<div class="section-title toggle-header" onclick="toggleSection('expenses-section')">
+  <span>📤 {% trans "Expenses by Category" %}</span>
+  <span class="toggle-arrow" id="expenses-section-arrow">▶</span>
+</div>
+<div id="expenses-section" class="toggle-body">
+  <div class="table-card">
+    {% if expense_by_category %}
+    <table>
+      <thead>
+        <tr>
+          <th>{% trans "Category" %}</th>
+          <th>{% trans "Count" %}</th>
+          <th>{% trans "Total" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in expense_by_category %}
+        <tr>
+          <td><span class="badge {{ e.category }}">{{ e.category }}</span></td>
+          <td>{{ e.count }}</td>
+          <td>{{ e.total|clan_currency:request.user.clan }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty">{% trans "No expenses recorded." %}</div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+function toggleSection(id) {
+  const body = document.getElementById(id);
+  const arrow = document.getElementById(id + '-arrow');
+  if (body && arrow) {
+    body.classList.toggle('open');
+    arrow.classList.toggle('open');
+  }
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "forms/base_form.html" %}
+{% block page_title %}Change Member Status{% endblock %}
+{% block form_title %}Change Status{% endblock %}
+{% block form_subtitle %}
+  Changing status for: {{ member.person.full_name }}
+{% endblock %}
+
+{% block form_fields %}
+<div class="field">
+  <label>New Status</label>
+  {{ form.new_status }}
+</div>
+
+<div class="field">
+  <label>Reason</label>
+  {{ form.reason }}
+</div>
+{% endblock %}
+
+{% block submit_label %}Update Status{% endblock %}

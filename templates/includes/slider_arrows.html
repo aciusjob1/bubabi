@@ -1,0 +1,9 @@
+{% if items|length > 1 %}
+<button onclick="slideCards('{{ slider_id }}', -1)" style="position:absolute; left:0; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.9); border:1px solid #e2e8f0; border-radius:50%; width:32px; height:32px; cursor:pointer; font-size:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:10; display:flex; align-items:center; justify-content:center;">◀</button>
+<button onclick="slideCards('{{ slider_id }}', 1)" style="position:absolute; right:0; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.9); border:1px solid #e2e8f0; border-radius:50%; width:32px; height:32px; cursor:pointer; font-size:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.1); z-index:10; display:flex; align-items:center; justify-content:center;">▶</button>
+<div style="display:flex; justify-content:center; gap:0.4rem; padding:0.5rem;" class="slider-dots" data-slider="{{ slider_id }}">
+  {% for i in items %}
+  <div class="slider-dot" data-index="{{ forloop.counter0 }}" style="width:8px; height:8px; border-radius:50%; background:#e2e8f0; cursor:pointer;"></div>
+  {% endfor %}
+</div>
+{% endif %}

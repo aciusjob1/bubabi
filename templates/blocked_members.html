@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load i18n clan_filters %}
+
+{% block page_title %}{% trans "Blocked Members" %}{% endblock %}
+
+{% block content %}
+<div style="max-width:1100px; margin:0 auto;">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+    <h2 style="font-size:1.3rem; font-weight:700;">🚫 {% trans "Blocked Members" %}</h2>
+    <a href="{% url 'members' %}" style="font-size:0.8rem; color:#6366f1;">← {% trans "All Members" %}</a>
+  </div>
+
+  {% if blocked_members %}
+  <div class="table-slider-wrapper">
+    <button onclick="slideTable('blockedTable', -1)" class="table-slider-btn left">◀</button>
+    <button onclick="slideTable('blockedTable', 1)" class="table-slider-btn right">▶</button>
+    <div class="table-card" id="blockedTable" style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>{% trans "Name" %}</th>
+            <th>{% trans "Email" %}</th>
+            <th>{% trans "Phone" %}</th>
+            <th>{% trans "Blocked Since" %}</th>
+            <th>{% trans "Blocked By" %}</th>
+            <th>{% trans "Reason" %}</th>
+            <th>{% trans "Action" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for m in blocked_members %}
+          <tr>
+            <td>
+              <a href="{% url 'member-profile' m.id %}" style="font-weight:600; color:#1e293b; text-decoration:none;">
+                {{ m.person.full_name|default:m.email }}
+              </a>
+            </td>
+            <td>{{ m.email }}</td>
+            <td>{{ m.phone|default:"—" }}</td>
+            <td>{{ m.blocked_at|date:"d M Y" }}</td>
+            <td>{{ m.blocked_by.person.full_name|default:"—" }}</td>
+            <td style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ m.block_reason|default:"—" }}</td>
+            <td>
+              <form method="post" action="{% url 'unblock-member' m.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" onclick="return confirm('{% trans "Unblock" %} {{ m.person.full_name|escapejs }}?')" 
+                   style="font-size:0.75rem; padding:0.2rem 0.6rem; background:#10b981; color:#fff; border-radius:6px; border:none; cursor:pointer; text-decoration:none;">{% trans "Unblock" %}</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% else %}
+  <div style="text-align:center; padding:3rem;">
+    <div style="font-size:2.5rem; margin-bottom:0.5rem;">✅</div>
+    <div style="font-weight:600; color:#64748b;">{% trans "No blocked members" %}</div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

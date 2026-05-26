@@ -1,0 +1,443 @@
+{% extends "base.html" %}
+{% load i18n clan_filters %}
+{% block page_title %}{% trans "Clan Feed" %}{% endblock %}
+{% block content %}
+
+<div style="max-width:620px; margin:0 auto;">
+
+  <!-- Create Post Box -->
+  <div style="background:#fff; border-radius:16px;
+              border:1px solid #e2e8f0; padding:1.2rem;
+              margin-bottom:1.5rem;
+              box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+    <form method="post" action="{% url 'create-post' %}"
+          enctype="multipart/form-data" id="createPostForm">
+      {% csrf_token %}
+
+      <div style="display:flex; gap:0.75rem; align-items:flex-start;">
+        {% avatar request.user 40 %}
+        <div style="flex:1;">
+          <textarea name="content" rows="2" id="postContent"
+                    maxlength="1000"
+                    placeholder="{% trans 'Share something with BUBABI clan...' %}"
+                    style="width:100%; border:none; outline:none;
+                           font-size:0.95rem; color:#1e293b;
+                           resize:none; background:transparent;
+                           font-family:inherit; line-height:1.5;"></textarea>
+          <div style="text-align:right; font-size:0.7rem; color:#94a3b8;">
+            <span id="charCount">0</span>/1000
+          </div>
+          <div id="mediaPreview" style="display:none; margin-top:0.5rem; position:relative;">
+            <img id="previewImg" style="max-width:100%; border-radius:8px;
+                                        max-height:300px; object-fit:cover; display:none;">
+            <video id="previewVideo" controls 
+                   style="max-width:100%; border-radius:8px;
+                          max-height:300px; display:none;"></video>
+            <button type="button" onclick="clearMedia()"
+                    style="position:absolute; top:0.5rem; right:0.5rem;
+                           background:rgba(0,0,0,0.6); color:#fff;
+                           border:none; border-radius:50%; width:28px; height:28px;
+                           cursor:pointer; font-size:1rem; display:flex;
+                           align-items:center; justify-content:center;">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="border-top:1px solid #f1f5f9; margin-top:1rem;
+                  padding-top:0.75rem; display:flex;
+                  justify-content:space-between; align-items:center;">
+        <div style="display:flex; gap:0.5rem;">
+          <label for="imageInput" style="padding:0.4rem 0.75rem; background:#f1f5f9;
+                        color:#374151; border-radius:8px; cursor:pointer;
+                        font-size:0.8rem; font-weight:600;
+                        display:flex; align-items:center; gap:0.3rem;"
+                 onmouseover="this.style.background='#e2e8f0'"
+                 onmouseout="this.style.background='#f1f5f9'">
+            📷 {% trans "Photo" %}
+          </label>
+          <input type="file" name="image" id="imageInput"
+                 accept="image/*" style="display:none;"
+                 onchange="previewMedia(this, 'image')">
+          <label for="videoInput" style="padding:0.4rem 0.75rem; background:#f1f5f9;
+                        color:#374151; border-radius:8px; cursor:pointer;
+                        font-size:0.8rem; font-weight:600;
+                        display:flex; align-items:center; gap:0.3rem;"
+                 onmouseover="this.style.background='#e2e8f0'"
+                 onmouseout="this.style.background='#f1f5f9'">
+            🎬 {% trans "Video" %}
+          </label>
+          <input type="file" name="video" id="videoInput"
+                 accept="video/*" style="display:none;"
+                 onchange="previewMedia(this, 'video')">
+        </div>
+        <button type="submit" id="postSubmitBtn"
+                style="padding:0.5rem 1.2rem; background:var(--primary, #10b981);
+                       color:#fff; border:none; border-radius:8px;
+                       font-size:0.875rem; font-weight:700; cursor:pointer;">
+          {% trans "Share" %}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Posts Feed -->
+  {% if posts %}
+  {% for post in posts %}
+  <div id="post-{{ post.id }}"
+       style="background:#fff; border-radius:16px;
+              border:1px solid {% if post.is_hidden_by_reports %}#f59e0b{% else %}#e2e8f0{% endif %};
+              margin-bottom:1.25rem; overflow:hidden;
+              box-shadow:0 2px 8px rgba(0,0,0,0.04);
+              opacity:{% if post.is_hidden_by_reports %}0.7{% else %}1{% endif %};">
+
+    <!-- Hidden Warning -->
+    {% if post.is_hidden_by_reports %}
+    <div style="background:#fef3c7; padding:0.5rem 1.2rem;
+                font-size:0.75rem; color:#92400e; text-align:center;
+                border-bottom:1px solid #fde68a;">
+      ⚠️ {% trans "This post has been hidden due to multiple reports. Under moderator review." %}
+      {% if request.user.is_moderator or request.user.is_superuser %}
+      <span style="font-weight:700;">({{ post.report_count }} reports)</span>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Post Header -->
+    <div style="padding:1rem 1.2rem 0.5rem;
+                display:flex; justify-content:space-between;
+                align-items:flex-start;">
+      <div style="display:flex; gap:0.75rem; align-items:center;">
+        {% avatar post.author 42 %}
+        <div>
+          <div style="font-weight:700; font-size:0.9rem; color:#1e293b;">
+            {{ post.author.person.full_name|default:post.author.email }}
+            {% if post.author == request.user %}
+            <span style="font-size:0.65rem; color:#10b981; font-weight:500;">({% trans "you" %})</span>
+            {% endif %}
+          </div>
+          <div style="font-size:0.72rem; color:#94a3b8;">
+            {{ post.author.clan_roles.first.role.name|default:"Member" }}
+            &nbsp;·&nbsp;
+            <time datetime="{{ post.created_at|date:'c' }}"
+                  title="{{ post.created_at|date:'d M Y H:i' }}">
+              {{ post.created_at|timesince }} {% trans "ago" %}
+            </time>
+            {% if post.edited_at %}
+            &nbsp;·&nbsp; {% trans "Edited" %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Post Menu -->
+      {% if request.user == post.author or request.user.is_moderator or request.user.is_superuser %}
+      <div style="position:relative;">
+        <button onclick="toggleMenu('menu-{{ post.id }}')"
+                style="background:none; border:none; cursor:pointer;
+                       color:#94a3b8; font-size:1.3rem; padding:0.2rem 0.5rem;
+                       border-radius:4px; line-height:1;"
+                title="{% trans 'Post options' %}">···</button>
+        <div id="menu-{{ post.id }}" 
+             style="display:none; position:absolute; right:0; top:100%;
+                    background:#fff; border:1px solid #e2e8f0;
+                    border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.12);
+                    z-index:50; min-width:160px; overflow:hidden;">
+          
+          {% if request.user == post.author %}
+          <a href="{% url 'edit-post' post.id %}"
+             style="display:block; padding:0.6rem 1rem; font-size:0.8rem;
+                    color:#374151; text-decoration:none;">
+            ✏️ {% trans "Edit" %}
+          </a>
+          {% endif %}
+          
+          <a href="{% url 'delete-post' post.id %}"
+             onclick="return confirm('{% trans "Delete this post?" %}')"
+             style="display:block; padding:0.6rem 1rem; font-size:0.8rem;
+                    color:#ef4444; text-decoration:none;">
+            🗑 {% trans "Delete" %}
+          </a>
+          
+          {% if request.user.is_superuser %}
+          <form method="post" action="{% url 'send-bulk-sms' %}" 
+                style="border-top:1px solid #f1f5f9;">
+            {% csrf_token %}
+            <input type="hidden" name="message" 
+                   value="BUBABI: {{ post.author.person.full_name }} - {{ post.content|truncatechars:120 }}">
+            <button type="submit"
+                    onclick="return confirm('{% trans "Share as SMS to all members?" %}')"
+                    style="display:block; width:100%; padding:0.6rem 1rem;
+                           font-size:0.8rem; color:#6366f1; background:none;
+                           border:none; cursor:pointer; text-align:left;">
+              📱 {% trans "Share via SMS" %}
+            </button>
+          </form>
+          {% endif %}
+          
+          {% if request.user.is_moderator or request.user.is_superuser %}
+          <div style="border-top:1px solid #f1f5f9;">
+            {% if post.report_count > 0 %}
+            <span style="display:block; padding:0.4rem 1rem; font-size:0.7rem;
+                         color:#f59e0b; background:#fffbeb;">
+              🚩 {{ post.report_count }} report{{ post.report_count|pluralize }}
+            </span>
+            {% endif %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Post Content -->
+    {% if post.content %}
+    <div style="padding:0.5rem 1.2rem 0.75rem;
+                font-size:0.9rem; color:#374151;
+                line-height:1.7; white-space:pre-line;
+                word-wrap:break-word;">
+      {{ post.content }}
+    </div>
+    {% endif %}
+
+    <!-- Post Image -->
+    {% if post.image %}
+    <div style="padding:0 0 0.5rem;">
+      <img src="{{ post.image.url }}"
+           alt="{% trans 'Post image' %}"
+           loading="lazy"
+           style="width:100%; max-height:500px;
+                  object-fit:cover; cursor:pointer;"
+           onclick="openLightbox('{{ post.image.url }}')">
+    </div>
+    {% endif %}
+
+    <!-- Post Video -->
+    {% if post.video %}
+    <div style="padding:0 0 0.5rem;">
+      <video controls preload="metadata"
+             style="width:100%; max-height:400px; border-radius:0;">
+        <source src="{{ post.video.url }}" type="video/mp4">
+        {% trans "Your browser does not support video playback." %}
+      </video>
+    </div>
+    {% endif %}
+
+    <!-- Reaction & Comment Counts -->
+    {% with total_reactions=post.reactions.count %}
+    {% with total_comments=post.post_comments.count %}
+    {% if total_reactions > 0 or total_comments > 0 %}
+    <div style="padding:0.5rem 1.2rem;
+                border-top:1px solid #f8fafc;
+                display:flex; gap:0.5rem; align-items:center;
+                justify-content:space-between; flex-wrap:wrap;">
+      <div style="display:flex; gap:0.15rem; align-items:center;">
+        {% if post.like_count > 0 %}<span style="font-size:1rem;">👍</span>{% endif %}
+        {% if post.love_count > 0 %}<span style="font-size:1rem;">❤️</span>{% endif %}
+        {% if post.laugh_count > 0 %}<span style="font-size:1rem;">😂</span>{% endif %}
+        {% if post.wow_count > 0 %}<span style="font-size:1rem;">😮</span>{% endif %}
+        {% if post.sad_count > 0 %}<span style="font-size:1rem;">😢</span>{% endif %}
+        {% if post.support_count > 0 %}<span style="font-size:1rem;">🙏</span>{% endif %}
+        {% if total_reactions > 0 %}
+        <span style="font-size:0.78rem; color:#64748b; margin-left:0.3rem;">
+          {{ total_reactions }}
+        </span>
+        {% endif %}
+      </div>
+      <div style="display:flex; gap:1rem;">
+        {% if total_comments > 0 %}
+        <span style="font-size:0.78rem; color:#64748b; cursor:pointer;"
+              onclick="toggleComments('comments-{{ post.id }}')">
+          {{ total_comments }} {% trans "comment" %}{{ total_comments|pluralize }}
+        </span>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+    {% endwith %}
+    {% endwith %}
+
+    <!-- Action Buttons -->
+    <div style="padding:0.3rem 1.2rem;
+                border-top:1px solid #f1f5f9;
+                display:flex; gap:0; justify-content:space-around;">
+
+      <!-- React Button -->
+      <div style="position:relative; flex:1; text-align:center;">
+        <button onclick="toggleReactions('reactions-{{ post.id }}')"
+                style="background:none; border:none; cursor:pointer;
+                       padding:0.6rem; width:100%; border-radius:8px;
+                       font-size:0.82rem; font-weight:600;
+                       color:{% if post.my_reaction %}#3b82f6{% else %}#64748b{% endif %};
+                       display:flex; align-items:center;
+                       justify-content:center; gap:0.3rem;">
+          {% if post.my_reaction %}
+            {{ post.my_reaction.get_reaction_display }}
+          {% else %}
+            👍 {% trans "Like" %}
+          {% endif %}
+        </button>
+        <div id="reactions-{{ post.id }}" class="reaction-picker"
+             style="display:none; position:absolute; bottom:110%; left:50%;
+                    transform:translateX(-50%); background:#fff;
+                    border:1px solid #e2e8f0; border-radius:30px;
+                    padding:0.4rem 0.6rem; box-shadow:0 4px 20px rgba(0,0,0,0.15);
+                    z-index:100; white-space:nowrap;">
+          {% for reaction in post.reactions.model.REACTIONS %}
+          <form method="post" action="{% url 'react-post' post.id %}" style="display:inline;">
+            {% csrf_token %}
+            <input type="hidden" name="reaction" value="{{ reaction.0 }}">
+            <button type="submit" title="{{ reaction.0 }}"
+                    style="background:none; border:none; cursor:pointer;
+                           font-size:1.4rem; padding:0.2rem 0.35rem;
+                           border-radius:50%; transition:transform 0.15s;"
+                    onmouseover="this.style.transform='scale(1.4)'"
+                    onmouseout="this.style.transform='scale(1)'">
+              {{ reaction.1 }}
+            </button>
+          </form>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Comment Button -->
+      <button onclick="toggleComments('comments-{{ post.id }}')"
+              style="flex:1; background:none; border:none; cursor:pointer;
+                     padding:0.6rem; border-radius:8px;
+                     font-size:0.82rem; font-weight:600; color:#64748b;
+                     display:flex; align-items:center;
+                     justify-content:center; gap:0.3rem;">
+        💬 {% trans "Comment" %}
+      </button>
+
+      <!-- Report / Share Button -->
+      {% if request.user != post.author %}
+      <a href="{% url 'report-post' post.id %}"
+         style="flex:1; background:none; border:none; cursor:pointer;
+                padding:0.6rem; border-radius:8px;
+                font-size:0.82rem; font-weight:600; color:#64748b;
+                text-decoration:none;
+                display:flex; align-items:center;
+                justify-content:center; gap:0.3rem;">
+        🚩 {% trans "Report" %}
+      </a>
+      {% else %}
+      <button onclick="sharePost('{{ post.id }}')"
+              style="flex:1; background:none; border:none; cursor:pointer;
+                     padding:0.6rem; border-radius:8px;
+                     font-size:0.82rem; font-weight:600; color:#64748b;
+                     display:flex; align-items:center;
+                     justify-content:center; gap:0.3rem;">
+        📤 {% trans "Share" %}
+      </button>
+      {% endif %}
+    </div>
+
+    <!-- Comments Section -->
+    <div id="comments-{{ post.id }}" style="display:none;
+         border-top:1px solid #f1f5f9; background:#f8fafc;
+         padding:0.75rem 1.2rem; max-height:400px; overflow-y:auto;">
+      {% if post.post_comments.exists %}
+        {% for comment in post.post_comments.all %}
+        <div style="display:flex; gap:0.6rem; margin-bottom:0.75rem;
+                    align-items:flex-start;">
+          {% avatar comment.author 30 %}
+          <div style="background:#fff; border-radius:12px;
+                      padding:0.5rem 0.75rem; flex:1;
+                      border:1px solid #e2e8f0;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div style="font-weight:700; font-size:0.78rem; color:#374151;">
+                {{ comment.author.person.full_name|default:comment.author.email }}
+                {% if comment.author == request.user %}
+                <span style="font-size:0.6rem; color:#10b981;">({% trans "you" %})</span>
+                {% endif %}
+              </div>
+              {% if request.user == comment.author or request.user.is_superuser %}
+              <a href="{% url 'delete-comment' comment.id %}"
+                 onclick="return confirm('{% trans "Delete this comment?" %}')"
+                 style="font-size:0.65rem; color:#ef4444; text-decoration:none;">✕</a>
+              {% endif %}
+            </div>
+            <div style="font-size:0.875rem; color:#374151; margin-top:0.2rem;">
+              {{ comment.content }}
+            </div>
+            <div style="font-size:0.68rem; color:#94a3b8; margin-top:0.3rem;">
+              {{ comment.created_at|timesince }} {% trans "ago" %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div style="text-align:center; padding:1rem; color:#94a3b8; font-size:0.85rem;">
+          {% trans "No comments yet. Be the first!" %}
+        </div>
+      {% endif %}
+      <form method="post" action="{% url 'comment-post' post.id %}"
+            style="display:flex; gap:0.5rem; align-items:center; margin-top:0.75rem;">
+        {% csrf_token %}
+        {% avatar request.user 30 %}
+        <input type="text" name="content"
+               placeholder="{% trans 'Write a comment...' %}"
+               required maxlength="500"
+               style="flex:1; padding:0.5rem 0.75rem;
+                      border:1px solid #e2e8f0; border-radius:20px;
+                      font-size:0.85rem; outline:none; background:#fff;">
+        <button type="submit"
+                style="padding:0.5rem 0.9rem; background:var(--primary, #10b981);
+                       color:#fff; border:none; border-radius:20px;
+                       font-size:0.8rem; font-weight:600; cursor:pointer;">
+          {% trans "Post" %}
+        </button>
+      </form>
+    </div>
+  </div>
+  {% endfor %}
+
+  {% else %}
+  <div style="background:#fff; border-radius:16px;
+              border:1px solid #e2e8f0; padding:3rem; text-align:center;">
+    <div style="font-size:3rem; margin-bottom:1rem;">📰</div>
+    <div style="font-weight:700; font-size:1.1rem; color:#374151;">
+      {% trans "No posts yet" %}
+    </div>
+    <div style="font-size:0.9rem; color:#94a3b8; margin-top:0.5rem;">
+      {% trans "Be the first to share something with BUBABI clan!" %}
+    </div>
+    <button onclick="document.getElementById('postContent').focus()"
+            style="margin-top:1.5rem; padding:0.6rem 1.5rem;
+                   background:var(--primary, #10b981); color:#fff; border:none;
+                   border-radius:8px; font-size:0.9rem; font-weight:600;
+                   cursor:pointer;">
+      ✍️ {% trans "Create First Post" %}
+    </button>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Lightbox -->
+<div id="lightbox" 
+     style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9);
+            z-index:9999; align-items:center; justify-content:center;"
+     onclick="closeLightbox()">
+  <span style="position:absolute; top:1rem; right:1.5rem; color:#fff;
+               font-size:2rem; cursor:pointer;">&times;</span>
+  <img id="lightboxImg" style="max-width:95%; max-height:95%; object-fit:contain;">
+</div>
+
+<script>
+function toggleReactions(id){var e=document.getElementById(id);e.style.display=e.style.display==='none'||!e.style.display?'block':'none'}
+function toggleComments(id){var e=document.getElementById(id);e.style.display=e.style.display==='none'||!e.style.display?'block':'none';if(e.style.display==='block')e.scrollIntoView({behavior:'smooth',block:'nearest'})}
+function toggleMenu(id){var e=document.getElementById(id);e.style.display=e.style.display==='none'?'block':'none'}
+document.addEventListener('click',function(e){if(!e.target.closest('[id^="reactions-"]')&&!e.target.closest('button[onclick^="toggleReactions"]')){document.querySelectorAll('[id^="reactions-"]').forEach(function(e){e.style.display='none'})}if(!e.target.closest('[id^="menu-"]')&&!e.target.closest('button[onclick^="toggleMenu"]')){document.querySelectorAll('[id^="menu-"]').forEach(function(e){e.style.display='none'})}});
+function previewMedia(i,t){if(i.files&&i.files[0]){var f=i.files[0],p=document.getElementById('mediaPreview'),img=document.getElementById('previewImg'),vid=document.getElementById('previewVideo');img.style.display='none';vid.style.display='none';var r=new FileReader();r.onload=function(e){if(t==='image'){img.src=e.target.result;img.style.display='block'}else{vid.src=e.target.result;vid.style.display='block'}p.style.display='block'};r.readAsDataURL(f);if(t==='image')document.getElementById('videoInput').value='';else document.getElementById('imageInput').value=''}}
+function clearMedia(){document.getElementById('imageInput').value='';document.getElementById('videoInput').value='';document.getElementById('mediaPreview').style.display='none';document.getElementById('previewImg').style.display='none';document.getElementById('previewVideo').style.display='none'}
+var ta=document.getElementById('postContent'),cc=document.getElementById('charCount');if(ta&&cc){ta.addEventListener('input',function(){cc.textContent=this.value.length;this.style.height='auto';this.style.height=Math.min(this.scrollHeight,200)+'px';cc.style.color=this.value.length>900?'#ef4444':this.value.length>700?'#f59e0b':'#94a3b8'})}
+document.querySelectorAll('form').forEach(function(f){f.addEventListener('submit',function(){var b=this.querySelector('button[type="submit"]');if(b){b.disabled=true;b.style.opacity='0.7'}})});
+function openLightbox(s){document.getElementById('lightboxImg').src=s;document.getElementById('lightbox').style.display='flex';document.body.style.overflow='hidden'}
+function closeLightbox(){document.getElementById('lightbox').style.display='none';document.body.style.overflow=''}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLightbox()});
+function sharePost(id){var url=window.location.origin+'/posts/#post-'+id;if(navigator.share){navigator.share({title:'BUBABI Clan Post',url:url})}else{navigator.clipboard.writeText(url).then(function(){alert('{% trans "Link copied to clipboard!" %}')})}}
+if(window.location.hash){var el=document.querySelector(window.location.hash);if(el){setTimeout(function(){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.boxShadow='0 0 0 3px #10b981';setTimeout(function(){el.style.boxShadow=''},2000)},500)}}
+</script>
+<style>.reaction-picker{animation:fadeInUp 0.2s ease}@keyframes fadeInUp{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}@media(max-width:480px){.reaction-picker{left:0!important;transform:none!important}}</style>
+
+{% endblock %}

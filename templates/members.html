@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% load i18n clan_filters %}
+
+{% block page_title %}{% trans "Members" %}{% endblock %}
+
+{% block content %}
+
+<!-- Clan Banner -->
+{% if clan_banner %}
+<div style="border-radius:12px; overflow:hidden; margin-bottom:1.5rem; height:120px; position:relative;">
+  <img src="{{ clan_banner.url }}" 
+       style="width:100%; height:100%; object-fit:cover;"
+       alt="{{ clan_name }}">
+  <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.6)); padding:1rem 1.5rem;">
+    <span style="color:#fff; font-weight:700; font-size:0.9rem;">{{ clan_name }}</span>
+  </div>
+</div>
+{% endif %}
+
+<!-- Header Actions -->
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.75rem;">
+  <div style="display:flex; gap:0.5rem; align-items:center;">
+    <div class="section-title" style="margin:0;">👥 {% trans "Clan Members" %}</div>
+    <span style="font-size:0.75rem; color:#64748b; white-space:nowrap;">
+      {{ members.count }} {% trans "members" %}
+    </span>
+  </div>
+  
+  {% if request.user.is_clan_admin %} <!-- Assuming helper property for cleaner checks -->
+  <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+    <a href="{% url 'invite-member' %}" style="padding:0.5rem 1rem; background:var(--primary); color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none;">
+      + {% trans "Invite" %}
+    </a>
+    <a href="{% url 'add-person' %}" style="padding:0.5rem 1rem; background:#6366f1; color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none;">
+      + {% trans "Person" %}
+    </a>
+    <a href="{% url 'blocked-members' %}" style="padding:0.5rem 1rem; background:#ef4444; color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none;">
+      🚫
+    </a>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Quick Stats -->
+<div class="stats-grid" style="margin-bottom:1rem;">
+  <div class="stat-card">
+    <div><div class="stat-label">{% trans "Active" %}</div><div class="stat-value" style="color:#10b981;">{{ active_count|default:0 }}</div></div>
+    <div class="stat-icon icon-green">✅</div>
+  </div>
+  <div class="stat-card">
+    <div><div class="stat-label">{% trans "Pending" %}</div><div class="stat-value" style="color:#f59e0b;">{{ pending_count|default:0 }}</div></div>
+    <div class="stat-icon icon-yellow">⏳</div>
+  </div>
+  <div class="stat-card">
+    <div><div class="stat-label">{% trans "Suspended" %}</div><div class="stat-value" style="color:#ef4444;">{{ suspended_count|default:0 }}</div></div>
+    <div class="stat-icon icon-red">🚫</div>
+  </div>
+  <div class="stat-card">
+    <div><div class="stat-label">{% trans "Elders" %}</div><div class="stat-value" style="color:#6366f1;">{{ elder_count|default:0 }}</div></div>
+    <div class="stat-icon icon-purple">⭐</div>
+  </div>
+</div>
+
+<!-- Search Bar -->
+<div style="background:#fff; border-radius:10px; border:1px solid #e2e8f0; padding:0.6rem 0.8rem; margin-bottom:1rem;">
+  <form method="get" style="display:flex; gap:0.5rem;">
+    <div style="position:relative; flex:1;">
+      <span style="position:absolute; left:0.6rem; top:50%; transform:translateY(-50%); color:#94a3b8;">🔍</span>
+      <input type="text" name="search" value="{{ request.GET.search|default:'' }}" 
+             placeholder="{% trans 'Search members...' %}"
+             style="width:100%; padding:0.5rem 0.5rem 0.5rem 2rem; border:1px solid #e2e8f0; border-radius:6px; font-size:0.85rem; outline:none;">
+    </div>
+    <button type="submit" style="padding:0.5rem 0.9rem; background:var(--primary); color:#fff; border:none; border-radius:6px; font-size:0.8rem; font-weight:600; cursor:pointer;">{% trans "Search" %}</button>
+  </form>
+</div>
+
+<!-- Members Table -->
+<div class="table-card" id="membersTable" style="overflow-x:auto;">
+  {% if members %}
+  <table>
+    <thead>
+      <tr>
+        <th>{% trans "Member" %}</th>
+        <th>{% trans "Status" %}</th>
+        <th>{% trans "Role" %}</th>
+        <th>{% trans "Phone" %}</th>
+        <th>{% trans "Actions" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for member in members %}
+      <tr>
+        <td>
+          <a href="{% url 'member-profile' member.id %}" style="text-decoration:none; color:#1e293b; display:flex; align-items:center; gap:0.5rem;">
+            {% avatar member 32 %}
+            <div>
+              <div style="font-weight:600; font-size:0.85rem;">{{ member.person.full_name|default:member.email }}</div>
+              <div style="font-size:0.7rem; color:#64748b;">{{ member.email }}</div>
+            </div>
+          </a>
+        </td>
+        <td><span class="badge {{ member.status }}">{{ member.status }}</span></td>
+        <td>
+          {% for role in member.clan_roles.all %}{% if role.is_active %}
+            <span style="font-size:0.72rem; background:#ede9fe; color:#5b21b6; padding:0.15rem 0.5rem; border-radius:10px; display:inline-block; margin-bottom:0.2rem;">
+              {{ role.role.name }}
+            </span>
+          {% endif %}{% endfor %}
+        </td>
+        <td style="font-size:0.8rem;">
+          {% if member.phone %}<a href="tel:{{ member.phone }}" style="color:#3b82f6; text-decoration:none;">{{ member.phone }}</a>{% else %}—{% endif %}
+        </td>
+        <td>
+          <div style="display:flex; gap:0.3rem;">
+            <a href="{% url 'member-profile' member.id %}" style="padding:0.2rem 0.5rem; background:#f1f5f9; border-radius:4px; font-size:0.7rem; text-decoration:none;">👤</a>
+            {% if request.user.is_clan_admin %}
+              <a href="{% url 'change-member-status' member.id %}" style="padding:0.2rem 0.5rem; background:#fef3c7; border-radius:4px; font-size:0.7rem; text-decoration:none;">🔄</a>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div style="text-align:center; padding:3rem;">
+    <div style="font-size:2rem;">👥</div>
+    <div style="font-weight:600; color:#64748b;">{% trans "No members found" %}</div>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

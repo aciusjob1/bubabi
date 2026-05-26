@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block page_title %}{% trans "File Judicial Case" %}{% endblock %}
+
+{% block content %}
+<div style="max-width:560px; margin:0 auto;">
+  <div class="section-title">⚖️ {% trans "File Judicial Case" %}</div>
+
+  <div style="background:#fff; border-radius:12px; border:1px solid #e2e8f0; padding:1.5rem;">
+    
+    <div style="background:#fef3c7; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1.25rem; font-size:0.8rem; color:#92400e;">
+      ⚠️ {% trans "All cases are reviewed by clan moderators. False claims may result in penalties." %}
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block; font-size:0.75rem; font-weight:600; color:#374151; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.4rem;">
+          ⚖️ {% trans "Case Title" %} *
+        </label>
+        <input type="text" name="title" required 
+               placeholder="{% trans 'e.g., Land Dispute - Plot 42' %}"
+               style="width:100%; padding:0.7rem; border:1px solid #e2e8f0; border-radius:8px; font-size:0.9rem;"
+               onfocus="this.style.borderColor='#10b981'" onblur="this.style.borderColor='#e2e8f0'">
+      </div>
+
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block; font-size:0.75rem; font-weight:600; color:#374151; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.4rem;">
+          📋 {% trans "Case Type" %}
+        </label>
+        <select name="case_type" style="width:100%; padding:0.7rem; border:1px solid #e2e8f0; border-radius:8px; font-size:0.9rem; background:#fff;">
+          {% for key, label in case_types %}
+          <option value="{{ key }}">{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block; font-size:0.75rem; font-weight:600; color:#374151; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.4rem;">
+          📝 {% trans "Description" %} *
+        </label>
+        <textarea name="description" rows="4" required 
+                  placeholder="{% trans 'Describe the case in detail...' %}"
+                  style="width:100%; padding:0.7rem; border:1px solid #e2e8f0; border-radius:8px; font-size:0.85rem; resize:vertical;"
+                  onfocus="this.style.borderColor='#10b981'" onblur="this.style.borderColor='#e2e8f0'"></textarea>
+      </div>
+
+      <div style="margin-bottom:1.25rem;">
+        <label style="display:block; font-size:0.75rem; font-weight:600; color:#374151; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.4rem;">
+          👥 {% trans "Parties Involved" %}
+        </label>
+        <textarea name="parties_involved" rows="2" 
+                  placeholder="{% trans 'Names of all parties involved in this case...' %}"
+                  style="width:100%; padding:0.7rem; border:1px solid #e2e8f0; border-radius:8px; font-size:0.85rem; resize:vertical;"></textarea>
+      </div>
+
+      <div style="margin-bottom:1.5rem;">
+        <label style="display:block; font-size:0.75rem; font-weight:600; color:#374151; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.4rem;">
+          📎 {% trans "Attachments / Evidence" %}
+        </label>
+        <input type="file" name="attachment" multiple
+               accept=".pdf,.doc,.docx,.txt,.rtf,.odt,.jpg,.jpeg,.png,.xls,.xlsx,.ppt,.pptx,.csv,.mp3,.mp4,.avi,.mov"
+               style="width:100%; padding:0.5rem; border:2px dashed #e2e8f0; border-radius:8px; font-size:0.85rem;">
+        <div style="font-size:0.7rem; color:#64748b; margin-top:0.25rem;">
+          {% trans "Documents, Images, Audio, Video, Spreadsheets — Max 10MB each" %}
+        </div>
+      </div>
+
+      <div style="display:flex; gap:0.75rem;">
+        <a href="{% url 'documents' %}" style="flex:1; padding:0.75rem; background:#f1f5f9; color:#374151; border-radius:8px; font-size:0.85rem; font-weight:600; text-decoration:none; text-align:center;">
+          {% trans "Cancel" %}
+        </a>
+        <button type="submit" style="flex:2; padding:0.75rem; background:#f59e0b; color:#000; border:none; border-radius:8px; font-size:0.85rem; font-weight:600; cursor:pointer;">
+          ⚖️ {% trans "File Case" %}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

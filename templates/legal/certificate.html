@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% load i18n %}
+{% block page_title %}📜 {% trans "Legal Certificate" %}{% endblock %}
+{% block content %}
+<div style="max-width:800px;margin:0 auto;background:#fff;padding:2rem;border-radius:12px;">
+<h1 style="color:#10b981;">📜 {% trans "LEGAL CONSENT CERTIFICATE" %}</h1>
+<div style="margin:1rem 0;padding:1rem;background:#f8fafc;border-radius:8px;">
+<p><b>{% trans "User" %}:</b> {{ record.user.email }}</p>
+<p><b>{% trans "Terms Version" %}:</b> {{ record.terms_version }}</p>
+<p><b>{% trans "Privacy Version" %}:</b> {{ record.privacy_version }}</p>
+<p><b>{% trans "Accepted At" %}:</b> {{ record.accepted_at }}</p>
+<p><b>{% trans "IP Address" %}:</b> {{ record.ip_address }}</p>
+<p style="font-family:monospace;font-size:0.8rem;color:#10b981;">🔐 {{ record.crypto_signature|default:"—" }}</p>
+<p style="font-family:monospace;font-size:0.8rem;color:#6366f1;">⛓️ {{ record.blockchain_anchor|default:"—" }}</p>
+</div></div>
+{% endblock %}

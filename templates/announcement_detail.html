@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load i18n clan_filters %}
+
+{% block page_title %}{{ announcement.title }}{% endblock %}
+
+{% block content %}
+<style>
+  /* Layout Wrapper & Dynamic Canvas Background */
+  .announcement-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 2rem;
+    border-radius: 16px;
+    
+    /* Blends the dynamic image seamlessly behind your content layout */
+    background: linear-gradient(#1e293b99, #0f172abb), var(--clan-banner) center/cover no-repeat fixed;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  }
+
+  /* Post Card Layout */
+  .post-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 12px;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .post-meta-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .post-date {
+    font-size: 0.75rem;
+    color: #64748b;
+  }
+  .post-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+  }
+  .post-body {
+    font-size: 0.9rem;
+    color: #374151;
+    line-height: 1.8;
+    white-space: pre-line;
+    margin-bottom: 1rem;
+  }
+  .post-footer {
+    font-size: 0.78rem;
+    color: #64748b;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  /* Override standalone section title color for better readability on dark gradients */
+  .announcement-container .section-title {
+    color: #f8fafc;
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+
+  /* Comments List Block */
+  .comment-item {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 10px;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .comment-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.4rem;
+  }
+  .comment-author {
+    font-size: 0.85rem;
+    color: #1e293b;
+  }
+  .comment-date {
+    font-size: 0.72rem;
+    color: #64748b;
+  }
+  .comment-body {
+    font-size: 0.875rem;
+    color: #374151;
+  }
+
+  /* Comment Composition Form */
+  .comment-form-panel {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 12px;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    padding: 1.2rem;
+    margin-top: 1rem;
+  }
+  .comment-form-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+  }
+  .comment-textarea {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.15s ease-in-out;
+  }
+  .comment-textarea:focus {
+    border-color: #10b981;
+  }
+  .btn-submit-comment {
+    margin-top: 0.75rem;
+    padding: 0.6rem 1.2rem;
+    background: #10b981;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease-in-out;
+  }
+  .btn-submit-comment:hover {
+    background: #059669;
+  }
+
+  /* Global Actions / Navigation Links */
+  .link-back-navigation {
+    display: inline-block;
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    color: #cbd5e1;
+    text-decoration: none;
+    transition: color 0.15s ease-in-out;
+  }
+  .link-back-navigation:hover {
+    color: #fff;
+  }
+</style>
+
+<!-- Container initialized with structural CSS custom property token context -->
+<div class="announcement-container" 
+     style="--clan-banner: url('{% if clan_banner %}{{ clan_banner.url }}{% else %}https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=1920&q=80{% endif %}');">
+
+  <!-- Post -->
+  <div class="post-card">
+    <div class="post-meta-header">
+      <span class="badge {{ announcement.category }}">{{ announcement.category }}</span>
+      <span class="post-date">
+        {{ announcement.created_at|date:"d M Y · H:i" }}
+      </span>
+    </div>
+
+    <h2 class="post-title">
+      {{ announcement.title }}
+    </h2>
+
+    <div class="post-body">
+      {{ announcement.content }}
+    </div>
+
+    <div class="post-footer">
+      {% trans "Posted by" %} <strong>
+        {{ announcement.author.person.full_name|default:announcement.author.email }}
+      </strong>
+      · {{ announcement.author.clan_roles.first.role.name|default:"Member" }}
+    </div>
+  </div>
+
+  <!-- Comments Heading -->
+  <div class="section-title">💬 {% trans "Comments" %} ({{ comments.count }})</div>
+
+  <!-- Comments List loop -->
+  {% for comment in comments %}
+  <div class="comment-item">
+    <div class="comment-meta">
+      <strong class="comment-author">
+        {{ comment.author.person.full_name|default:comment.author.email }}
+      </strong>
+      <span class="comment-date">
+        {{ comment.created_at|date:"d M · H:i" }}
+      </span>
+    </div>
+    <div class="comment-body">
+      {{ comment.content }}
+    </div>
+  </div>
+  {% empty %}
+  <div class="table-card">
+    <div class="empty">{% trans "No comments yet. Be the first!" %}</div>
+  </div>
+  {% endfor %}
+
+  <!-- Comment Form Panel -->
+  <div class="comment-form-panel">
+    <div class="comment-form-title">
+      {% trans "Add a comment" %}
+    </div>
+    <form method="post">
+      {% csrf_token %}
+      <textarea name="content" 
+                rows="3"
+                placeholder="{% trans 'Write your comment...' %}"
+                class="comment-textarea"
+                required></textarea>
+      <button type="submit" class="btn-submit-comment">
+        {% trans "Post Comment" %}
+      </button>
+    </form>
+  </div>
+
+  <!-- Foot Navigation Links -->
+  <a href="{% url 'announcements' %}" class="link-back-navigation">
+    ← {% trans "Back to Announcements" %}
+  </a>
+</div>
+{% endblock %}

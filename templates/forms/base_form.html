@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load clan_filters %}
+
+{% block content %}
+
+<div style="max-width:540px; margin:0 auto;">
+  <div style="background:#fff; border-radius:12px;
+              border:1px solid #e2e8f0; padding:1.5rem;">
+
+    <div style="margin-bottom:1.5rem;">
+      <div style="font-size:1rem; font-weight:700;">
+        {% block form_title %}Form{% endblock %}
+      </div>
+      <div style="font-size:0.8rem; color:#64748b; margin-top:0.2rem;">
+        {% block form_subtitle %}{% endblock %}
+      </div>
+    </div>
+
+    {% if messages %}
+    {% for msg in messages %}
+    <div style="padding:0.75rem 1rem; border-radius:8px;
+                margin-bottom:1rem; font-size:0.85rem;
+                background:{% if msg.tags == 'error' %}#fee2e2;color:#991b1b
+                {% else %}#d1fae5;color:#065f46{% endif %};">
+      {{ msg }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      {% block form_fields %}{% endblock %}
+      <button type="submit" style="
+        width:100%; padding:0.85rem;
+        background:#10b981; color:#fff;
+        border:none; border-radius:8px;
+        font-size:0.95rem; font-weight:700;
+        cursor:pointer; margin-top:1rem;">
+        {% block submit_label %}Submit{% endblock %}
+      </button>
+    </form>
+
+    <a href="javascript:history.back()" style="
+       display:block; text-align:center;
+       margin-top:1rem; font-size:0.8rem;
+       color:#64748b; text-decoration:none;">
+      ← Go back
+    </a>
+  </div>
+</div>
+
+<style>
+  .field { margin-bottom:1rem; }
+  .field label {
+    display:block; font-size:0.75rem;
+    font-weight:600; color:#374151;
+    text-transform:uppercase; letter-spacing:0.5px;
+    margin-bottom:0.4rem;
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    width:100%; padding:0.7rem 0.9rem;
+    border:1px solid #e2e8f0; border-radius:8px;
+    font-size:0.9rem; color:#1e293b;
+    background:#f8fafc; outline:none;
+    transition:border-color 0.15s;
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-color:#10b981;
+    background:#fff;
+  }
+  .field .help {
+    font-size:0.72rem; color:#64748b; margin-top:0.3rem;
+  }
+  .field .error {
+    font-size:0.72rem; color:#ef4444; margin-top:0.3rem;
+  }
+</style>
+
+{% endblock %}

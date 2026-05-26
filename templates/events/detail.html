@@ -1,0 +1,29 @@
+{% extends "base.html" %}{% load i18n %}
+{% block page_title %}{{ event.title }}{% endblock %}
+{% block content %}
+<div style="max-width:800px; margin:0 auto;">
+  {% if event.is_cancelled %}<div style="padding:0.75rem; background:#fee2e2; color:#991b1b; border-radius:8px; margin-bottom:1rem;">⚠️ {% trans "This event has been cancelled." %} {% if event.cancellation_reason %}{{ event.cancellation_reason }}{% endif %}</div>{% endif %}
+  <h2>{{ event.title }}</h2>
+  <div style="display:flex; gap:1rem; flex-wrap:wrap; margin:1rem 0; font-size:0.85rem; color:#64748b;">
+    <span>📅 {{ event.scheduled_at|date:"d M Y, H:i" }}</span>
+    <span>📍 {{ event.location|default:"TBA" }}</span>
+    <span>🏷️ {{ event.get_event_type_display }}</span>
+  </div>
+  {% if event.description %}<p style="white-space:pre-wrap;">{{ event.description }}</p>{% endif %}
+  {% if not event.is_cancelled %}
+  <div style="margin:1.5rem 0;">
+    <form method="post" action="{% url 'rsvp-event' event.pk %}" style="display:flex; gap:0.5rem; align-items:center;">
+      {% csrf_token %}
+      <button name="attending" value="yes" style="padding:0.5rem 1.5rem; background:#10b981; color:#fff; border:none; border-radius:8px; cursor:pointer;">✅ {% trans "I'm Attending" %}</button>
+      <button name="attending" value="no" style="padding:0.5rem 1.5rem; background:#ef4444; color:#fff; border:none; border-radius:8px; cursor:pointer;">❌ {% trans "Can't Attend" %}</button>
+    </form>
+  </div>{% endif %}
+  {% if can_manage %}
+  <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin:1rem 0;">
+    {% if event.scheduled_at >= now or event.is_cancelled %}
+    <a href="{% url 'edit-event' event.pk %}" style="padding:0.4rem 1rem; background:#6366f1; color:#fff; border-radius:6px; text-decoration:none; font-size:0.8rem;">✏️ {% trans "Edit" %}</a>{% endif %}
+    {% if not event.is_cancelled %}<a href="{% url 'cancel-event' event.pk %}" style="padding:0.4rem 1rem; background:#f59e0b; color:#fff; border-radius:6px; text-decoration:none; font-size:0.8rem;">🚫 {% trans "Cancel" %}</a>{% endif %}
+    <a href="{% url 'manage-attendance' event.pk %}" style="padding:0.4rem 1rem; background:#3b82f6; color:#fff; border-radius:6px; text-decoration:none; font-size:0.8rem;">📋 {% trans "Attendance" %}</a>
+    <a href="{% url 'record-minutes' event.pk %}" style="padding:0.4rem 1rem; background:#8b5cf6; color:#fff; border-radius:6px; text-decoration:none; font-size:0.8rem;">📝 {% trans "Minutes" %}</a>
+  </div>{% endif %}
+</div>{% endblock %}

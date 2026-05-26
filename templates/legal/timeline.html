@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% load i18n %}
+{% block page_title %}📜 {% trans "Legal Timeline" %}{% endblock %}
+{% block content %}
+<div style="max-width:800px;margin:0 auto;">
+<h2>📜 {% trans "Legal Acceptance Timeline" %}</h2>
+{% for r in records %}
+<div style="background:#fff;padding:1rem;margin:0.5rem 0;border-radius:8px;border:1px solid #e2e8f0;">
+<p><b>{{ r.accepted_at }}</b> — Terms v{{ r.terms_version }} | Privacy v{{ r.privacy_version }}</p>
+<p style="font-family:monospace;font-size:0.75rem;color:#10b981;">🔐 {{ r.crypto_signature|default:"—" }}</p>
+</div>
+{% empty %}
+<p>{% trans "No legal records found." %}</p>
+{% endfor %}
+</div>
+{% endblock %}

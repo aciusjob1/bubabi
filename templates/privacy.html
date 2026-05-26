@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block sidebar %}{% endblock %}
+{% load i18n %}
+
+{% block page_title %}{% trans "Privacy Policy" %}{% endblock %}
+
+{% block content %}
+<div style="max-width:800px; margin:0 auto; padding:1rem;">
+  <h1 style="font-size:1.5rem; font-weight:700; margin-bottom:0.5rem;">🔐 {% trans "Privacy Policy" %}</h1>
+  <p style="color:#64748b; font-size:0.85rem; margin-bottom:1.5rem;">{% trans "Last Updated: May 2026" %}</p>
+
+  <div style="background:#fff; border-radius:12px; border:1px solid #e2e8f0; padding:2rem; line-height:1.8; color:#374151;">
+
+    <!-- 0. Data Controller -->
+    <h2 style="font-size:1.1rem; font-weight:700; margin:0 0 0.75rem;">{% trans "0. Data Controller" %}</h2>
+    <p style="margin-bottom:1rem;">{% trans "This system is operated by the Clan Administration Team. All data collected is managed under their authority. For any privacy-related inquiries, contact your clan leadership." %}</p>
+
+    <!-- Intro -->
+    <p style="margin-bottom:1rem;">{% trans "Welcome to our Clan Management System. Your privacy is important to us. This Privacy Policy explains how we collect, use, and protect your information." %}</p>
+
+    <!-- 1. Information We Collect -->
+    <h2 style="font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.75rem;">{% trans "1. Information We Collect" %}</h2>
+    <p style="margin-bottom:0.5rem;">{% trans "We collect and process the following categories of information:" %}</p>
+    <ul style="padding-left:1.5rem; margin-bottom:1rem;">
+      <li>{% trans "Personal details (e.g. name, phone number, email)" %}</li>
+      <li>{% trans "Account credentials (username and encrypted password)" %}</li>
+      <li>{% trans "Clan-related data (membership, contributions, roles)" %}</li>
+      <li>{% trans "Payment records (amounts, dates, methods — no sensitive PINs)" %}</li>
+      <li>{% trans "Device and usage data (IP address, login activity)" %}</li>
+    </ul>
+
+    <!-- 2. How We Use Your Information -->
+    <h2 style="font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.75rem;">{% trans "2. How We Use Your Information" %}</h2>
+    <p style="margin-bottom:0.5rem;">{% trans "We use your data to:" %}</p>
+    <ul style="padding-left:1.5rem; margin-bottom:1rem;">
+      <li>{% trans "Manage your account and authentication" %}</li>
+      <li>{% trans "Track contributions and financial records" %}</li>
+      <li>{% trans "Communicate important updates" %}</li>
+      <li>{% trans "Improve system performance and security" %}</li>
+      <li>{% trans "Maintain audit logs for accountability" %}</li>
+    </ul>
+
+    <!-- 3. Data Sharing -->
+    <h2 style="font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.75rem;">{% trans "3. Data Sharing" %}</h2>
+    <p style="margin-bottom:1rem;">{% trans "We do not sell or rent your data." %}</p>
+    <p style="margin-bottom:0.5rem;">{% trans "Your data may only be shared with:" %}</p>
+    <ul style="padding-left:1.5rem; margin-bottom:1rem;">
+      <li>{% trans "Authorized clan administrators" %}</li>
+      <li>{% trans "System administrators (for support and maintenance)" %}</li>
+      <li>{% trans "Third-party services used for authentication, hosting, or analytics (if applicable)" %}</li>
+      <li>{% trans "Legal authorities (if required by law)" %}</li>
+    </ul>
+
+    <!-- 4. Data Security -->
+    <h2 style="font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.75rem;">{% trans "4. Data Security" %}</h2>
+    <p style="margin-bottom:0.5rem;">{% trans "We implement strong safeguards:" %}</p>
+    <ul style="padding-left:1.5rem; margin-bottom:1rem;">
+      <li>{% trans "Encrypted passwords" %}</li>
+      <li>{% trans "Role-based access control (RBAC)" %}</li>
+      <li>{% trans "Activity logging and audit trails" %}</li>
+      <li>{% trans "Secure server practices" %}</li>
+    </ul>
+    <p style="margin-bottom:1rem;">{% trans "While we implement strong security measures, no digital system can guarantee absolute security. Users are encouraged to protect their login credentials." %}</p>
+
+    <!-- 5. Data Retention -->
+    <h2 style="font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.75rem;">{% trans "5. Data Retention" %}</h2>
+    <p style="margin-bottom:0.5rem;">{% trans "We retain your data:" %}</p>
+    <ul style="padding-left:1.5rem; margin-bottom:1rem;">
+      <li>{% trans "As long as your account is active" %}</li>
+      <li>{% trans "As required for legal or financial records" %}</li>
+      <li>{% trans "Until explicitly deleted by administrators (where applicable)" %}</li>
+    </ul>
+
+    <!-- 6. Your Rights -->
+    <h2 style="font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.75rem;">{% trans "6. Your Rights" %}</h2>
+    <p style="margin-bottom:0.5rem;">{% trans "You have the right to:" %}</p>
+    <ul style="padding-left:1.5rem; margin-bottom:1rem;">
+      <li>{% trans "Access your personal data" %}</li>
+      <li>{% trans "Request corrections" %}</li>
+      <li>{% trans "Request a copy of your data (data portability)" %}</li>
+      <li>{% trans "Request deletion of your account data (subject to legal retention rules)" %}</li>
+      <li>{% trans "Request account deactivation (via admin)" %}</li>
+    </ul>
+
+    <!-- 7. Cookies & Tracking -->
+    <h2 style="font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.75rem;">{% trans "7. Cookies & Tracking" %}</h2>
+    <p style="margin-bottom:0.5rem;">{% trans "We may use basic cookies for:" %}</p>
+    <ul style="padding-left:1.5rem; margin-bottom:1rem;">
+      <li>{% trans "Session management" %}</li>
+      <li>{% trans "Login persistence" %}</li>
+    </ul>
+    <p style="margin-bottom:1rem;">{% trans "No invasive tracking is performed." %}</p>
+
+    <!-- 8. Changes to This Policy -->
+    <h2 style="font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.75rem;">{% trans "8. Changes to This Policy" %}</h2>
+    <p style="margin-bottom:1rem;">{% trans "We may update this Privacy Policy at any time. Continued use of the system means you accept the updated version. Users will be notified of significant changes." %}</p>
+
+    <!-- 9. Contact -->
+    <h2 style="font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.75rem;">{% trans "9. Contact" %}</h2>
+    <p style="margin-bottom:1rem;">{% trans "For privacy concerns, contact your clan administrator." %}</p>
+
+    <!-- 10. Eligibility -->
+    <h2 style="font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.75rem;">{% trans "10. Eligibility" %}</h2>
+    <p>{% trans "This system is intended for authorized clan members only. Users must comply with internal clan membership rules and governance policies." %}</p>
+
+  </div>
+
+  <!-- Back Navigation -->
+  <div style="margin-top:1.5rem; text-align:center;">
+    <a href="{% url 'accept-terms' %}" style="display:inline-block; font-size:0.85rem; color:#6366f1; text-decoration:none; padding:0.5rem 1rem; background:#f1f5f9; border-radius:8px;">← {% trans "Go back" %}</a>
+  </div>
+</div>
+{% endblock %}

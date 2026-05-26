@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load i18n clan_filters %}
+
+{% block page_title %}{% trans "Approval Requests" %}{% endblock %}
+
+{% block content %}
+<div style="max-width:900px; margin:0 auto;">
+  <h2 style="margin-bottom:1rem;">⚖️ {% trans "Approval Requests" %}</h2>
+
+  {% if approvals %}
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>{% trans "Action" %}</th>
+          <th>{% trans "Description" %}</th>
+          <th>{% trans "Initiated By" %}</th>
+          <th>{% trans "Approvals" %}</th>
+          <th>{% trans "Rejections" %}</th>
+          <th>{% trans "Needed" %}</th>
+          <th>{% trans "Vote" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in approvals %}
+        <tr>
+          <td><strong>{{ a.action_type }}</strong></td>
+          <td>{{ a.description }}</td>
+          <td>{{ a.initiated_by.person.full_name|default:a.initiated_by.email }}</td>
+          <td style="color:#10b981; font-weight:600;">{{ a.approval_count }}</td>
+          <td style="color:#ef4444; font-weight:600;">{{ a.rejection_count }}</td>
+          <td>{{ a.minimum_approvals }}</td>
+          <td>
+            <form method="post" style="display:flex; gap:0.3rem;">
+              {% csrf_token %}
+              <input type="hidden" name="approval_id" value="{{ a.id }}">
+              <button type="submit" name="vote" value="approve" style="padding:0.25rem 0.6rem; background:#10b981; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:0.75rem;">✅ {% trans "Approve" %}</button>
+              <button type="submit" name="vote" value="reject" style="padding:0.25rem 0.6rem; background:#ef4444; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:0.75rem;">❌ {% trans "Reject" %}</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty">✅ {% trans "No pending approval requests." %}</div>
+  {% endif %}
+</div>
+{% endblock %}

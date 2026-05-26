@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load i18n clan_filters %}
+
+{% block page_title %}{% trans "Financials" %}{% endblock %}
+
+{% block content %}
+
+<!-- Clan Banner -->
+{% if request.user.clan and request.user.clan.banner_image %}
+<div style="border-radius:12px; overflow:hidden; margin-bottom:1.5rem; height:120px;">
+  <img src="{{ request.user.clan.banner_image.url }}" style="width:100%; height:100%; object-fit:cover;">
+</div>
+{% endif %}
+
+<style>
+  .toggle-header { cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; padding-right: 0.5rem; }
+  .toggle-header:hover { opacity: 0.75; }
+  .toggle-arrow { transition: transform 0.2s; font-size: 0.7rem; color: #64748b; }
+  .toggle-arrow.open { transform: rotate(90deg); }
+  .toggle-body { display: none; }
+  .toggle-body.open { display: block; }
+</style>
+
+<!-- Summary Cards -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div><div class="stat-label">{% trans "Current Balance" %}</div><div class="stat-value">{{ balance|clan_currency:request.user.clan }}</div><div class="stat-sub">{% trans "Clan Fund" %}</div></div>
+    <div class="stat-icon icon-green">💰</div>
+  </div>
+  <div class="stat-card">
+    <div><div class="stat-label">{% trans "Total Collected" %}</div><div class="stat-value">{{ total_collected|clan_currency:request.user.clan }}</div><div class="stat-sub">{% trans "all time" %}</div></div>
+    <div class="stat-icon icon-blue">📥</div>
+  </div>
+  <div class="stat-card">
+    <div><div class="stat-label">{% trans "Total Expenses" %}</div><div class="stat-value">{{ total_expenses|clan_currency:request.user.clan }}</div><div class="stat-sub">{% trans "all time" %}</div></div>
+    <div class="stat-icon icon-red">📤</div>
+  </div>
+  <div class="stat-card">
+    <div><div class="stat-label">{% trans "Loans Outstanding" %}</div><div class="stat-value">{{ loans_outstanding|clan_currency:request.user.clan }}</div><div class="stat-sub">{% trans "active" %}</div></div>
+    <div class="stat-icon icon-yellow">🏦</div>
+  </div>
+</div>
+
+<!-- Quick Stats Row 2 -->
+<div class="stats-grid" style="margin-bottom:1rem;">
+  <div class="stat-card"><div><div class="stat-label">{% trans "Paid" %}</div><div class="stat-value" style="color:#10b981;">{{ paid_count|default:0 }}</div></div><div class="stat-icon icon-green">✅</div></div>
+  <div class="stat-card"><div><div class="stat-label">{% trans "Due" %}</div><div class="stat-value" style="color:#3b82f6;">{{ due_count|default:0 }}</div></div><div class="stat-icon icon-blue">📅</div></div>
+  <div class="stat-card"><div><div class="stat-label">{% trans "Late" %}</div><div class="stat-value" style="color:#ef4444;">{{ late_count|default:0 }}</div></div><div class="stat-icon icon-red">⏰</div></div>
+  <div class="stat-card"><div><div class="stat-label">{% trans "Unpaid Fines" %}</div><div class="stat-value" style="color:#f59e0b;">{{ unpaid_fines|default:0 }}</div></div><div class="stat-icon icon-yellow">⚠️</div></div>
+</div>
+
+<!-- Quick Actions -->
+<div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.5rem;">
+  <a href="{% url 'create-contributions' %}" style="padding:0.5rem 1rem; background:var(--primary); color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none;">+ {% trans "Generate Period" %}</a>
+  <a href="{% url 'add-expense' %}" style="padding:0.5rem 1rem; background:#ef4444; color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none;">📤 {% trans "Record Expense" %}</a>
+  <a href="{% url 'contributions' %}" style="padding:0.5rem 1rem; background:#3b82f6; color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none;">📋 {% trans "All Contributions" %}</a>
+  <a href="{% url 'reports' %}" style="padding:0.5rem 1rem; background:#6366f1; color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none;">📊 {% trans "Reports" %}</a>
+  <a href="{% url 'system' %}#sms-section" style="padding:0.5rem 1rem; background:#f59e0b; color:#fff; border-radius:8px; font-size:0.8rem; font-weight:600; text-decoration:none; white-space:nowrap;">📱 {% trans "Bulk SMS" %}</a>
+</div>
+
+<!-- AWAITING VERIFICATION -->
+<div class="section-title toggle-header" onclick="toggleSection('unverified')">
+  <span>⏳ {% trans "Awaiting Verification" %} ({{ unverified.count|default:0 }})</span>
+  <span class="toggle-arrow open" id="unverified-arrow">▶</span>
+</div>
+<div id="unverified" class="toggle-body open">
+  {% if unverified %}
+  <div class="table-card"><table>
+    <thead><tr><th>{% trans "Member" %}</th><th>{% trans "Period" %}</th><th>{% trans "Amount" %}</th><th>{% trans "Recorded By" %}</th><th>{% trans "Action" %}</th></tr></thead>
+    <tbody>
+      {% for c in unverified %}
+      <tr>
+        <td><a href="{% url 'member-profile' c.member.id %}" style="text-decoration:none; color:#1e293b; font-weight:600;">{% avatar c.member 24 %} {{ c.member.person.full_name|default:c.member.email }}</a></td>
+        <td><strong>{{ c.period_label }}</strong></td>
+        <td>{{ c.amount_paid|clan_currency:request.user.clan }}</td>
+        <td>{{ c.recorded_by.person.full_name|default:c.recorded_by.email }}</td>
+        <td><a href="{% url 'verify-payment' c.id %}" style="padding:0.25rem 0.6rem; background:#3b82f6; color:#fff; border-radius:6px; font-size:0.72rem; font-weight:600; text-decoration:none; white-space:nowrap;">✓ {% trans "Verify" %}</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table></div>
+  {% else %}
+  <div class="empty">✅ {% trans "All payments verified." %}</div>
+  {% endif %}
+</div>
+
+<!-- LATE CONTRIBUTIONS -->
+<div class="section-title toggle-header" onclick="toggleSection('late')">
+  <span>⏰ {% trans "Late Payments" %} ({{ late_contributions|length|default:0 }})</span>
+  <span class="toggle-arrow" id="late-arrow">▶</span>
+</div>
+<div id="late" class="toggle-body">
+  {% if late_contributions %}
+  <div class="table-card"><table>
+    <thead><tr><th>{% trans "Member" %}</th><th>{% trans "Period" %}</th><th>{% trans "Due" %}</th><th>{% trans "Days Late" %}</th><th>{% trans "Actions" %}</th></tr></thead>
+    <tbody>
+      {% for c in late_contributions %}
+      <tr style="background:#fff5f5;">
+        <td><a href="{% url 'member-profile' c.member.id %}" style="text-decoration:none; color:#1e293b; font-weight:600;">{% avatar c.member 24 %} {{ c.member.person.full_name|default:c.member.email }}</a></td>
+        <td><strong>{{ c.period_label }}</strong></td>
+        <td>{{ c.amount_due|clan_currency:request.user.clan }}</td>
+        <td style="color:#ef4444; font-weight:700;">{{ c.days_late }} {% trans "days" %}</td>
+        <td>
+          <div style="display:flex; gap:0.3rem; flex-wrap:wrap;">
+            <a href="{% url 'record-payment' c.id %}" style="padding:0.25rem 0.6rem; background:#10b981; color:#fff; border-radius:6px; font-size:0.72rem; font-weight:600; text-decoration:none; white-space:nowrap;">💳 {% trans "Pay" %}</a>
+            {% if c.member.phone %}
+            <form method="post" action="{% url 'send-contribution-reminder' c.id %}" style="display:inline;">{% csrf_token %}<button type="submit" title="{% trans 'Send SMS' %}" style="padding:0.25rem 0.5rem; background:#6366f1; color:#fff; border:none; border-radius:6px; font-size:0.72rem; cursor:pointer; white-space:nowrap;">📱</button></form>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table></div>
+  {% else %}
+  <div class="empty">✅ {% trans "No late payments." %}</div>
+  {% endif %}
+</div>
+
+<script>
+function toggleSection(id) {
+  const body = document.getElementById(id);
+  const arrow = document.getElementById(id + '-arrow');
+  if (body && arrow) { body.classList.toggle('open'); arrow.classList.toggle('open'); }
+}
+</script>
+{% endblock %}

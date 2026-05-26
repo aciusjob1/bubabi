@@ -1,0 +1,770 @@
+{% extends "base.html" %}
+{% load i18n clan_filters %}
+
+{% block page_title %}{% trans "Clan Settings" %}{% endblock %}
+
+{% block content %}
+<div style="max-width:800px; margin:0 auto; position: relative; z-index: 1;">
+
+  <!-- Header Banner Preview -->
+  {% if clan.banner_image %}
+  <div id="bannerContainer" style="border-radius:12px; overflow:hidden; margin-bottom:1.5rem; height:160px; position:relative; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+    <img src="{{ clan.banner_image.url }}" style="width:100%; height:100%; object-fit:cover;" alt="{{ clan.name }}">
+    <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.6)); padding:1rem 1.5rem;">
+      <span style="color:#fff; font-weight:700; font-size:1.1rem;">{{ clan.name }}</span>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Success/Error Messages -->
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags }}" style="padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; background:{% if message.tags == 'success' %}#d1fae5; color:#065f46;{% else %}#fee2e2; color:#991b1b;{% endif %} font-size:0.85rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+    {{ message }}
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data" id="settingsForm">
+    {% csrf_token %}
+
+    <!-- Hidden Inputs for Django File Clearing Mechanism -->
+    {% if form.logo.field.widget.clear_checkbox_name %}
+      <input type="checkbox" name="{{ form.logo.field.widget.clear_checkbox_name }}" id="logo-clear-checkbox" style="display:none;">
+    {% endif %}
+    {% if form.banner_image.field.widget.clear_checkbox_name %}
+      <input type="checkbox" name="{{ form.banner_image.field.widget.clear_checkbox_name }}" id="banner-clear-checkbox" style="display:none;">
+    {% endif %}
+
+    <!-- Section 1: Identity -->
+    <div class="settings-card">
+      <div class="settings-header" onclick="toggleCardFromHeader(this)" style="cursor:pointer;">
+        <div class="settings-icon" style="background:#dbeafe;">🏛️</div>
+        <div>
+          <h3 class="settings-title">{% trans "Clan Identity" %}</h3>
+          <p class="settings-subtitle">{% trans "Basic information about your clan" %}</p>
+        </div>
+        <button type="button" class="toggle-section" aria-label="Toggle section">▼</button>
+      </div>
+
+      <div class="settings-body">
+        <div class="form-row">
+          <div class="form-col">
+            <label class="form-label" for="{{ form.name.id_for_label }}">{% trans "Clan Name" %} *</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+            <div class="form-error">{{ form.name.errors.0 }}</div>
+            {% endif %}
+          </div>
+          <div class="form-col">
+            <label class="form-label" for="{{ form.code.id_for_label }}">{% trans "Short Code / Acronym" %}</label>
+            {{ form.code }}
+            <div class="form-help">{% trans "e.g., BUBABI, MAKOLO" %}</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="{{ form.motto.id_for_label }}">{% trans "Motto / Slogan" %}</label>
+          {{ form.motto }}
+          <div class="form-help">{% trans "A short phrase that inspires your clan" %}</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="{{ form.description.id_for_label }}">{% trans "Description" %}</label>
+          {{ form.description }}
+          <div class="form-help">
+            <span id="descCounter">0/500</span> {% trans "characters" %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: Branding -->
+    <div class="settings-card">
+      <div class="settings-header" onclick="toggleCardFromHeader(this)" style="cursor:pointer;">
+        <div class="settings-icon" style="background:#ede9fe;">🎨</div>
+        <div>
+          <h3 class="settings-title">{% trans "Branding & Appearance" %}</h3>
+          <p class="settings-subtitle">{% trans "Logo, banner and colour theme" %}</p>
+        </div>
+        <button type="button" class="toggle-section" aria-label="Toggle section">▼</button>
+      </div>
+
+      <div class="settings-body">
+        <div class="form-row">
+          <div class="form-col">
+            <label class="form-label">{% trans "Clan Logo" %}</label>
+            {% if clan.logo %}
+            <div id="logoPreviewWrapper" style="position:relative; display:inline-block;">
+              <img src="{{ clan.logo.url }}" class="logo-preview" alt="{% trans 'Current logo' %}">
+              <button type="button" onclick="clearLogo(event)" class="clear-media" title="{% trans 'Remove logo' %}">✕</button>
+            </div>
+            {% endif %}
+            {{ form.logo }}
+            <div class="form-help">{% trans "Recommended: 512×512 px, PNG or JPG (max 2MB)" %}</div>
+          </div>
+          <div class="form-col">
+            <label class="form-label">{% trans "Cover Banner" %}</label>
+            {% if clan.banner_image %}
+            <div id="bannerPreviewWrapper" style="position:relative;">
+              <img src="{{ clan.banner_image.url }}" class="banner-preview" alt="{% trans 'Current banner' %}">
+              <button type="button" onclick="clearBanner(event)" class="clear-media" title="{% trans 'Remove banner' %}">✕</button>
+            </div>
+            {% endif %}
+            {{ form.banner_image }}
+            <div class="form-help">{% trans "Recommended: 1200×400 px (max 5MB)" %}</div>
+          </div>
+        </div>
+
+        <div class="form-row" style="margin-top: 1rem;">
+          <div class="form-col">
+            <label class="form-label" for="{{ form.primary_color.id_for_label }}">{% trans "Primary Colour" %}</label>
+            <div class="color-picker-group">
+              {{ form.primary_color }}
+              <span class="color-hex" id="primaryHex">{{ clan.primary_color|default:"#10b981" }}</span>
+            </div>
+          </div>
+          <div class="form-col">
+            <label class="form-label" for="{{ form.accent_color.id_for_label }}">{% trans "Accent Colour" %}</label>
+            <div class="color-picker-group">
+              {{ form.accent_color }}
+              <span class="color-hex" id="accentHex">{{ clan.accent_color|default:"#6366f1" }}</span>
+            </div>
+          </div>
+          <div class="form-col">
+            <label class="form-label" for="{{ form.sidebar_color.id_for_label }}">🎨 {% trans "Sidebar Colour" %}</label>
+            <div class="color-picker-group">
+              {{ form.sidebar_color }}
+              <span class="color-hex" id="sidebarHex">{{ clan.sidebar_color|default:"#3d1a1a" }}</span>
+            </div>
+            <div class="form-help">{% trans "Used in sidebars and authentication backdrops" %}</div>
+          </div>
+          <div class="form-col">
+            <label class="form-label" for="{{ form.blur_intensity.id_for_label }}">🌫️ {% trans "Sidebar Blur" %}</label>
+            {{ form.blur_intensity }}
+            <div class="form-help">{% trans "Glass effect intensity for background framework" %}</div>
+          </div>
+        </div>
+
+        <!-- Live Preview -->
+        <div class="live-preview" style="margin-top:1.5rem; padding:1rem; border-radius:8px; border:2px dashed #e2e8f0; text-align:center; background: rgba(255,255,255,0.4);">
+          <span style="font-size:0.7rem; color:#64748b; display:block; margin-bottom:0.5rem;">{% trans "Live Button Preview" %}</span>
+          <button type="button" id="previewBtn" style="padding:0.5rem 1.5rem; border:none; border-radius:8px; color:#fff; font-weight:600; cursor:default; transition: background 0.2s;">{% trans "Sample Button" %}</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Financial Configuration -->
+    <div class="settings-card">
+      <div class="settings-header" onclick="toggleCardFromHeader(this)" style="cursor:pointer;">
+        <div class="settings-icon" style="background:#fef3c7;">💰</div>
+        <div>
+          <h3 class="settings-title">{% trans "Financial Settings" %}</h3>
+          <p class="settings-subtitle">{% trans "Currency, contribution defaults and fines" %}</p>
+        </div>
+        <button type="button" class="toggle-section" aria-label="Toggle section">▼</button>
+      </div>
+
+      <div class="settings-body">
+        <div class="form-row">
+          <div class="form-col">
+            <label class="form-label" for="{{ form.currency.id_for_label }}">{% trans "Currency" %}</label>
+            {{ form.currency }}
+          </div>
+          <div class="form-col">
+            <label class="form-label" for="{{ form.default_contribution.id_for_label }}">{% trans "Default Contribution" %}</label>
+            {{ form.default_contribution }}
+            <div class="form-help">{% trans "Amount each member pays per period" %}</div>
+          </div>
+        </div>
+
+        <div class="form-row" style="margin-top: 1rem;">
+          <div class="form-col">
+            <label class="form-label" for="{{ form.late_fine_amount.id_for_label }}">{% trans "Late Payment Fine" %}</label>
+            {{ form.late_fine_amount }}
+          </div>
+          <div class="form-col">
+            <label class="form-label" for="{{ form.max_loan_amount.id_for_label }}">{% trans "Max Loan Amount" %}</label>
+            {{ form.max_loan_amount }}
+            <div class="form-help">{% trans "Maximum amount a member can borrow" %}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 4: Advanced -->
+    <div class="settings-card">
+      <div class="settings-header" onclick="toggleCardFromHeader(this)" style="cursor:pointer;">
+        <div class="settings-icon" style="background:#f1f5f9;">⚙️</div>
+        <div>
+          <h3 class="settings-title">{% trans "Advanced" %}</h3>
+          <p class="settings-subtitle">{% trans "Timezone, language and registration" %}</p>
+        </div>
+        <button type="button" class="toggle-section" aria-label="Toggle section">▼</button>
+      </div>
+
+      <div class="settings-body">
+        <div class="form-row">
+          <div class="form-col">
+            <label class="form-label" for="{{ form.timezone.id_for_label }}">{% trans "Timezone" %}</label>
+            {{ form.timezone }}
+          </div>
+          <div class="form-col">
+            <label class="form-label" for="{{ form.default_language.id_for_label }}">{% trans "Default Language" %}</label>
+            {{ form.default_language }}
+          </div>
+        </div>
+
+        <div class="form-row" style="margin-top: 1rem;">
+          <div class="form-col">
+            <label class="form-label" for="{{ form.contact_email.id_for_label }}">📧 {% trans "Contact Email" %}</label>
+            {{ form.contact_email }}
+            <div class="form-help">{% trans "Shown to users when registration is closed" %}</div>
+          </div>
+          <div class="form-col">
+            <label class="form-label" for="{{ form.contact_phone.id_for_label }}">📱 {% trans "Contact Phone" %}</label>
+            {{ form.contact_phone }}
+            <div class="form-help">{% trans "For registration inquiries" %}</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="checkbox-label" for="{{ form.is_public.id_for_label }}">
+            {{ form.is_public }}
+            <span>{% trans "Allow public registration" %}</span>
+          </label>
+          <div class="form-help" style="margin-left:1.75rem;">
+            {% trans "When enabled, anyone can register to join your clan without an invitation." %}
+          </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="danger-zone" style="margin-top:1.5rem; padding:1rem; border:1px solid #fecaca; border-radius:8px; background: rgba(254,242,242,0.6); backdrop-filter: blur(4px);">
+          <h4 style="color:#991b1b; font-size:0.8rem; margin:0 0 0.5rem 0;">⚠️ {% trans "Danger Zone" %}</h4>
+          <p style="font-size:0.72rem; color:#7f1d1d; margin:0 0 0.75rem 0;">
+            {% trans "These actions cannot be undone. Please operate carefully." %}
+          </p>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <a href="/system-cleanup/" style="padding:0.5rem 1rem; background:#6366f1; color:#fff; border:none; border-radius:6px; font-size:0.75rem; cursor:pointer; text-decoration:none; text-align:center;">
+              🧹 {% trans "System Cleanup" %}
+            </a>
+            <button type="button" onclick="confirmReset()" class="btn-danger" style="padding:0.5rem 1rem; background:#ef4444; color:#fff; border:none; border-radius:6px; font-size:0.75rem; cursor:pointer;">
+              🔄 {% trans "Reset to Defaults" %}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 5: Payment Methods Links -->
+    <div class="settings-card">
+      <div class="settings-header" style="justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div class="settings-icon" style="background:#fce7f3;">💳</div>
+          <div>
+            <h3 class="settings-title">{% trans "Payment Methods" %}</h3>
+            <p class="settings-subtitle">{% trans "Mobile money providers and banking pipelines" %}</p>
+          </div>
+        </div>
+        <a href="/payment-methods/" class="btn-cancel" style="padding: 0.5rem 1rem; font-size: 0.75rem; background: #fce7f3; color: #9d174d; border-radius: 6px; text-decoration: none; font-weight: 600;">
+          ⚙️ {% trans "Manage Methods" %}
+        </a>
+      </div>
+    </div>
+
+    <!-- Save Form CTA Button Actions -->
+    <div class="form-actions" style="position: relative; z-index: 10;">
+      <a href="{% url 'dashboard' %}" class="btn-cancel">{% trans "Cancel" %}</a>
+      <button type="button" onclick="previewChanges()" class="btn-preview" style="padding:0.7rem 1.5rem; background:#6366f1; color:#fff; border:none; border-radius:8px; font-size:0.85rem; font-weight:600; cursor:pointer; transition: background 0.15s;">
+        👁️ {% trans "Preview" %}
+      </button>
+      <button type="submit" class="btn-save">
+        💾 {% trans "Save All Settings" %}
+      </button>
+    </div>
+
+  </form>
+</div>
+
+<style>
+  /* ── CSS Engine Global Variables Setup ── */
+  :root {
+    --clan-primary-raw: 16, 185, 129;   /* Fallback: #10b981 */
+    --clan-accent-raw: 99, 102, 241;    /* Fallback: #6366f1 */
+    --blur-intensity: 6px;
+  }
+
+  /* ── Dynamic Layout Engine Frame Base ── */
+  body {
+    background: linear-gradient(
+      135deg, 
+      rgba(var(--clan-primary-raw), 0.07) 0%, 
+      rgba(var(--clan-accent-raw), 0.02) 50%, 
+      #f8fafc 100%
+    ) !important;
+    background-attachment: fixed !important;
+    transition: background 0.4s ease;
+  }
+
+  /* ── Upgraded Glassmorphism Settings Cards ── */
+  .settings-card {
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(var(--blur-intensity));
+    -webkit-backdrop-filter: blur(var(--blur-intensity)); /* Safari support */
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  }
+
+  .settings-card:hover {
+    background: rgba(255, 255, 255, 0.90);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.01);
+  }
+
+  .settings-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    position: relative;
+  }
+
+  .settings-icon {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .settings-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+  }
+
+  .settings-subtitle {
+    font-size: 0.78rem;
+    color: #64748b;
+    margin: 0.15rem 0 0;
+  }
+
+  .settings-body {
+    margin-top: 1.5rem;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .toggle-section {
+    margin-left: auto;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: #94a3b8;
+    transition: transform 0.2s;
+    padding: 0.25rem;
+    pointer-events: none; /* Allows click events to pass onto the whole header container */
+  }
+
+  /* ── Collapse Classes via JavaScript State ── */
+  .settings-card.collapsed .settings-body {
+    display: none !important;
+  }
+  
+  .settings-card.collapsed .toggle-section {
+    transform: rotate(-90deg);
+  }
+
+  /* ── Form Grid ── */
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  .form-col { min-width: 0; }
+  .form-group { margin-top: 1rem; }
+
+  /* ── Labels ── */
+  .form-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #374151;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.4rem;
+  }
+
+  .form-help {
+    font-size: 0.7rem;
+    color: #64748b;
+    margin-top: 0.3rem;
+  }
+
+  .form-error {
+    font-size: 0.72rem;
+    color: #ef4444;
+    margin-top: 0.25rem;
+    font-weight: 500;
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #374151;
+    margin-top: 0.75rem;
+  }
+
+  /* ── Inputs ── */
+  input:not([type=checkbox]):not([type=color]),
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: #1e293b;
+    background: rgba(248, 250, 252, 0.7);
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  input:not([type=checkbox]):not([type=color]):focus,
+  select:focus,
+  textarea:focus {
+    border-color: #10b981;
+    outline: none;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+  }
+
+  input[type=color] {
+    padding: 0.2rem;
+    height: 42px;
+    width: 70px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+  }
+
+  .color-picker-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .color-hex {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #64748b;
+    font-family: monospace;
+  }
+
+  input[type=file] {
+    width: 100%;
+    padding: 0.5rem;
+    background: #fff;
+    border: 2px dashed #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.8rem;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 90px;
+  }
+
+  select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem center;
+    padding-right: 2rem;
+  }
+
+  /* ── Previews ── */
+  .logo-preview {
+    width: 80px; height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-bottom: 0.5rem;
+    display: block;
+    border: 2px solid #e2e8f0;
+  }
+
+  .banner-preview {
+    width: 100%; height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-bottom: 0.5rem;
+    display: block;
+    border: 2px solid #e2e8f0;
+  }
+
+  .clear-media {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 21px;
+    height: 21px;
+    border-radius: 50%;
+    background: #ef4444;
+    color: #fff;
+    border: 1px solid #fff;
+    font-size: 0.65rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+
+  /* ── Buttons ── */
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-cancel {
+    padding: 0.7rem 1.5rem;
+    background: #f1f5f9;
+    color: #374151;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    transition: background 0.15s;
+  }
+
+  .btn-cancel:hover { background: #e2e8f0; }
+
+  .btn-preview:hover { background: #4f46e5 !important; }
+
+  .btn-save {
+    padding: 0.7rem 2rem;
+    background: #10b981;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s;
+  }
+
+  .btn-save:hover { background: #059669; }
+
+  /* ── Responsive Viewports ── */
+  @media (max-width: 640px) {
+    .form-row {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    .settings-card { padding: 1rem; }
+
+    .form-actions {
+      flex-direction: column;
+    }
+
+    .btn-cancel, .btn-save, .btn-preview {
+      width: 100%;
+      text-align: center;
+    }
+
+    .logo-preview {
+      width: 60px; height: 60px;
+    }
+  }
+</style>
+
+<script>
+  // Safely toggles configuration sections from the parent card container header
+  function toggleCardFromHeader(headerElement) {
+    const card = headerElement.closest('.settings-card');
+    if (card) {
+      card.classList.toggle('collapsed');
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    // Dynamic binding helpers utilizing input name tags directly to prevent broken template labels
+    const getElementByDjangoName = (name) => document.querySelector(`[name="${name}"]`);
+
+    // Configuration Input References
+    const primaryInput = getElementByDjangoName('primary_color');
+    const accentInput = getElementByDjangoName('accent_color');
+    const sidebarInput = getElementByDjangoName('sidebar_color');
+    const blurInput = getElementByDjangoName('blur_intensity');
+
+    const previewBtn = document.getElementById('previewBtn');
+    const primaryHex = document.getElementById('primaryHex');
+    const accentHex = document.getElementById('accentHex');
+    const sidebarHex = document.getElementById('sidebarHex');
+
+    // Helper: Converts Hex (#ffffff) to RGB tokens (255, 255, 255)
+    function hexToRgbChannels(hex) {
+      hex = hex.replace('#', '');
+      if (hex.length === 3) {
+        hex = hex.split('').map(str => str + str).join('');
+      }
+      const num = parseInt(hex, 16);
+      return `${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}`;
+    }
+
+    // Engine Core: Synchronizes CSS runtime architecture state with inputs
+    function runBackgroundEngine() {
+      if (primaryInput) {
+        const primaryRgb = hexToRgbChannels(primaryInput.value);
+        document.documentElement.style.setProperty('--clan-primary-raw', primaryRgb);
+        if (previewBtn) previewBtn.style.background = primaryInput.value;
+        if (primaryHex) primaryHex.textContent = primaryInput.value.toUpperCase();
+      }
+      if (accentInput) {
+        const accentRgb = hexToRgbChannels(accentInput.value);
+        document.documentElement.style.setProperty('--clan-accent-raw', accentRgb);
+        if (accentHex) accentHex.textContent = accentInput.value.toUpperCase();
+      }
+      if (sidebarInput) {
+        if (sidebarHex) sidebarHex.textContent = sidebarInput.value.toUpperCase();
+      }
+      if (blurInput) {
+        document.documentElement.style.setProperty('--blur-intensity', `${blurInput.value}px`);
+      }
+    }
+
+    // Event Bindings for live theme engine changes
+    if (primaryInput) primaryInput.addEventListener('input', runBackgroundEngine);
+    if (accentInput)   accentInput.addEventListener('input', runBackgroundEngine);
+    if (sidebarInput)  sidebarInput.addEventListener('input', runBackgroundEngine);
+    if (blurInput)     blurInput.addEventListener('input', runBackgroundEngine);
+
+    // Run Engine once on layout load setup
+    runBackgroundEngine();
+
+    // Characters counter evaluation pipeline & safe paste validation
+    const descField = getElementByDjangoName('description');
+    const descCounter = document.getElementById('descCounter');
+    if (descField && descCounter) {
+      const updateCounter = () => {
+        if (descField.value.length > 500) {
+          descField.value = descField.value.substring(0, 500);
+        }
+        descCounter.textContent = `${descField.value.length}/500`;
+      };
+      descField.addEventListener('input', updateCounter);
+      updateCounter(); // Execute init setup count assessment on load
+    }
+
+    // Media file size safety guards
+    const logoInput = getElementByDjangoName('logo');
+    const bannerInput = getElementByDjangoName('banner_image');
+
+    if (logoInput) {
+      logoInput.addEventListener('change', function() {
+        if (this.files[0] && this.files[0].size > 2 * 1024 * 1024) {
+          alert('{% trans "Logo file size must not exceed 2MB." %}');
+          this.value = ''; // Flush chosen reference
+        }
+      });
+    }
+
+    if (bannerInput) {
+      bannerInput.addEventListener('change', function() {
+        if (this.files[0] && this.files[0].size > 5 * 1024 * 1024) {
+          alert('{% trans "Banner file size must not exceed 5MB." %}');
+          this.value = ''; // Flush chosen reference
+        }
+      });
+    }
+
+    // Enforce description character hard-cap on submission
+    const settingsForm = document.getElementById('settingsForm');
+    if (settingsForm && descField) {
+      settingsForm.addEventListener('submit', function(event) {
+        if (descField.value.length > 500) {
+          event.preventDefault();
+          alert('{% trans "Description exceeds the maximum limit of 500 characters." %}');
+          descField.focus();
+        }
+      });
+    }
+  });
+
+  // Action: Clear Logo Media Asset with Django compatibility flags
+  function clearLogo(event) {
+    event.stopPropagation(); // Stops the accordion card context from toggling close
+    if (confirm('{% trans "Remove the current logo?" %}')) {
+      const clearCheckbox = document.getElementById('logo-clear-checkbox');
+      if (clearCheckbox) {
+        clearCheckbox.checked = true; // Tell Django backend to discard file reference
+      }
+      document.getElementById('logoPreviewWrapper')?.remove();
+    }
+  }
+
+  // Action: Clear Banner Media Asset with Django compatibility flags
+  function clearBanner(event) {
+    event.stopPropagation();
+    if (confirm('{% trans "Remove the current banner?" %}')) {
+      const clearCheckbox = document.getElementById('banner-clear-checkbox');
+      if (clearCheckbox) {
+        clearCheckbox.checked = true; 
+      }
+      document.getElementById('bannerPreviewWrapper')?.remove();
+      document.getElementById('bannerContainer')?.remove();
+    }
+  }
+
+  // Action: Reset parameters variables fields configuration back onto default fallbacks
+  function confirmReset() {
+    if (confirm('{% trans "Reset ALL settings to default values? This cannot be undone." %}')) {
+      const setter = (name, value) => {
+        const el = document.querySelector(`[name="${name}"]`);
+        if (el) { el.value = value; el.dispatchEvent(new Event('input')); }
+      };
+
+      setter('primary_color', '#10b981');
+      setter('accent_color', '#6366f1');
+      setter('sidebar_color', '#3d1a1a');
+      setter('blur_intensity', '6');
+      setter('default_contribution', '50000');
+      setter('late_fine_amount', '10000');
+      setter('max_loan_amount', '500000');
+      setter('currency', 'TZS');
+
+      alert('{% trans "Settings reset to defaults locally. Click Save to apply changes permanently." %}');
+    }
+  }
+
+  // Quick form visualization snapshot data preview
+  function previewChanges() {
+    const nameEl = document.querySelector('[name="name"]');
+    const primaryEl = document.querySelector('[name="primary_color"]');
+    const name = nameEl ? nameEl.value : '{{ clan.name }}';
+    const primary = primaryEl ? primaryEl.value : '#10b981';
+    
+    alert('{% trans "Settings Preview Configuration" %}\n\n' + 
+          '{% trans "Clan Name" %}: ' + name + '\n' + 
+          '{% trans "Primary Colour" %}: ' + primary + '\n\n' +
+          '{% trans "Click Save All Settings to commit configuration records changes." %}');
+  }
+</script>
+{% endblock %}

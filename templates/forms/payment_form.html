@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+{% load i18n clan_filters %}
+
+{% block page_title %}{% trans "Record Payment" %}{% endblock %}
+
+{% block content %}
+<div class="pay-container">
+  <h2>💸 {% trans "Record Payment" %}</h2>
+  <p class="pay-subtitle">{{ contribution.member.person.full_name }} · {{ contribution.period_label }}</p>
+  
+  <div class="pay-card">
+    <div class="pay-grid">
+      <div><div class="pay-label">{% trans "Amount Due" %}</div><div class="pay-value">{{ contribution.amount_due|tsh }}</div></div>
+      <div><div class="pay-label">{% trans "Already Paid" %}</div><div class="pay-value" style="color:#10b981;">{{ contribution.amount_paid|tsh }}</div></div>
+      <div><div class="pay-label">{% trans "Remaining" %}</div><div class="pay-value" style="color:#ef4444;">{{ balance_due|tsh }}</div></div>
+      <div><div class="pay-label">{% trans "Status" %}</div><span class="badge {{ contribution.status }}">{{ contribution.get_status_display }}</span></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width:{% widthratio contribution.amount_paid contribution.amount_due 100 %}%;"></div></div>
+    <div class="progress-text">{% widthratio contribution.amount_paid contribution.amount_due 100 %}% {% trans "paid" %}</div>
+  </div>
+
+  <form method="post" id="paymentForm" onsubmit="return confirmSubmit()" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <div class="pay-field">
+      <label class="pay-label">{% trans "Amount to Pay" %}</label>
+      <div class="amount-row">
+        <input type="number" name="amount" id="amountInput" step="0.01" min="0" max="{{ balance_due }}" value="{{ balance_due }}" class="pay-input" required>
+        <button type="button" onclick="document.getElementById('amountInput').value='{{ balance_due }}'" class="btn btn-outline pay-full-btn">💰 {% trans "Pay Full" %}</button>
+      </div>
+      <div id="amountWarning" class="amount-warning" style="display:none;">⚠️ {% trans "Cannot exceed remaining balance of" %} {{ balance_due|tsh }}</div>
+    </div>
+
+    <div class="pay-field">
+      <label class="pay-label">{% trans "Payment Method" %}</label>
+      <div class="method-grid">
+        {% if payment_methods.cash_enabled and can_use_cash %}
+        <label class="method-card selected" data-method="cash">
+          <input type="radio" name="payment_method" value="cash" checked>
+          <span class="method-icon">💵</span>
+          <div class="method-info"><div class="method-name">{% trans "Cash" %}</div><div class="method-desc">{% trans "Treasurer only" %}</div></div>
+        </label>
+        {% endif %}
+        {% if payment_methods.mobile_money_enabled %}
+        <label class="method-card{% if not payment_methods.cash_enabled or not can_use_cash %} selected{% endif %}" data-method="mobile_money">
+          <input type="radio" name="payment_method" value="mobile_money"{% if not payment_methods.cash_enabled or not can_use_cash %} checked{% endif %}>
+          <span class="method-icon">📱</span>
+          <div class="method-info"><div class="method-name">{% trans "Mobile Money" %}</div><div class="method-desc">M-Pesa, Airtel, Tigo, Halotel</div></div>
+        </label>
+        {% endif %}
+        {% if payment_methods.bank_transfer_enabled %}
+        <label class="method-card" data-method="bank">
+          <input type="radio" name="payment_method" value="bank">
+          <span class="method-icon">🏦</span>
+          <div class="method-info"><div class="method-name">{% trans "Bank Transfer" %}</div><div class="method-desc">CRDB, NMB, NBC, Equity</div></div>
+        </label>
+        {% endif %}
+        <label class="method-card" data-method="other">
+          <input type="radio" name="payment_method" value="other">
+          <span class="method-icon">📄</span>
+          <div class="method-info"><div class="method-name">{% trans "Other" %}</div><div class="method-desc">{% trans "In-kind, manual" %}</div></div>
+        </label>
+      </div>
+    </div>
+
+    <!-- CASH FIELDS -->
+    <div id="cashFields">
+      <div class="pay-field"><label class="pay-label">{% trans "Received by" %}</label><input type="text" name="received_by" class="pay-input" value="{{ current_user_name|default:'' }}" placeholder="{% trans 'Name of person who received cash' %}"></div>
+      <div class="pay-field"><label class="pay-label">{% trans "Receipt Number" %} 📌</label><input type="text" name="cash_receipt_number" class="pay-input receipt-input" placeholder="{% trans 'Enter receipt or voucher number' %}"><div class="field-hint">{% trans "Important for audit" %}</div></div>
+    </div>
+
+    <!-- MOBILE MONEY FIELDS -->
+    <div id="mobileFields" style="display:none;">
+      <div class="pay-field">
+        <label class="pay-label">📱 {% trans "Phone Number" %}</label>
+        <input type="tel" name="mobile_phone" class="pay-input" id="mobilePhone" placeholder="+255 7XX XXX XXX" value="{{ contribution.member.phone|default:'' }}">
+        <div class="field-hint">{% trans "Number that sent the payment" %}</div>
+      </div>
+      <div id="autoProvider" class="pay-field" style="display:none; padding:0.5rem; border-radius:8px; font-size:0.78rem; font-weight:600;"></div>
+      <div class="pay-field">
+        <label class="pay-label">{% trans "Provider" %}</label>
+        <select name="mobile_provider" class="pay-input" id="mobileProvider">
+          <option value="">{% trans "Select provider" %}</option>
+          {% for p in payment_methods.mobile_providers %}
+          <option value="{{ p.code }}">{{ p.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="pay-field">
+        <label class="pay-label">{% trans "Transaction ID" %} <span style="color:#ef4444;">*</span></label>
+        <input type="text" name="payment_ref" class="pay-input receipt-input" id="mobileRef" placeholder="{% trans 'e.g., T26ABC123 from M-Pesa SMS' %}">
+        <div class="field-hint">📩 {% trans "Enter the transaction ID from the confirmation SMS" %}</div>
+      </div>
+    </div>
+
+    <!-- BANK FIELDS -->
+    <div id="bankFields" style="display:none;">
+      <div class="pay-field">
+        <label class="pay-label">🏦 {% trans "Bank Name" %}</label>
+        <select name="bank_name" class="pay-input">
+          <option value="">{% trans "Select bank" %}</option>
+          {% for b in payment_methods.banks %}
+          <option value="{{ b.code }}">{{ b.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="pay-field"><label class="pay-label">{% trans "Account Number" %}</label><input type="text" name="bank_account" class="pay-input" placeholder="{% trans 'Account number used' %}"></div>
+      <div class="pay-field"><label class="pay-label">{% trans "Transaction Reference" %}</label><input type="text" name="payment_ref" class="pay-input receipt-input" placeholder="{% trans 'Bank reference or deposit slip number' %}"></div>
+      <div class="pay-field"><label class="pay-label">📎 {% trans "Upload Slip (optional)" %}</label><input type="file" name="bank_slip" class="pay-input" accept="image/*,.pdf" style="padding:0.5rem;"></div>
+    </div>
+
+    <!-- OTHER FIELDS -->
+    <div id="otherFields" style="display:none;">
+      <div class="pay-field"><label class="pay-label">📄 {% trans "Description" %}</label><input type="text" name="other_description" class="pay-input" placeholder="{% trans 'e.g., Paid in cash, Brought cement, Labor contribution' %}"></div>
+      <div class="pay-field"><label class="pay-label">{% trans "Notes" %}</label><textarea name="other_notes" class="pay-input" rows="2" placeholder="{% trans 'Additional details...' %}"></textarea></div>
+    </div>
+
+    <button type="submit" class="btn btn-green pay-submit">💾 {% trans "Confirm Payment" %}</button>
+    <a href="{% url 'contributions' %}" class="btn btn-outline pay-cancel">{% trans "Cancel" %}</a>
+  </form>
+</div>
+
+<style>
+  .pay-container { max-width:540px; margin:0 auto; padding:0 0.25rem; }
+  .pay-container h2 { margin:0 0 0.15rem; font-size:1.15rem; }
+  .pay-subtitle { font-size:0.8rem; color:#64748b; margin:0 0 1.25rem; }
+  .pay-card { background:#fff; border-radius:12px; border:1px solid #e2e8f0; padding:1.25rem; margin-bottom:1.25rem; }
+  .pay-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem; }
+  .pay-label { font-size:0.68rem; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.2rem; }
+  .pay-value { font-size:0.95rem; font-weight:700; color:#1e293b; }
+  .progress-bar { background:#f1f5f9; border-radius:4px; height:6px; overflow:hidden; }
+  .progress-fill { background:#10b981; height:100%; border-radius:4px; transition:width 0.3s; }
+  .progress-text { font-size:0.68rem; color:#64748b; text-align:right; margin-top:0.25rem; }
+  .pay-field { margin-bottom:1rem; }
+  .pay-input, select.pay-input, textarea.pay-input { width:100%; padding:0.7rem 0.85rem; border:1px solid #e2e8f0; border-radius:8px; font-size:0.9rem; outline:none; background:#fff; box-sizing:border-box; font-family:inherit; }
+  .pay-input:focus, select.pay-input:focus { border-color:#10b981; box-shadow:0 0 0 3px rgba(16,185,129,0.1); }
+  .receipt-input { font-size:1rem; font-weight:600; letter-spacing:1px; }
+  .field-hint { font-size:0.68rem; color:#64748b; margin-top:0.25rem; }
+  .amount-row { display:flex; gap:0.5rem; } .amount-row .pay-input { flex:1; }
+  .amount-warning { font-size:0.7rem; color:#ef4444; margin-top:0.25rem; }
+  .method-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; }
+  .method-card { display:flex; align-items:center; gap:0.5rem; padding:0.7rem; border:2px solid #e2e8f0; border-radius:8px; cursor:pointer; transition:all 0.15s; background:#fff; }
+  .method-card input[type="radio"] { display:none; }
+  .method-card.selected { border-color:#10b981; background:#f0fdf4; }
+  .method-card:hover { border-color:#10b981; }
+  .method-icon { font-size:1.4rem; flex-shrink:0; }
+  .method-name { font-weight:600; font-size:0.82rem; color:#1e293b; }
+  .method-desc { font-size:0.68rem; color:#64748b; }
+  .pay-submit { width:100%; padding:0.75rem; font-size:0.9rem; }
+  .pay-cancel { width:100%; margin-top:0.5rem; text-align:center; display:block; padding:0.65rem; }
+  @media (max-width:480px) {
+    .pay-container { max-width:100%; padding:0; }
+    .pay-input, select.pay-input { padding:0.75rem 0.85rem; font-size:16px; }
+    .amount-row { flex-direction:column; } .pay-full-btn { width:100%; }
+    .method-grid { grid-template-columns:1fr 1fr; gap:0.4rem; } .method-card { padding:0.6rem; }
+  }
+  @media (max-width:360px) { .method-grid { grid-template-columns:1fr; } }
+</style>
+
+<script>
+  var amountInput = document.getElementById('amountInput');
+  var amountWarning = document.getElementById('amountWarning');
+  var maxBalance = {{ balance_due }};
+  
+  amountInput.addEventListener('input', function() {
+    var val = parseFloat(this.value) || 0;
+    amountWarning.style.display = val > maxBalance ? 'block' : 'none';
+    this.style.borderColor = val > maxBalance ? '#ef4444' : '#e2e8f0';
+  });
+
+  // ─── Provider Detection ───
+  var providers = [
+    {% for p in payment_methods.mobile_providers %}
+    {code: "{{ p.code }}", name: "{{ p.name }}", prefixes: [{% for prefix in p.prefixes %}"{{ prefix }}"{% if not forloop.last %},{% endif %}{% endfor %}]}{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ];
+  
+  function normalizePhone(phone) {
+    phone = phone.replace(/\s+/g, '').replace(/-/g, '');
+    if (phone.startsWith('+')) phone = phone.slice(1);
+    if (phone.startsWith('0')) phone = '255' + phone.slice(1);
+    return phone;
+  }
+  
+  function detectProvider(phone) {
+    if (!phone || phone.length < 9) return null;
+    var norm = normalizePhone(phone);
+    for (var i = 0; i < providers.length; i++) {
+      for (var j = 0; j < providers[i].prefixes.length; j++) {
+        if (norm.startsWith(providers[i].prefixes[j])) return providers[i];
+      }
+    }
+    return null;
+  }
+
+  var mobilePhone = document.getElementById('mobilePhone');
+  var autoProvider = document.getElementById('autoProvider');
+  var mobileProvider = document.getElementById('mobileProvider');
+  
+  if (mobilePhone) {
+    mobilePhone.addEventListener('input', function() {
+      var provider = detectProvider(this.value);
+      if (provider) {
+        autoProvider.style.display = 'block';
+        autoProvider.style.background = '#f0fdf4'; autoProvider.style.color = '#065f46';
+        autoProvider.textContent = '✅ ' + provider.name;
+        for (var i = 0; i < mobileProvider.options.length; i++) {
+          mobileProvider.options[i].selected = mobileProvider.options[i].value === provider.code;
+        }
+      } else {
+        autoProvider.style.display = 'none';
+        mobileProvider.value = '';
+      }
+    });
+  }
+
+  // ─── Method Switching ───
+  function showFields(method) {
+    document.getElementById('cashFields').style.display = method === 'cash' ? 'block' : 'none';
+    document.getElementById('mobileFields').style.display = method === 'mobile_money' ? 'block' : 'none';
+    document.getElementById('bankFields').style.display = method === 'bank' ? 'block' : 'none';
+    document.getElementById('otherFields').style.display = method === 'other' ? 'block' : 'none';
+  }
+
+  document.querySelectorAll('.method-card').forEach(function(card) {
+    card.addEventListener('click', function() {
+      document.querySelectorAll('.method-card').forEach(function(c) { c.classList.remove('selected'); });
+      this.classList.add('selected');
+      this.querySelector('input').checked = true;
+      showFields(this.dataset.method);
+    });
+  });
+
+  // Init
+  var defaultCard = document.querySelector('.method-card.selected');
+  if (defaultCard) showFields(defaultCard.dataset.method);
+
+  function confirmSubmit() {
+    var amount = parseFloat(amountInput.value) || 0;
+    var method = document.querySelector('input[name="payment_method"]:checked').value;
+    var names = { cash: 'Cash', mobile_money: 'Mobile Money', bank: 'Bank Transfer', other: 'Other' };
+    if (amount <= 0) { alert('{% trans "Please enter a valid amount." %}'); return false; }
+    if (amount > maxBalance) { alert('{% trans "Amount cannot exceed the remaining balance." %}'); return false; }
+    return confirm('{% trans "You are about to record a" %} ' + names[method] + ' {% trans "payment of" %} TSh ' + amount.toLocaleString() + '.\n\n{% trans "Proceed?" %}');
+  }
+</script>
+{% endblock %}

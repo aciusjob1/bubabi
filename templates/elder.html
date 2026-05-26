@@ -1,0 +1,305 @@
+{% extends "base.html" %}
+{% load i18n clan_filters %}
+
+{% block page_title %}{% trans "Heritage" %}{% endblock %}
+
+{% block content %}
+<div style="max-width:1200px; margin:0 auto; position: relative; z-index: 1;">
+
+  <!-- Premium Clan Banner Component -->
+  {% if request.user.clan and request.user.clan.banner_image %}
+  <div id="bannerContainer" style="border-radius:12px; overflow:hidden; margin-bottom:1.5rem; height:140px; position:relative; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+    <img src="{{ request.user.clan.banner_image.url }}" style="width:100%; height:100%; object-fit:cover;" alt="Clan Banner">
+    <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.6)); padding:1rem 1.5rem;">
+      <span style="color:#fff; font-weight:700; font-size:1.1rem;">{{ request.user.clan.name }}</span>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Strategic Action Matrix Controls -->
+  <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.5rem;">
+    <a href="{% url 'add-family' %}" class="panel-btn-link" style="background:rgba(var(--clan-primary-raw, 16, 185, 129), 1);">+ {% trans "New Family" %}</a>
+    <a href="{% url 'add-relationship' %}" class="panel-btn-link" style="background:#6366f1; box-shadow: 0 2px 4px rgba(99,102,241,0.15);">🔗 {% trans "Add Relationship" %}</a>
+    <a href="{% url 'create-vote' %}" class="panel-btn-link" style="background:#f59e0b; color:#0f172a; box-shadow: 0 2px 4px rgba(245,158,11,0.15);">🗳️ {% trans "Initiate Vote" %}</a>
+    <a href="{% url 'system' %}#sms-section" class="panel-btn-link" style="background:#0284c7; box-shadow: 0 2px 4px rgba(2,132,199,0.15);">📱 {% trans "Bulk SMS" %}</a> 
+    <a href="{% url 'family-tree' %}" class="panel-btn-link" style="background:#ef4444; box-shadow: 0 2px 4px rgba(239,68,68,0.15);">🌳 {% trans "Family Tree" %}</a>
+  </div>
+
+  <!-- Summary Metric Dashboards -->
+  <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+    <div class="settings-card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0; padding: 1.25rem;">
+      <div>
+        <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">{% trans "Families" %}</div>
+        <div style="font-size: 1.75rem; font-weight: 800; color: #1e293b; margin-top: 0.15rem;">{{ family_count|default:0 }}</div>
+        <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.1rem;">{% trans "in" %} {{ clan.name }}</div>
+      </div>
+      <div style="font-size: 1.75rem; background: #faf5ff; width: 48px; height: 48px; border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 1px solid #f3e8ff;">🏠</div>
+    </div>
+    
+    <div class="settings-card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0; padding: 1.25rem;">
+      <div>
+        <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">{% trans "Persons" %}</div>
+        <div style="font-size: 1.75rem; font-weight: 800; color: #1e293b; margin-top: 0.15rem;">{{ persons_count|default:0 }}</div>
+        <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.1rem;">{% trans "on record" %}</div>
+      </div>
+      <div style="font-size: 1.75rem; background: #eff6ff; width: 48px; height: 48px; border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 1px solid #dbeafe;">👤</div>
+    </div>
+
+    <div class="settings-card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0; padding: 1.25rem;">
+      <div>
+        <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">{% trans "Elders" %}</div>
+        <div style="font-size: 1.75rem; font-weight: 800; color: #f59e0b; margin-top: 0.15rem;">{{ elder_count|default:0 }}</div>
+        <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.1rem;">{% trans "active voices" %}</div>
+      </div>
+      <div style="font-size: 1.75rem; background: #fef3c7; width: 48px; height: 48px; border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 1px solid #fef3c7;">⭐</div>
+    </div>
+
+    <div class="settings-card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0; padding: 1.25rem;">
+      <div>
+        <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">{% trans "Deceased" %}</div>
+        <div style="font-size: 1.75rem; font-weight: 800; color: #475569; margin-top: 0.15rem;">{{ deceased_count|default:0 }}</div>
+        <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.1rem;">{% trans "preserved memory" %}</div>
+      </div>
+      <div style="font-size: 1.75rem; background: #fef2f2; width: 48px; height: 48px; border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 1px solid #fee2e2;">🕊️</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ -->
+  <!-- COUNCIL OF ELDERS SECTION       -->
+  <!-- ═══════════════════════════════ -->
+  <div class="section-title toggle-header" onclick="toggleSection('elders-section')">
+    <span style="display:flex; align-items:center; gap:0.4rem;">⭐ {% trans "Council of Elders" %} <span style="font-size:0.8rem; background:rgba(0,0,0,0.06); padding:0.1rem 0.4rem; border-radius:6px;">{{ elders|length|default:0 }}</span></span>
+    <span class="toggle-arrow open" id="elders-section-arrow">▶</span>
+  </div>
+  
+  <div id="elders-section" class="toggle-body open">
+    <div class="settings-card" style="padding:0.5rem; border-radius:12px; overflow:hidden;">
+      <div style="overflow-x:auto; width:100%;">
+        {% if elders %}
+        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.875rem;">
+          <thead>
+            <tr style="border-bottom:2px solid #f1f5f9; background:rgba(248,250,252,0.6);">
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Elder" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Age" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Gender" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Roles" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase; text-align:right;">{% trans "Action" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for elder in elders %}
+            <tr style="border-bottom:1px solid #f1f5f9; transition:background 0.15s;" class="ledger-row">
+              <td style="padding:0.85rem 1rem;">
+                <a href="{% url 'member-profile' elder.id %}" style="text-decoration:none; color:#1e293b; display:flex; align-items:center; gap:0.6rem;">
+                  {% avatar elder 28 %}
+                  <strong style="font-weight:600; color:#1e293b;">{{ elder.person.full_name|default:elder.email }}</strong>
+                </a>
+              </td>
+              <td style="padding:0.85rem 1rem; color:#475569; font-weight:500;">{{ elder.person.age|default:"—" }} {% trans "yrs" %}</td>
+              <td style="padding:0.85rem 1rem; color:#64748b;">{{ elder.person.get_gender_display|default:elder.person.gender|title|default:"—" }}</td>
+              <td style="padding:0.85rem 1rem;">
+                {% for role in elder.clan_roles.all %}
+                <span style="font-size:0.68rem; background:#ede9fe; color:#5b21b6; padding:0.2rem 0.5rem; border-radius:6px; display:inline-block; font-weight:600; margin:0.1rem;">{{ role.role.name }}</span>
+                {% empty %}<span style="color:#94a3b8;">—</span>{% endfor %}
+              </td>
+              <td style="padding:0.85rem 1rem; text-align:right;">
+                <a href="{% url 'member-profile' elder.id %}" class="panel-btn-link" style="background:#6366f1; font-size:0.7rem; padding:0.25rem 0.6rem; border-radius:6px;">👤 {% trans "Profile" %}</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div style="text-align:center; padding:3rem 2rem; color:#94a3b8;">
+          <div style="font-size:2.2rem; margin-bottom:0.4rem;">⭐</div>
+          <div style="font-weight:600; font-size:0.9rem; color:#475569;">{% trans "No elders recorded yet." %}</div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ -->
+  <!-- FAMILY HOUSES SECTION           -->
+  <!-- ═══════════════════════════════ -->
+  <div class="section-title toggle-header" onclick="toggleSection('families-section')">
+    <span style="display:flex; align-items:center; gap:0.4rem;">🏠 {% trans "Family Houses" %} <span style="font-size:0.8rem; background:rgba(0,0,0,0.06); padding:0.1rem 0.4rem; border-radius:6px;">{{ families|length|default:0 }}</span></span>
+    <span class="toggle-arrow open" id="families-section-arrow">▶</span>
+  </div>
+  
+  <div id="families-section" class="toggle-body open">
+    <div class="settings-card" style="padding:0.5rem; border-radius:12px; overflow:hidden;">
+      <div style="overflow-x:auto; width:100%;">
+        {% if families %}
+        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.875rem;">
+          <thead>
+            <tr style="border-bottom:2px solid #f1f5f9; background:rgba(248,250,252,0.6);">
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "House Name" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Founder" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Description" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Est." %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase; text-align:right;">{% trans "Action" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for f in families %}
+            <tr style="border-bottom:1px solid #f1f5f9; transition:background 0.15s;" class="ledger-row">
+              <td style="padding:0.85rem 1rem;"><strong style="color:#1e293b; font-weight:600;">{{ f.name }}</strong></td>
+              <td style="padding:0.85rem 1rem; color:#475569;">{{ f.founding_person.full_name|default:"—" }}</td>
+              <td style="padding:0.85rem 1rem; color:#64748b;">{{ f.description|truncatechars:60|default:"—" }}</td>
+              <td style="padding:0.85rem 1rem; color:#64748b; font-size:0.8rem; white-space:nowrap;">{{ f.established_date|date:"d M Y"|default:"—" }}</td>
+              <td style="padding:0.85rem 1rem; text-align:right; white-space:nowrap;">
+                <a href="{% url 'family-tree' %}?person={{ f.founding_person.id|default:'' }}" class="panel-btn-link" style="background:#d1fae5; color:#065f46; font-size:0.7rem; padding:0.25rem 0.6rem; border-radius:6px; box-shadow:none;">🌳 {% trans "View Tree" %}</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div style="text-align:center; padding:3rem 2rem; color:#94a3b8;">
+          <div style="font-size:2.2rem; margin-bottom:0.4rem;">🏠</div>
+          <div style="font-weight:600; font-size:0.9rem; color:#475569;">{% trans "No family houses recorded." %}</div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ -->
+  <!-- ACTIVE LEGISLATION & VOTING      -->
+  <!-- ═══════════════════════════════ -->
+  <div class="section-title toggle-header" onclick="toggleSection('votes-section')">
+    <span style="display:flex; align-items:center; gap:0.4rem;">🗳️ {% trans "Open Votes" %} <span style="font-size:0.8rem; background:rgba(0,0,0,0.06); padding:0.1rem 0.4rem; border-radius:6px;">{{ open_votes|length|default:0 }}</span></span>
+    <span class="toggle-arrow open" id="votes-section-arrow">▶</span>
+  </div>
+  
+  <div id="votes-section" class="toggle-body open">
+    <div class="settings-card" style="padding:0.5rem; border-radius:12px; overflow:hidden;">
+      <div style="overflow-x:auto; width:100%;">
+        {% if open_votes %}
+        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.875rem;">
+          <thead>
+            <tr style="border-bottom:2px solid #f1f5f9; background:rgba(248,250,252,0.6);">
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Topic" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Initiated By" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase;">{% trans "Closes" %}</th>
+              <th style="padding:0.85rem 1rem; font-size:0.72rem; font-weight:700; color:#475569; text-transform:uppercase; text-align:right;">{% trans "Action" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for vote in open_votes %}
+            <tr style="border-bottom:1px solid #f1f5f9; transition:background 0.15s;" class="ledger-row">
+              <td style="padding:0.85rem 1rem;"><strong style="color:#1e293b; font-weight:600;">{{ vote.title }}</strong></td>
+              <td style="padding:0.85rem 1rem; color:#475569;">{{ vote.initiated_by.person.full_name|default:vote.initiated_by.email }}</td>
+              <td style="padding:0.85rem 1rem; color:#64748b; font-size:0.8rem; white-space:nowrap;">{{ vote.closes_at|date:"d M Y" }}</td>
+              <td style="padding:0.85rem 1rem; text-align:right; white-space:nowrap;">
+                <a href="{% url 'cast-vote' vote.id %}" class="panel-btn-link" style="background:#6366f1; font-size:0.7rem; padding:0.25rem 0.6rem; border-radius:6px;">🗳️ {% trans "Vote" %}</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div style="text-align:center; padding:3rem 2rem; color:#94a3b8;">
+          <div style="font-size:2.2rem; margin-bottom:0.4rem;">🗳️</div>
+          <div style="font-weight:600; font-size:0.9rem; color:#475569;">{% trans "No open legislative polls at this time." %}</div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<style>
+  /* Global Dynamic Glassmorphism Engine Context */
+  :root {
+    --clan-primary-raw: 16, 185, 129;
+    --clan-accent-raw: 99, 102, 241;
+    --blur-intensity: 6px;
+  }
+
+  body {
+    background: linear-gradient(
+      135deg, 
+      rgba(var(--clan-primary-raw), 0.04) 0%, 
+      rgba(var(--clan-accent-raw), 0.02) 50%, 
+      #f8fafc 100%
+    ) !important;
+    background-attachment: fixed !important;
+  }
+
+  /* Premium Content Structural Enclosures */
+  .settings-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(var(--blur-intensity));
+    -webkit-backdrop-filter: blur(var(--blur-intensity));
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.01);
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  .settings-card:hover {
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03);
+  }
+
+  /* Dynamic Header Blocks */
+  .section-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #475569;
+    background: rgba(255,255,255,0.6);
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.5);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .toggle-header {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .toggle-header:hover { background: rgba(255,255,255,0.9); }
+  .toggle-arrow { transition: transform 0.2s; font-size: 0.7rem; color: #94a3b8; }
+  .toggle-arrow.open { transform: rotate(90deg); }
+  .toggle-body { display: none; margin-bottom: 1.25rem; }
+  .toggle-body.open { display: block; }
+
+  /* Premium Anchors & Touch Interaction Design */
+  .panel-btn-link {
+    padding: 0.55rem 1.25rem; 
+    color: #fff; 
+    border-radius: 8px; 
+    font-size: 0.82rem; 
+    font-weight: 600; 
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: opacity 0.15s, transform 0.1s;
+    white-space: nowrap;
+  }
+  .panel-btn-link:hover { opacity: 0.9; transform: translateY(-1px); }
+  .panel-btn-link:active { transform: translateY(0); }
+  .ledger-row:hover { background: rgba(248, 250, 252, 0.8) !important; }
+</style>
+
+<script>
+function toggleSection(id) {
+  const body = document.getElementById(id);
+  const arrow = document.getElementById(id + '-arrow');
+  if (body && arrow) {
+    body.classList.toggle('open');
+    arrow.classList.toggle('open');
+  }
+}
+</script>
+{% endblock %}

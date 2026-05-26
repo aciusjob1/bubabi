@@ -13,3 +13,5 @@ gunicorn
 africastalking
 africastalking
 requests
+cloudinary
+django-cloudinary-storage

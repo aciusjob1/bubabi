@@ -37,6 +37,13 @@
       {% endif %}
     }
 
+      {% if error %}
+        <div class="alert alert-error">
+          <span>{{ error }}</span>
+          <button class="alert-close" onclick="this.parentElement.remove();">×</button>
+        </div>
+      {% endif %}
+
     body::after {
       content: '';
       position: fixed;
@@ -360,6 +367,13 @@
         {% endfor %}
       {% endif %}
 
+
+      {% if error %}
+        <div class="alert alert-error">
+          <span>{{ error }}</span>
+          <button class="alert-close" onclick="this.parentElement.remove();">×</button>
+        </div>
+      {% endif %}
       <!-- Login method tabs -->
       <div class="login-methods">
         <button type="button" class="login-method-tab active"
@@ -374,6 +388,13 @@
         </button>
       </div>
 
+
+      {% if error %}
+        <div class="alert alert-error">
+          <span>{{ error }}</span>
+          <button class="alert-close" onclick="this.parentElement.remove();">×</button>
+        </div>
+      {% endif %}
       <form id="loginForm" method="POST" action="" onsubmit="return handleFormSubmit(this)">
         {% csrf_token %}
         <input type="hidden" name="login_method" id="loginMethodInput" value="identity">

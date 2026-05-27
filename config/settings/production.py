@@ -20,6 +20,7 @@ DATABASES = {
 
 # Production Storage Split Setup
 # Cloudinary handles your persistent media uploads; WhiteNoise handles native CSS/JS assets
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 STORAGES = {
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",

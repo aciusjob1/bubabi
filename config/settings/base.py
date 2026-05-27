@@ -143,6 +143,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
     'http://0.0.0.0:8000',
     'https://bubabi.onrender.com',
+    'https://bubabi.aciusjob1.workers.dev',
 ]
 
 # ── Messages ───────────────────────────────────────────────

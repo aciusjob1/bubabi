@@ -103,6 +103,7 @@ def login_view(request):
             if user.is_blocked:
                 return render(request, "account_blocked.html", {"reason": user.block_reason}, status=403)
             elif user.status == 'pending':
+                login(request, user)
                 return redirect('registration-pending')
             elif user.status == 'suspended':
                 error = 'Your account has been suspended. Contact clan leadership.'

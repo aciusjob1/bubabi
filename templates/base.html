@@ -528,11 +528,13 @@
       <span class="nav-label">{% trans "Fines" %}</span>
     </a>
 
+    {% if request.user.is_superuser %}
     <a href="{% url 'audit' %}" data-label="{% trans 'Audit Log' %}"
        class="nav-item {% if request.resolver_match.url_name == 'audit' %}active{% endif %}">
       <span class="nav-icon">🔍</span>
       <span class="nav-label">{% trans "Audit Log" %}</span>
     </a>
+    {% endif %}
 
     <a href="{% url 'logout' %}" data-label="{% trans 'Sign out' %}" class="nav-item logout-item">
       <span class="nav-icon">🚪</span>

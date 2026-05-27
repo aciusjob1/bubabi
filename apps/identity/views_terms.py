@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-# # from apps.compliance.engine import must_accept_policy, accept_policy, get_active_policy
+from apps.compliance.engine import must_accept_policy, accept_policy, get_active_policy
 from apps.identity.utils.network import get_client_ip
 
 def accept_terms_view(request):

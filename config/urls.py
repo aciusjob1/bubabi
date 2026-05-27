@@ -136,7 +136,7 @@ urlpatterns = [
     path('reports/', identity_views.reports_view, name='reports'),
     path('reports/monthly/', identity_views.download_monthly_pdf, name='pdf-monthly'),
     path('reports/owing/', identity_views.download_owing_pdf, name='pdf-owing'),
-    path('reports/annual/', identity_views.download_annual_pdf, name='pdf-annual'),
+    path('reports/annual/<int:year>/', identity_views.download_annual_pdf, name='pdf-annual'),
     path('reports/member-statement/<uuid:pk>/', identity_views.download_member_statement_pdf, name='pdf-member-statement'),
     
     # SMS

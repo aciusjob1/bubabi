@@ -326,10 +326,10 @@
 
   <!-- Language Switcher -->
   <div style="display:flex;justify-content:center;gap:10px;margin-top:1rem;">
-    <a href="/i18n/set_language/" style="text-decoration:none;" onclick="setLang('en'); return false;">
+    <a href="/i18n/setlang/" style="text-decoration:none;" onclick="setLang('en'); return false;">
       <button id="btn-en" style="padding:6px 18px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:#cbd5e1;font-size:0.8rem;cursor:pointer;">English</button>
     </a>
-    <a href="/i18n/set_language/" style="text-decoration:none;" onclick="setLang('sw'); return false;">
+    <a href="/i18n/setlang/" style="text-decoration:none;" onclick="setLang('sw'); return false;">
       <button id="btn-sw" style="padding:6px 18px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:#cbd5e1;font-size:0.8rem;cursor:pointer;">Kiswahili</button>
     </a>
   </div>
@@ -339,7 +339,7 @@
 function setLang(lang) {
   const form = document.createElement('form');
   form.method = 'POST';
-  form.action = '/i18n/set_language/';
+  form.action = '/i18n/setlang/';
   const csrf = document.createElement('input');
   csrf.type = 'hidden';
   csrf.name = 'csrfmiddlewaretoken';

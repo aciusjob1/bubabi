@@ -78,6 +78,7 @@ def login_view(request):
     if request.user.is_authenticated:
         return redirect(get_role_dashboard(request.user))
     clan = Clan.objects.first() if Clan.objects.exists() else None
+    clan_banner = clan.banner_image if clan and clan.banner_image else None
     error = None
     email_val = ''
     
@@ -130,7 +131,8 @@ def login_view(request):
     return render(request, 'login.html', {
         'error': error,
         'clan': clan,
-        'email': email_val
+        'email': email_val,
+        'clan_banner': clan.banner_image if clan and clan.banner_image else None
     })
 
 
@@ -193,6 +195,7 @@ def register_view(request):
             return render(request, 'registration/register.html', {
                 'form': {'errors': errors, 'full_name': {'value': full_name}, 'email': {'value': email}, 'phone': {'value': phone}, 'gender': {'value': gender}, 'birth_date': {'value': birth_date}, 'clan_id': {'value': clan_id}, 'family_id': {'value': family_id}},
                 'clan': clan, 'clans': clans, 'families': families,
+                'clan_banner': clan.banner_image if clan and clan.banner_image else None,
             })
         try:
             selected_clan = Clan.objects.get(id=clan_id, is_public=True)
@@ -201,6 +204,7 @@ def register_view(request):
             return render(request, 'registration/register.html', {
                 'form': {'errors': errors, 'full_name': {'value': full_name}, 'email': {'value': email}, 'phone': {'value': phone}, 'gender': {'value': gender}, 'birth_date': {'value': birth_date}, 'clan_id': {'value': clan_id}, 'family_id': {'value': family_id}},
                 'clan': clan, 'clans': clans, 'families': families,
+                'clan_banner': clan.banner_image if clan and clan.banner_image else None,
             })
         person = Person.objects.create(full_name=full_name, gender=gender or 'other', birth_date=birth_date or '2000-01-01')
         member = Member.objects.create_user(email=email, password=password1, person=person, phone=phone, clan=selected_clan, status=MemberStatus.PENDING)

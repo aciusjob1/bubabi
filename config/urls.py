@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path, include, include
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
@@ -23,7 +23,6 @@ from apps.governance import views as governance_views
 from apps.financials import views as financials_views
 
 urlpatterns = [
-    path('i18n/', include('django.conf.urls.i18n')),
     # Admin
     path('admin/', admin.site.urls),
     

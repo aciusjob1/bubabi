@@ -3,7 +3,7 @@ import dj_database_url
 import os
 
 DEBUG = False
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['bubabi.onrender.com']
 
 # PostgreSQL from Render
 DATABASES = {

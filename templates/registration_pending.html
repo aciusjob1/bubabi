@@ -6,16 +6,44 @@
 {% block content %}
 <div style="max-width:600px; margin:3rem auto; text-align:center; padding:2rem;">
     <div style="font-size:4rem; margin-bottom:1rem;">⏳</div>
-    <h2 style="color:#6366f1; margin-bottom:1rem;">{% trans "Registration Pending Approval" %}</h2>
-    <p style="color:#64748b; margin-bottom:2rem; line-height:1.6;">
-        {% trans "Your registration has been submitted successfully. Your account is pending approval by clan leadership. You will be notified once your account is approved." %}
+    <h2 style="color:#6366f1; margin-bottom:0.5rem;">{% trans "Registration Successful!" %}</h2>
+    <p style="color:#6ee7b7; margin-bottom:1.5rem; font-size:0.95rem;">{% trans "You're almost in! 🎉" %}</p>
+    
+    <!-- Progress Steps -->
+    <div style="display:flex; justify-content:center; gap:0; margin:1.5rem 0; font-size:0.8rem;">
+        <span style="color:#6ee7b7;">✅ {% trans "Created" %}</span>
+        <span style="color:#334155; margin:0 0.3rem;">→</span>
+        <span style="color:#fbbf24; font-weight:700;">⏳ {% trans "Pending" %}</span>
+        <span style="color:#334155; margin:0 0.3rem;">→</span>
+        <span style="color:#475569;">🔒 {% trans "Approved" %}</span>
+    </div>
+    
+    <p style="color:#64748b; margin-bottom:1.5rem; line-height:1.6; font-size:0.9rem;">
+        {% trans "Your account is awaiting approval from your clan leaders. This is a quick review to confirm your membership." %}
     </p>
+    <p style="color:#fbbf24; font-size:0.8rem; margin-bottom:1.5rem;">🕒 {% trans "Most approvals happen within 24 hours" %}</p>
+    
     <div style="background:#f8fafc; border-radius:12px; padding:1.5rem; margin-bottom:2rem;">
         <p style="color:#475569; font-size:0.9rem;">
             📧 {% trans "Check your email for updates" %}<br>
             ⏰ {% trans "Approval typically takes 1-3 business days" %}
         </p>
     </div>
+    
+    <!-- Contact Actions -->
+    <div style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom:1rem;">
+        {% if clan and clan.contact_phone %}
+        <a href="tel:{{ clan.contact_phone }}" style="display:block; width:100%; padding:0.7rem; border-radius:10px; font-size:0.85rem; font-weight:600; text-decoration:none; text-align:center; background:transparent; color:#94a3b8; border:1px solid rgba(255,255,255,0.08);">
+            📞 {% trans "Call Clan Leadership" %}
+        </a>
+        {% endif %}
+        {% if clan and clan.contact_email %}
+        <a href="mailto:{{ clan.contact_email }}" style="display:block; width:100%; padding:0.7rem; border-radius:10px; font-size:0.85rem; font-weight:600; text-decoration:none; text-align:center; background:transparent; color:#94a3b8; border:1px solid rgba(255,255,255,0.08);">
+            📧 {% trans "Email Leadership" %}
+        </a>
+        {% endif %}
+    </div>
+    
     <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
         <a href="{% url 'logout' %}" style="display:inline-block; padding:0.75rem 2rem; background:#ef4444; color:#fff; border-radius:8px; text-decoration:none; font-weight:600;">
             🚪 {% trans "Sign Out" %}
@@ -24,5 +52,7 @@
             🔄 {% trans "Check Status" %}
         </a>
     </div>
+    
+    <p style="color:#64748b; font-size:0.75rem; margin-top:1rem;">📢 {% trans "You'll be notified when approved" %}</p>
 </div>
 {% endblock %}

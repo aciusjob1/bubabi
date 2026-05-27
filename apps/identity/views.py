@@ -239,7 +239,7 @@ def register_view(request):
 # DASHBOARDS
 # ══════════════════════════════════════════════
 
-@login_required
+
 @leader_required
 def dashboard(request):
     clan = request.user.clan
@@ -258,7 +258,7 @@ def dashboard(request):
     return render(request, 'dashboard.html', context)
 
 
-@login_required
+
 @treasurer_required
 def treasurer_dashboard(request):
     clan = request.user.clan
@@ -289,7 +289,7 @@ def treasurer_dashboard(request):
     return render(request, 'treasurer.html', context)
 
 
-@login_required
+
 @secretary_required
 def secretary_dashboard(request):
     from apps.events.models import ClanEvent
@@ -304,7 +304,7 @@ def secretary_dashboard(request):
     return render(request, 'secretary.html', context)
 
 
-@login_required
+
 @elder_required
 def elder_dashboard(request):
     from apps.genealogy.models import Family
@@ -325,7 +325,7 @@ def elder_dashboard(request):
     return render(request, 'elder.html', context)
 
 
-@login_required
+
 def member_dashboard(request):
     member = request.user
     my_contributions = Contribution.objects.filter(member=member).order_by('-due_date')
@@ -339,7 +339,7 @@ def member_dashboard(request):
     return render(request, 'member_dashboard.html', context)
 
 
-@login_required
+
 @superuser_required
 def system_dashboard(request):
     from apps.financials.models import LedgerEntry
@@ -362,7 +362,7 @@ def system_dashboard(request):
 # GENERAL PAGES
 # ══════════════════════════════════════════════
 
-@login_required
+
 def members_view(request):
     clan = request.user.clan
     search = request.GET.get('search', '').strip()
@@ -380,7 +380,7 @@ def members_view(request):
     return render(request, 'members.html', context)
 
 
-@login_required
+
 def member_profile(request, pk):
     member = get_object_or_404(Member, pk=pk, clan=request.user.clan)
     from apps.genealogy.models import PersonFamilyMembership
@@ -397,7 +397,7 @@ def member_profile(request, pk):
     return render(request, 'profile.html', context)
 
 
-@login_required
+
 def contributions_view(request):
     clan = request.user.clan
     contributions = Contribution.objects.filter(member__clan=clan).select_related('member__person', 'verified_by__person')
@@ -425,7 +425,7 @@ def contributions_view(request):
     })
 
 
-@login_required
+
 def loans_view(request):
     clan = request.user.clan
     user = request.user
@@ -437,20 +437,20 @@ def loans_view(request):
     return render(request, 'loans.html', {'loans': loans, 'is_treasurer': is_treasurer})
 
 
-@login_required
+
 def fines_view(request):
     fines = Fine.objects.filter(member__clan=request.user.clan).select_related('member__person', 'issued_by__person').order_by('-created_at')
     return render(request, 'fines.html', {'fines': fines})
 
 
-@login_required
+
 @elder_required
 def audit_view(request):
     logs = AuditLog.objects.select_related('actor__person').order_by('-timestamp')[:100]
     return render(request, 'audit.html', {'logs': logs})
 
 
-@login_required
+
 def reports_view(request):
     clan = request.user.clan
     monthly_data = []
@@ -473,7 +473,7 @@ def reports_view(request):
 # IDENTITY ACTIONS
 # ══════════════════════════════════════════════
 
-@login_required
+
 @secretary_required
 def add_person(request):
     from apps.identity.forms import PersonForm
@@ -489,7 +489,7 @@ def add_person(request):
     return render(request, 'forms/person_form.html', {'form': form})
 
 
-@login_required
+
 @secretary_required
 def invite_member_view(request):
     from apps.identity.forms import InviteMemberForm
@@ -507,7 +507,7 @@ def invite_member_view(request):
     return render(request, 'forms/invite_form.html', {'form': form})
 
 
-@login_required
+
 @leader_required
 def change_member_status(request, pk):
     member = get_object_or_404(Member, pk=pk, clan=request.user.clan)
@@ -529,7 +529,7 @@ def change_member_status(request, pk):
 # ROLE ASSIGNMENT
 # ══════════════════════════════════════════════
 
-@login_required
+
 def assign_leader_view(request, pk):
     # Protected action: requires elder approval if not superuser
     if not request.user.is_superuser and action == "assign":
@@ -568,7 +568,7 @@ def assign_leader_view(request, pk):
     return render(request, 'forms/assign_role.html', {'member': member, 'role_name': 'Leader', 'has_role': is_leader})
 
 
-@login_required
+
 def assign_elder_view(request, pk):
     member = get_object_or_404(Member, pk=pk, clan=request.user.clan)
     is_leader = request.user.clan_roles.filter(is_active=True, role__hierarchy_level__gte=5).exists()
@@ -593,7 +593,7 @@ def assign_elder_view(request, pk):
     return render(request, 'forms/assign_role.html', {'member': member, 'role_name': 'Elder', 'has_role': is_elder})
 
 
-@login_required
+
 def assign_moderator_view(request, pk):
     member = get_object_or_404(Member, pk=pk, clan=request.user.clan)
     is_leader = request.user.clan_roles.filter(is_active=True, role__hierarchy_level__gte=5).exists()
@@ -622,7 +622,7 @@ def assign_moderator_view(request, pk):
 # BLOCK / UNBLOCK
 # ══════════════════════════════════════════════
 
-@login_required
+
 def assign_treasurer_view(request, pk):
     member = get_object_or_404(Member, pk=pk, clan=request.user.clan)
     is_leader = request.user.clan_roles.filter(is_active=True, role__hierarchy_level__gte=5).exists()
@@ -642,7 +642,7 @@ def assign_treasurer_view(request, pk):
         return redirect('member-profile', pk=member.id)
     return render(request, 'forms/assign_role.html', {"member": member, "role_name": "Treasurer", "has_role": MemberRole.objects.filter(member=member, role=role, is_active=True).exists()})
 
-@login_required
+
 def assign_secretary_view(request, pk):
     member = get_object_or_404(Member, pk=pk, clan=request.user.clan)
     is_leader = request.user.clan_roles.filter(is_active=True, role__hierarchy_level__gte=5).exists()
@@ -662,9 +662,9 @@ def assign_secretary_view(request, pk):
         return redirect('member-profile', pk=member.id)
     return render(request, 'forms/assign_role.html', {"member": member, "role_name": "Secretary", "has_role": MemberRole.objects.filter(member=member, role=role, is_active=True).exists()})
 
-@login_required
 
-@login_required
+
+
 @leader_required
 def blocked_members_view(request):
     """List all blocked members for the clan."""
@@ -691,7 +691,7 @@ def block_member_view(request, pk):
     return render(request, 'forms/block_member.html', {'member': member})
 
 
-@login_required
+
 @moderator_required
 def unblock_member_view(request, pk):
     member = get_object_or_404(Member, pk=pk, clan=request.user.clan)
@@ -714,7 +714,7 @@ def unblock_member_view(request, pk):
 # CLAN SETTINGS
 # ══════════════════════════════════════════════
 
-@login_required
+
 @superuser_required
 def clan_settings_view(request):
     clan = request.user.clan
@@ -733,14 +733,14 @@ def clan_settings_view(request):
 # NOTIFICATIONS
 # ══════════════════════════════════════════════
 
-@login_required
+
 def notifications_view(request):
     Notification.objects.filter(recipient=request.user, is_read=False).update(is_read=True)
     notifications = Notification.objects.filter(recipient=request.user).order_by('-sent_at')[:50]
     return render(request, 'notifications.html', {'notifications': notifications})
 
 
-@login_required
+
 def mark_notification_read(request, pk):
     try:
         notif = Notification.objects.get(pk=pk, recipient=request.user)
@@ -751,7 +751,7 @@ def mark_notification_read(request, pk):
     return redirect('notifications')
 
 
-@login_required
+
 def mark_all_notifications_read(request):
     Notification.objects.filter(recipient=request.user, is_read=False).update(is_read=True)
     messages.success(request, "All notifications marked as read.")
@@ -762,7 +762,7 @@ def mark_all_notifications_read(request):
 # ANNOUNCEMENTS
 # ══════════════════════════════════════════════
 
-@login_required
+
 def announcements_view(request):
     clan = request.user.clan
     now = timezone.now()
@@ -774,7 +774,7 @@ def announcements_view(request):
     return render(request, 'announcements.html', {'announcements': announcements, 'now': now})
 
 
-@login_required
+
 @secretary_required
 def create_announcement(request):
     from apps.identity.forms import AnnouncementForm
@@ -805,7 +805,7 @@ def create_announcement(request):
     return render(request, 'forms/announcement_form.html', {'form': form})
 
 
-@login_required
+
 def announcement_detail(request, pk):
     announcement = get_object_or_404(Announcement, pk=pk, clan=request.user.clan)
     if not announcement.is_active and request.user != announcement.author and not request.user.is_superuser:
@@ -822,7 +822,7 @@ def announcement_detail(request, pk):
     return render(request, 'announcement_detail.html', {'announcement': announcement, 'comments': comments})
 
 
-@login_required
+
 def delete_announcement(request, pk):
     announcement = get_object_or_404(Announcement, pk=pk, clan=request.user.clan, is_active=True)
     if request.user == announcement.author or request.user.is_superuser:
@@ -840,7 +840,7 @@ def delete_announcement(request, pk):
 # FAMILY TREE
 # ══════════════════════════════════════════════
 
-@login_required
+
 def family_tree_view(request, person_pk=None):
     from apps.genealogy.services.genealogy_service import GenealogyService
     from apps.genealogy.models import Family
@@ -888,7 +888,7 @@ def family_tree_view(request, person_pk=None):
     })
 
 
-@login_required
+
 @secretary_required
 def add_family_member_view(request, family_id):
     from apps.genealogy.models import Family, PersonFamilyMembership, Relationship
@@ -917,7 +917,7 @@ def add_family_member_view(request, family_id):
 # POSTS (CLAN FEED)
 # ══════════════════════════════════════════════
 
-@login_required
+
 def posts_view(request):
     from apps.identity.models import Post, PostReaction
     clan = request.user.clan
@@ -929,7 +929,7 @@ def posts_view(request):
     return render(request, 'posts.html', {'posts': posts})
 
 
-@login_required
+
 def create_post(request):
     from apps.identity.models import Post
     if request.method == 'POST':
@@ -944,7 +944,7 @@ def create_post(request):
     return redirect('posts')
 
 
-@login_required
+
 def edit_post(request, pk):
     from apps.identity.models import Post
     post = get_object_or_404(Post, pk=pk, clan=request.user.clan)
@@ -959,7 +959,7 @@ def edit_post(request, pk):
     return render(request, 'forms/edit_post.html', {'post': post})
 
 
-@login_required
+
 def delete_post(request, pk):
     from apps.identity.models import Post
     post = get_object_or_404(Post, pk=pk)
@@ -970,7 +970,7 @@ def delete_post(request, pk):
     return redirect('posts')
 
 
-@login_required
+
 def react_post(request, pk):
     from apps.identity.models import Post, PostReaction
     post = get_object_or_404(Post, pk=pk, clan=request.user.clan)
@@ -985,7 +985,7 @@ def react_post(request, pk):
     return redirect(f'/posts/#post-{post.id}')
 
 
-@login_required
+
 def comment_post(request, pk):
     from apps.identity.models import Post, PostComment
     post = get_object_or_404(Post, pk=pk, clan=request.user.clan)
@@ -998,7 +998,7 @@ def comment_post(request, pk):
     return redirect(f'/posts/#post-{post.id}')
 
 
-@login_required
+
 def delete_comment(request, pk):
     from apps.identity.models import PostComment
     comment = get_object_or_404(PostComment, pk=pk)
@@ -1009,7 +1009,7 @@ def delete_comment(request, pk):
     return redirect('posts')
 
 
-@login_required
+
 def report_post(request, pk):
     from apps.identity.models import Post, PostReport
     post = get_object_or_404(Post, pk=pk, clan=request.user.clan, is_active=True)
@@ -1051,7 +1051,7 @@ def notify_moderators_about_report(report):
             Notification.objects.create(recipient=moderator, title="New Post Report", message=f"{report.reported_by.person.full_name} reported a post by {report.post.author.person.full_name} for: {report.get_reason_display()}", link=f'/admin/identity/postreport/')
 
 
-@login_required
+
 @elder_required
 @moderator_required
 def resolve_report(request, pk):
@@ -1079,7 +1079,7 @@ def resolve_report(request, pk):
 # PDF REPORTS
 # ══════════════════════════════════════════════
 
-@login_required
+
 def download_monthly_pdf(request, period_label):
     from apps.core.pdf.pdf_service import generate_monthly_statement
     buffer = generate_monthly_statement(request.user.clan, period_label)
@@ -1087,7 +1087,7 @@ def download_monthly_pdf(request, period_label):
     response['Content-Disposition'] = f'attachment; filename="bubabi-{period_label}-statement.pdf"'
     return response
 
-@login_required
+
 def download_owing_pdf(request):
     from apps.core.pdf.pdf_service import generate_owing_list
     buffer = generate_owing_list(request.user.clan)
@@ -1095,7 +1095,7 @@ def download_owing_pdf(request):
     response['Content-Disposition'] = 'attachment; filename="bubabi-owing-list.pdf"'
     return response
 
-@login_required
+
 def download_annual_pdf(request, year):
     from apps.core.pdf.pdf_service import generate_annual_summary
     buffer = generate_annual_summary(request.user.clan, year)
@@ -1103,7 +1103,7 @@ def download_annual_pdf(request, year):
     response['Content-Disposition'] = f'attachment; filename="bubabi-annual-{year}.pdf"'
     return response
 
-@login_required
+
 def download_member_statement_pdf(request, pk):
     from apps.core.pdf.pdf_service import generate_member_statement
     member = get_object_or_404(Member, pk=pk, clan=request.user.clan)
@@ -1117,7 +1117,7 @@ def download_member_statement_pdf(request, pk):
 # SMS FUNCTIONALITY
 # ══════════════════════════════════════════════
 
-@login_required
+
 @secretary_required
 @rate_limit("sms_test", 3, 300)
 def sms_test_view(request):
@@ -1135,7 +1135,7 @@ def sms_test_view(request):
         else: messages.warning(request, 'Please provide phone and message.')
     return redirect('dashboard')
 
-@login_required
+
 @secretary_required
 @rate_limit("sms_bulk", 2, 600)
 def send_bulk_sms(request):
@@ -1149,7 +1149,7 @@ def send_bulk_sms(request):
         else: messages.error(request, "Message cannot be empty.")
     return redirect('system')
 
-@login_required
+
 @treasurer_required
 def send_contribution_reminder(request, contribution_id):
     contribution = get_object_or_404(Contribution, id=contribution_id, member__clan=request.user.clan)
@@ -1166,7 +1166,7 @@ def send_contribution_reminder(request, contribution_id):
 # AVATAR UPLOAD
 # ══════════════════════════════════════════════
 
-@login_required
+
 def upload_avatar(request, pk):
     member = get_object_or_404(Member, pk=pk, clan=request.user.clan)
     if request.user != member and not request.user.is_superuser:
@@ -1181,7 +1181,7 @@ def upload_avatar(request, pk):
         messages.success(request, "Profile photo updated!")
     return redirect('member-profile', pk=pk)
 
-@login_required
+
 def remove_avatar(request, pk):
     member = get_object_or_404(Member, pk=pk, clan=request.user.clan)
     if request.user != member and not request.user.is_superuser:
@@ -1198,7 +1198,7 @@ def remove_avatar(request, pk):
 # LOAN APPROVAL
 # ══════════════════════════════════════════════
 
-@login_required
+
 @treasurer_required
 def review_loan(request, pk):
     loan = get_object_or_404(Loan, pk=pk, borrower__clan=request.user.clan)
@@ -1235,7 +1235,7 @@ def review_loan(request, pk):
 # MEETING MINUTES
 # ══════════════════════════════════════════════
 
-@login_required
+
 @secretary_required
 def record_minutes(request, event_pk):
     from apps.events.models import ClanEvent, MeetingMinutes, EventAttendance
@@ -1261,7 +1261,7 @@ def record_minutes(request, event_pk):
 # MODERATOR DASHBOARD
 # ══════════════════════════════════════════════
 
-@login_required
+
 @moderator_required
 def moderator_dashboard(request):
     from apps.identity.models import Post, PostReport
@@ -1283,7 +1283,7 @@ def moderator_dashboard(request):
 # CLAN DOCUMENTS & JUDICIAL
 # ══════════════════════════════════════════════
 
-@login_required
+
 def documents_view(request):
     from apps.identity.models import ClanDocument, JudicialCase
     clan = request.user.clan
@@ -1304,7 +1304,7 @@ def documents_view(request):
     })
 
 
-@login_required
+
 def upload_document_view(request):
     # Only Moderator (level 4), Leader (level 5), or Super Admin can upload
     can_upload = request.user.is_superuser or request.user.clan_roles.filter(is_active=True, role__hierarchy_level__gte=4).exists()
@@ -1330,7 +1330,7 @@ def upload_document_view(request):
     return render(request, 'forms/upload_document.html', {'document_types': ClanDocument.DOCUMENT_TYPES})
 
 
-@login_required
+
 def file_judicial_case_view(request):
     from apps.identity.models import JudicialCase
     if request.method == 'POST':
@@ -1350,7 +1350,7 @@ def file_judicial_case_view(request):
     return render(request, 'forms/file_case.html', {'case_types': JudicialCase.CASE_TYPES})
 
 
-@login_required
+
 @moderator_required
 def update_case_view(request, pk):
     from apps.identity.models import JudicialCase
@@ -1381,7 +1381,7 @@ def _get_upcoming_events(clan):
     return ClanEvent.objects.filter(clan=clan, is_cancelled=False, scheduled_at__gte=timezone.now()).order_by('scheduled_at')[:5]
 # The existing view is good, just ensure it handles all actions properly
 
-@login_required
+
 @elder_required
 @moderator_required
 def resolve_all_reports(request):
@@ -1447,7 +1447,7 @@ def can_moderate_content(user):
         role__hierarchy_level__gte=RoleLevel.ELDER
     ).exists()
 
-@login_required
+
 @superuser_required
 def payment_methods_view(request):
     """Manage clan payment methods."""
@@ -1536,7 +1536,7 @@ def payment_methods_view(request):
         'current_methods': payment_methods,
     })
 
-@login_required
+
 @superuser_required
 def system_cleanup_view(request):
     """System cleanup — delete old data, reset finances, clear test data."""
@@ -1707,7 +1707,7 @@ def system_cleanup_view(request):
     }
     return render(request, 'system_cleanup.html', context)
 
-@login_required
+
 @superuser_required
 def upload_constitution_view(request):
     """Upload or replace the clan constitution. Super Admin only. Only one active at a time."""
@@ -1756,7 +1756,7 @@ def upload_constitution_view(request):
         'clan': clan,
     })
 
-@login_required
+
 @xframe_options_exempt
 def view_document(request, pk):
     """Preview a document inline instead of downloading."""
@@ -1789,7 +1789,7 @@ def view_document(request, pk):
 
 
 
-@login_required
+
 def registration_pending_view(request):
     return render(request, "registration_pending.html")
 
@@ -1801,7 +1801,7 @@ def terms_view(request):
     """Display terms of service page."""
     return render(request, 'terms.html')
 
-@login_required
+
 def accept_terms_view(request):
     """Force user to accept terms before using the system."""
     if request.user.has_accepted_terms:

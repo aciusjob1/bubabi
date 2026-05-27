@@ -318,8 +318,8 @@
   </div>
   
   <div class="lang-row">
-    <button class="lang-btn active-lang" onclick="setSystemLanguage('en')">English</button>
-    <button class="lang-btn" onclick="setSystemLanguage('sw')">Kiswahili</button>
+    <button class="lang-btn active-lang" onclick="setSystemLanguage('en', true)">English</button>
+    <button class="lang-btn" onclick="setSystemLanguage('sw', true)">Kiswahili</button>
   </div>
 
   <div class="footer-text">© {% now "Y" %} {% if clan %}{{ clan.name }}{% else %}BUBABI{% endif %}</div>
@@ -351,18 +351,18 @@ function setLang(lang) {
   form.submit();
 }
 
-function setSystemLanguage(lang) {
+function setSystemLanguage(lang, reload) {
   localStorage.setItem('clan_lang', lang);
   document.querySelectorAll('.lang-btn').forEach(btn => {
     const isSwahili = btn.textContent.toLowerCase().includes('swahili');
     const isEnglish = btn.textContent.toLowerCase().includes('english');
     btn.classList.toggle('active-lang', (lang === 'sw' && isSwahili) || (lang === 'en' && isEnglish));
   });
-  setLang(lang);
+  if (reload) setLang(lang);
 }
 document.addEventListener('DOMContentLoaded', () => {
   const savedLang = localStorage.getItem('clan_lang');
-  if (savedLang) setSystemLanguage(savedLang);
+  if (savedLang) setSystemLanguage(savedLang, false);
 });
 
 function togglePassword(id, btn) {

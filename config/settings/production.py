@@ -47,3 +47,14 @@ CSRF_TRUSTED_ORIGINS = [
     'https://bubabi.aciusjob1.workers.dev',
 ]
 
+
+import os
+
+# Production Static Directory Settings
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.StaticFilesStorage",
+    },
+}

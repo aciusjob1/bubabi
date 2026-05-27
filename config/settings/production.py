@@ -1,63 +1,25 @@
-from .base import *
-import dj_database_url
 import os
+import dj_database_url
+from .base import *
 
 DEBUG = False
-ALLOWED_HOSTS = ['bubabi.onrender.com', 'bubabi.aciusjob1.workers.dev']
 
-# PostgreSQL from Render
+ALLOWED_HOSTS = [
+    'bubabi.onrender.com',
+    'localhost',
+    '127.0.0.1',
+]
+
+# Database configuration targeting Render's PostgreSQL database
 DATABASES = {
     'default': dj_database_url.config(
         default=os.environ.get('DATABASE_URL'),
-        conn_max_age=600,
+        conn_max_age=600
     )
 }
 
-# Security
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-
-# Static files
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-
-
-# Media
-MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
-MEDIA_URL = '/media/'
-
-# Cloudinary media storage
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', ''),
-    'API_KEY': os.environ.get('CLOUDINARY_API_KEY', ''),
-    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', ''),
-}
-,
-    "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-    },
-}
-
-
-CSRF_TRUSTED_ORIGINS = [
-    'https://bubabi.onrender.com',
-    'https://bubabi.aciusjob1.workers.dev',
-]
-
-
-import os
-
-# Production Static Directory Settings
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# Production Storage Configuration
-,
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.StaticFilesStorage",
-    },
-}
-
-# Production Unified Storage Configuration
+# Production Storage Split Setup
+# Cloudinary handles your persistent media uploads; WhiteNoise handles native CSS/JS assets
 STORAGES = {
     "default": {
         "BACKEND": "django_cloudinary_storage.storage.MediaCloudinaryStorage",

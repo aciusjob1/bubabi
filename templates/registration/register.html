@@ -335,12 +335,7 @@ function setSystemLanguage(lang) {
     const isEnglish = btn.textContent.toLowerCase().includes('english');
     btn.classList.toggle('active-lang', (lang === 'sw' && isSwahili) || (lang === 'en' && isEnglish));
   });
-  document.querySelectorAll('[data-en]').forEach(el => {
-    const text = el.getAttribute(lang === 'sw' ? 'data-sw' : 'data-en');
-    if (!text) return;
-    if (el.tagName === 'INPUT') { el.placeholder = text; }
-    else { el.textContent = text; }
-  });
+  setLang(lang);
 }
 document.addEventListener('DOMContentLoaded', () => {
   const savedLang = localStorage.getItem('clan_lang');

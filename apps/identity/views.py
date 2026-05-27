@@ -231,6 +231,7 @@ def register_view(request):
     return render(request, 'registration/register.html', {
         'form': {'errors': {}, 'full_name': {'value': ''}, 'email': {'value': ''}, 'phone': {'value': ''}, 'gender': {'value': ''}, 'birth_date': {'value': ''}, 'clan_id': {'value': ''}, 'family_id': {'value': ''}},
         'clan': clan, 'clans': clans, 'families': families,
+        'clan_banner': clan.banner_image if clan and clan.banner_image else None,
     })
 
 

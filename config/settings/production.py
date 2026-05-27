@@ -22,9 +22,9 @@ DATABASES = {
 # Cloudinary handles your persistent media uploads; WhiteNoise handles native CSS/JS assets
 STORAGES = {
     "default": {
-        "BACKEND": "django_cloudinary_storage.storage.MediaCloudinaryStorage",
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.StaticFilesStorage",
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }

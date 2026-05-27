@@ -46,3 +46,4 @@ CSRF_TRUSTED_ORIGINS = [
     'https://bubabi.onrender.com',
     'https://bubabi.aciusjob1.workers.dev',
 ]
+

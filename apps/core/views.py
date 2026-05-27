@@ -3,7 +3,9 @@ from apps.identity.models import Member
 from apps.genealogy.models import Family
 
 def about_view(request):
-    clan = getattr(request.user, 'clan', None) if request.user.is_authenticated else None
+    clan = None
+    if request.user.is_authenticated:
+        clan = getattr(request.user, 'clan', None)
 
     try:
         member_count = Member.objects.filter(clan=clan).count() if clan else Member.objects.count()

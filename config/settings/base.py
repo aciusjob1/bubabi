@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'apps.financials',
     'apps.events',
     'apps.audit',
+    'apps.compliance',
 ]
 
 # ── Middleware ─────────────────────────────────────────────

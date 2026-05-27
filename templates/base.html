@@ -580,6 +580,7 @@
 
   <div class="topbar-right">
     <span class="topbar-date" id="clock"></span>
+    {% if not request.user.status == 'pending' %}
     <a href="{% url 'notifications' %}" class="notification-bell-link" title="{% trans 'Notifications' %}">
       🔔
       {% if unread_notifications|default:0 > 0 %}
@@ -588,6 +589,7 @@
       </span>
       {% endif %}
     </a>
+    {% endif %}
 
     {% get_current_language as CURRENT_LANG %}
     <div class="lang-wrapper">

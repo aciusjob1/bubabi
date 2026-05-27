@@ -2,84 +2,96 @@
 {% block title %}About {{ clan_name }}{% endblock %}
 
 {% block content %}
-<div style="max-width:900px;margin:0 auto;padding:20px 15px;">
+<style>
+  .about-wrap { max-width:900px; margin:0 auto; padding:20px 15px; }
+  .hero { text-align:center; padding:40px 20px 30px; background:linear-gradient(135deg,rgba(var(--clan-primary-raw),0.12),rgba(99,102,241,0.08)); border-radius:20px; margin-bottom:25px; border:1px solid rgba(var(--clan-primary-raw),0.25); }
+  .hero h1 { color:var(--primary); font-size:2.2rem; font-weight:800; margin:10px 0 5px; }
+  .hero .motto { color:#475569; font-size:1rem; margin:5px 0; }
+  .hero .sub { color:#64748b; font-size:0.88rem; }
+  .hero img { width:80px; height:80px; border-radius:16px; object-fit:cover; box-shadow:0 8px 25px rgba(0,0,0,0.15); }
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:15px; margin-bottom:25px; }
+  .stat-card { background:var(--primary); border-radius:14px; padding:20px; text-align:center; }
+  .stat-card .num { font-size:2rem; font-weight:800; color:#fff; }
+  .stat-card .lbl { font-size:0.78rem; color:rgba(255,255,255,0.8); margin-top:4px; }
+  .card { background:#fff; border:1px solid #e2e8f0; border-radius:16px; padding:25px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+  .card h2 { color:var(--primary); margin:0 0 15px; font-size:1.15rem; }
+  .card p, .card li { color:#334155; font-size:0.9rem; line-height:1.6; }
+  .card strong { color:#1e293b; }
+  .module-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; }
+  .module-item { background:rgba(var(--clan-primary-raw),0.06); border:1px solid rgba(var(--clan-primary-raw),0.15); border-radius:10px; padding:14px; }
+  .module-name { color:#1e293b; font-weight:700; font-size:0.9rem; }
+  .module-desc { color:#64748b; font-size:0.8rem; margin-top:4px; }
+  .sec-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(175px,1fr)); gap:10px; }
+  .sec-item { display:flex; align-items:center; gap:8px; color:#334155; font-size:0.88rem; }
+  .sec-item span { color:var(--primary); font-weight:bold; }
+  .tech-wrap { display:flex; flex-wrap:wrap; gap:10px; }
+  .tech-pill { background:rgba(var(--clan-primary-raw),0.1); border:1px solid rgba(var(--clan-primary-raw),0.3); color:#1e40af; padding:6px 14px; border-radius:20px; font-size:0.85rem; font-weight:500; }
+  .footer { text-align:center; padding:20px; color:#64748b; font-size:0.85rem; }
+  .footer strong { color:#334155; }
+</style>
+
+<div class="about-wrap">
 
   <!-- Hero -->
-  <div style="text-align:center;padding:50px 20px 30px;background:linear-gradient(135deg,rgba(var(--clan-primary-raw),0.15),rgba(99,102,241,0.1));border-radius:20px;margin-bottom:30px;border:1px solid rgba(var(--clan-primary-raw),0.2);">
-    {% if clan_logo %}
-    <img src="{{ clan_logo.url }}" style="width:80px;height:80px;border-radius:16px;margin-bottom:15px;object-fit:cover;box-shadow:0 8px 25px rgba(0,0,0,0.3);">
-    {% endif %}
-    <h1 style="color:var(--primary);font-size:2.5rem;font-weight:800;margin:0;">{{ clan_name }}</h1>
-    <p style="color:#94a3b8;font-size:1.1rem;margin:8px 0 4px;">{{ clan_motto|default:"Clan Governance Operating System" }}</p>
-    <p style="color:#64748b;font-size:0.9rem;">Connecting generations. Preserving legacy.</p>
+  <div class="hero">
+    {% if clan_logo %}<img src="{{ clan_logo.url }}" alt="Logo">{% endif %}
+    <h1>{{ clan_name }}</h1>
+    <p class="motto">{{ clan_motto|default:"Clan Governance Operating System" }}</p>
+    <p class="sub">Connecting generations. Preserving legacy.</p>
   </div>
 
   <!-- Stats -->
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:15px;margin-bottom:30px;">
-    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(var(--clan-primary-raw),0.2);border-radius:14px;padding:20px;text-align:center;">
-      <div style="font-size:2rem;font-weight:800;color:var(--primary);">{{ member_count|default:"0" }}</div>
-      <div style="font-size:0.8rem;color:#94a3b8;margin-top:4px;">Members</div>
-    </div>
-    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(var(--clan-primary-raw),0.2);border-radius:14px;padding:20px;text-align:center;">
-      <div style="font-size:2rem;font-weight:800;color:var(--primary);">{{ family_count|default:"0" }}</div>
-      <div style="font-size:0.8rem;color:#94a3b8;margin-top:4px;">Families</div>
-    </div>
-    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(var(--clan-primary-raw),0.2);border-radius:14px;padding:20px;text-align:center;">
-      <div style="font-size:2rem;font-weight:800;color:var(--primary);">6</div>
-      <div style="font-size:0.8rem;color:#94a3b8;margin-top:4px;">Modules</div>
-    </div>
-    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(var(--clan-primary-raw),0.2);border-radius:14px;padding:20px;text-align:center;">
-      <div style="font-size:2rem;font-weight:800;color:var(--primary);">29</div>
-      <div style="font-size:0.8rem;color:#94a3b8;margin-top:4px;">Permissions</div>
-    </div>
+  <div class="stats">
+    <div class="stat-card"><div class="num">{{ member_count|default:"0" }}</div><div class="lbl">Members</div></div>
+    <div class="stat-card"><div class="num">{{ family_count|default:"0" }}</div><div class="lbl">Families</div></div>
+    <div class="stat-card"><div class="num">6</div><div class="lbl">Modules</div></div>
+    <div class="stat-card"><div class="num">29</div><div class="lbl">Permissions</div></div>
   </div>
 
-  <!-- Mission & Vision -->
-  <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:25px;margin-bottom:20px;">
-    <h2 style="color:var(--primary);margin:0 0 15px;font-size:1.2rem;">🎯 Mission & Vision</h2>
-    <p style="color:#cbd5e1;margin:0 0 10px;"><strong style="color:#e2e8f0;">Mission:</strong> Deliver secure, transparent, and scalable clan governance infrastructure.</p>
-    <p style="color:#cbd5e1;margin:0;"><strong style="color:#e2e8f0;">Vision:</strong> Become the global standard for digital community governance systems.</p>
+  <!-- Mission -->
+  <div class="card">
+    <h2>🎯 Mission & Vision</h2>
+    <p><strong>Mission:</strong> Deliver secure, transparent, and scalable clan governance infrastructure.</p>
+    <p style="margin:8px 0 0;"><strong>Vision:</strong> Become the global standard for digital community governance systems.</p>
   </div>
 
-  <!-- Core Modules -->
-  <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:25px;margin-bottom:20px;">
-    <h2 style="color:var(--primary);margin:0 0 15px;font-size:1.2rem;">🧩 Core Modules</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+  <!-- Modules -->
+  <div class="card">
+    <h2>🧩 Core Modules</h2>
+    <div class="module-grid">
       {% for module in modules %}
-      <div style="background:rgba(var(--clan-primary-raw),0.08);border-radius:10px;padding:12px 15px;">
-        <div style="color:#e2e8f0;font-weight:600;font-size:0.9rem;">{{ module.icon }} {{ module.name }}</div>
-        <div style="color:#94a3b8;font-size:0.8rem;margin-top:4px;">{{ module.desc }}</div>
+      <div class="module-item">
+        <div class="module-name">{{ module.icon }} {{ module.name }}</div>
+        <div class="module-desc">{{ module.desc }}</div>
       </div>
       {% endfor %}
     </div>
   </div>
 
   <!-- Security -->
-  <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:25px;margin-bottom:20px;">
-    <h2 style="color:var(--primary);margin:0 0 15px;font-size:1.2rem;">🔐 Security & Compliance</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;">
+  <div class="card">
+    <h2>🔐 Security & Compliance</h2>
+    <div class="sec-grid">
       {% for item in security_items %}
-      <div style="display:flex;align-items:center;gap:8px;color:#cbd5e1;font-size:0.88rem;">
-        <span style="color:var(--primary);font-size:1rem;">✓</span> {{ item }}
-      </div>
+      <div class="sec-item"><span>✓</span> {{ item }}</div>
       {% endfor %}
     </div>
-    <p style="color:#64748b;font-size:0.8rem;margin:15px 0 0;">Aligned with ISO 27001 & SOC2 principles</p>
+    <p style="color:#94a3b8;font-size:0.8rem;margin:15px 0 0;">Aligned with ISO 27001 & SOC2 principles</p>
   </div>
 
   <!-- Tech Stack -->
-  <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:25px;margin-bottom:30px;">
-    <h2 style="color:var(--primary);margin:0 0 15px;font-size:1.2rem;">🛠️ Tech Stack</h2>
-    <div style="display:flex;flex-wrap:wrap;gap:10px;">
+  <div class="card">
+    <h2>🛠️ Tech Stack</h2>
+    <div class="tech-wrap">
       {% for tech in tech_stack %}
-      <span style="background:rgba(var(--clan-primary-raw),0.12);border:1px solid rgba(var(--clan-primary-raw),0.25);color:#e2e8f0;padding:6px 14px;border-radius:20px;font-size:0.85rem;">{{ tech }}</span>
+      <span class="tech-pill">{{ tech }}</span>
       {% endfor %}
     </div>
   </div>
 
   <!-- Footer -->
-  <div style="text-align:center;padding:20px;color:#64748b;font-size:0.85rem;">
-    <p style="margin:0;">Designed by <strong style="color:#94a3b8;">Acius Job Missingo</strong></p>
+  <div class="footer">
+    <p>Designed by <strong>Acius Job Missingo</strong></p>
     <small>© 2026 {{ clan_name }} System</small>
   </div>
 

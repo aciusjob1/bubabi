@@ -19,7 +19,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'cloudinary_storage',
-    'django_cloudinary_storage',
     'django.contrib.staticfiles',
     # Third party
     'rest_framework',

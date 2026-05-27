@@ -3123,9 +3123,6 @@ msgstr "Sera ya Faragha"
 msgid "Forgot Password?"
 msgstr "Umesahau Nenosiri?"
 
-msgid "Contact your clan administrator to reset your password."
-msgstr "Wasiliana na msimamizi wa ukoo wako kubadilisha nenosiri lako."
-
 msgid "Close"
 msgstr "Funga"
 
@@ -3521,3 +3518,42 @@ msgstr "Kuondoa watumiaji wanaokiuka masharti haya"
 
 msgid "10. Governing Use"
 msgstr "10. Matumizi ya Utawala"
+
+msgid "Registration Pending"
+msgstr "Usajili Unasubiri"
+
+msgid "Registration Successful!"
+msgstr "Usajili Umefanikiwa!"
+
+msgid "You're almost in! 🎉"
+msgstr "Unakaribia kuingia! 🎉"
+
+msgid "Created"
+msgstr "Imeundwa"
+
+msgid "Your account is awaiting approval from your clan leaders. This is a quick review to confirm your membership."
+msgstr "Akaunti yako inasubiri idhini kutoka kwa viongozi wa ukoo wako. Hii ni mapitio ya haraka kuthibitisha uanachama wako."
+
+msgid "Most approvals happen within 24 hours"
+msgstr "Idhini nyingi hutolewa ndani ya masaa 24"
+
+msgid "Check your email for updates"
+msgstr "Angalia barua pepe yako kwa taarifa"
+
+msgid "Approval typically takes 1-3 business days"
+msgstr "Uidhinishaji huchukua siku 1-3 za kazi"
+
+msgid "Call Clan Leadership"
+msgstr "Pigia Viongozi wa Ukoo"
+
+msgid "Email Leadership"
+msgstr "Tuma Barua Pepe kwa Viongozi"
+
+msgid "Sign Out"
+msgstr "Toka"
+
+msgid "Check Status"
+msgstr "Angalia Hali"
+
+msgid "You'll be notified when approved"
+msgstr "Utajulishwa ukisha idhinishwa"

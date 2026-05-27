@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.clickjacking import xframe_options_exempt
 from apps.core.decorators import rate_limit
@@ -228,6 +229,36 @@ def register_view(request):
             except: pass
         # Don't auto-login — show pending approval page instead
         messages.success(request, f"Registration submitted! Your account is pending approval by clan leadership.")
+        
+        # Notify superusers and clan leaders about new pending member
+        try:
+            from apps.identity.models import Notification
+            # Notify superusers
+            superusers = Member.objects.filter(is_superuser=True, status='active')
+            for admin in superusers:
+                Notification.objects.create(
+                    recipient=admin,
+                    notif_type='member_invited',
+                    title='New Member Pending Approval',
+                    message=f'{person.full_name} ({email}) has registered and is pending approval for {selected_clan.name} clan.',
+                    link=f'/admin/identity/member/{member.id}/change/'
+                )
+            # Notify clan leaders/elders
+            leaders = Member.objects.filter(clan=selected_clan, status='active').filter(
+                Q(is_elder=True) | Q(is_superuser=True)
+            ).distinct()
+            for leader in leaders:
+                if leader not in superusers:  # Avoid duplicate notifications
+                    Notification.objects.create(
+                        recipient=leader,
+                        notif_type='member_invited',
+                        title='New Member Pending Approval',
+                        message=f'{person.full_name} ({email}) has registered and is pending approval for your clan {selected_clan.name}.',
+                        link=f'/members/'
+                    )
+        except Exception as e:
+            pass  # Fail silently - don't block registration
+        
         return redirect('registration-pending')
     return render(request, 'registration/register.html', {
         'form': {'errors': {}, 'full_name': {'value': ''}, 'email': {'value': ''}, 'phone': {'value': ''}, 'gender': {'value': ''}, 'birth_date': {'value': ''}, 'clan_id': {'value': ''}, 'family_id': {'value': ''}},
@@ -327,7 +358,16 @@ def elder_dashboard(request):
 
 
 
+@login_required
 def member_dashboard(request):
+    # Block pending/suspended/removed users
+    if hasattr(request.user, 'status'):
+        if request.user.status == 'pending':
+            return redirect('registration-pending')
+        elif request.user.status == 'suspended':
+            return render(request, "account_blocked.html", {"reason": "Your account has been suspended."}, status=403)
+        elif request.user.status == 'removed':
+            return render(request, "account_blocked.html", {"reason": "Your account has been removed."}, status=403)
     member = request.user
     my_contributions = Contribution.objects.filter(member=member).order_by('-due_date')
     my_balance_due = my_contributions.filter(status__in=[ContributionStatus.DUE, ContributionStatus.LATE, ContributionStatus.PENALIZED]).aggregate(total=Sum('amount_due'))['total'] or 0
@@ -353,6 +393,7 @@ def system_dashboard(request):
         'contribution_count': Contribution.objects.count(), 'ledger_count': LedgerEntry.objects.count(),
         'relationship_count': Relationship.objects.count(), 'votes_count': VoteCast.objects.count(),
         'all_clans': all_clans,
+        'pending_members': Member.objects.filter(status='pending').select_related('person', 'clan').order_by('-created_at'),
         'all_members': Member.objects.select_related('person', 'clan').order_by('clan__name', 'person__full_name'),
         'recent_audit': AuditLog.objects.select_related('actor').order_by('-timestamp')[:20],
     }
@@ -364,6 +405,7 @@ def system_dashboard(request):
 # ══════════════════════════════════════════════
 
 
+@login_required
 def members_view(request):
     clan = request.user.clan
     search = request.GET.get('search', '').strip()
@@ -382,6 +424,7 @@ def members_view(request):
 
 
 
+@login_required
 def member_profile(request, pk):
     member = get_object_or_404(Member, pk=pk, clan=request.user.clan)
     from apps.genealogy.models import PersonFamilyMembership

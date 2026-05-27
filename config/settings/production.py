@@ -41,9 +41,3 @@ STORAGES = {
     },
 }
 
-# Debug cloudinary config
-import logging
-logger = logging.getLogger(__name__)
-_cloud = CLOUDINARY_STORAGE.get('CLOUD_NAME', 'MISSING')
-_key = CLOUDINARY_STORAGE.get('API_KEY', 'MISSING')
-logger.info(f"CLOUDINARY CONFIG - cloud:{_cloud} key:{_key}")

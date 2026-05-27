@@ -175,6 +175,10 @@
       .brand-name { font-size:1.1rem; }
       .form-card { padding:1rem 0.85rem; }
     }
+  .lang-row { display:flex; justify-content:center; gap:0.5rem; margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid rgba(255,255,255,0.06); }
+  .lang-btn { padding:0.45rem 1rem; min-height:34px; background:rgba(255,255,255,0.02); color:#94a3b8; border:1px solid rgba(255,255,255,0.06); border-radius:20px; font-size:0.72rem; cursor:pointer; transition:all 0.15s; font-weight:600; }
+  .lang-btn:hover { color:#f1f5f9; background:rgba(255,255,255,0.05); }
+  .lang-btn.active-lang { background:var(--primary); color:#fff; border-color:var(--primary); }
   </style>
 </head>
 <body>
@@ -230,7 +234,7 @@
         <label class="form-label">{% trans "Full Name" %} *</label>
         <input type="text" name="full_name" required class="form-input"
                value="{{ form.full_name.value|default:'' }}"
-               placeholder="{% trans 'Enter your full name' %}">
+               placeholder="{% trans 'Enter your full name" data-sw="Ingiza jina lako kamili' %}">
       </div>
 
       <div class="row-2">
@@ -238,13 +242,13 @@
           <label class="form-label">{% trans "Email" %} *</label>
           <input type="email" name="email" required class="form-input"
                  value="{{ form.email.value|default:'' }}"
-                 placeholder="{% trans 'your@email.com' %}">
+                 placeholder="{% trans 'your@email.com" data-sw="barua@mfano.com' %}">
         </div>
         <div class="form-group">
           <label class="form-label">{% trans "Phone" %}</label>
           <input type="tel" name="phone" class="form-input"
                  value="{{ form.phone.value|default:'' }}"
-                 placeholder="{% trans '0712345678' %}">
+                 placeholder="{% trans '0712345678" data-sw="0712345678' %}">
         </div>
       </div>
 
@@ -272,7 +276,7 @@
           <option value="{{ c.id }}" {% if form.clan_id.value == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
           {% endfor %}
         </select>
-        <div class="help-text">{% trans "Choose the clan you belong to" %}</div>
+        <div class="help-text">{% trans "Choose the clan you belong to" data-sw="Chagua ukoo unaotoka" %}</div>
       </div>
 
       <div class="form-group">
@@ -283,14 +287,14 @@
           <option value="{{ f.id }}" {% if form.family_id.value == f.id|stringformat:"s" %}selected{% endif %}>{{ f.name }}</option>
           {% endfor %}
         </select>
-        <div class="help-text">{% trans "Your family lineage within the clan" %}</div>
+        <div class="help-text">{% trans "Your family lineage within the clan" data-sw="Ukoo wako wa familia ndani ya ukoo" %}</div>
       </div>
 
       <div class="form-group">
         <label class="form-label">{% trans "Password" %} *</label>
         <div class="password-wrapper">
           <input type="password" name="password1" required id="password1" class="form-input"
-                 placeholder="{% trans 'Create a strong password (min 6 characters)' %}">
+                 placeholder="{% trans 'Create a strong password (min 6 characters)" data-sw="Tengeneza nenosiri imara (angalau herufi 6)' %}">
           <button type="button" onclick="togglePassword('password1', this)" class="password-toggle">👁</button>
         </div>
       </div>
@@ -299,7 +303,7 @@
         <label class="form-label">{% trans "Confirm Password" %} *</label>
         <div class="password-wrapper">
           <input type="password" name="password2" required id="password2" class="form-input"
-                 placeholder="{% trans 'Repeat your password' %}">
+                 placeholder="{% trans 'Repeat your password" data-sw="Rudia nenosiri lako' %}">
           <button type="button" onclick="togglePassword('password2', this)" class="password-toggle">👁</button>
         </div>
       </div>
@@ -313,6 +317,11 @@
     <a href="{% url 'login' %}">{% trans "Sign in" %}</a>
   </div>
   
+  <div class="lang-row">
+    <button class="lang-btn active-lang" onclick="setSystemLanguage('en')">English</button>
+    <button class="lang-btn" onclick="setSystemLanguage('sw')">Kiswahili</button>
+  </div>
+
   <div class="footer-text">© {% now "Y" %} {% if clan %}{{ clan.name }}{% else %}BUBABI{% endif %}</div>
 
   <!-- Language Switcher -->
@@ -349,6 +358,25 @@ function setLang(lang) {
   document.body.appendChild(form);
   form.submit();
 }
+
+function setSystemLanguage(lang) {
+  localStorage.setItem('clan_lang', lang);
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    const isSwahili = btn.textContent.toLowerCase().includes('swahili');
+    const isEnglish = btn.textContent.toLowerCase().includes('english');
+    btn.classList.toggle('active-lang', (lang === 'sw' && isSwahili) || (lang === 'en' && isEnglish));
+  });
+  document.querySelectorAll('[data-en]').forEach(el => {
+    const text = el.getAttribute(lang === 'sw' ? 'data-sw' : 'data-en');
+    if (!text) return;
+    if (el.tagName === 'INPUT') { el.placeholder = text; }
+    else { el.textContent = text; }
+  });
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const savedLang = localStorage.getItem('clan_lang');
+  if (savedLang) setSystemLanguage(savedLang);
+});
 
 function togglePassword(id, btn) {
   const input = document.getElementById(id);

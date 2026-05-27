@@ -328,6 +328,29 @@
 </div>
 
 <script>
+function setLang(lang) {
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = '/i18n/setlang/';
+  const csrf = document.createElement('input');
+  csrf.type = 'hidden';
+  csrf.name = 'csrfmiddlewaretoken';
+  csrf.value = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  const langInput = document.createElement('input');
+  langInput.type = 'hidden';
+  langInput.name = 'language';
+  langInput.value = lang;
+  const next = document.createElement('input');
+  next.type = 'hidden';
+  next.name = 'next';
+  next.value = window.location.pathname;
+  form.appendChild(csrf);
+  form.appendChild(langInput);
+  form.appendChild(next);
+  document.body.appendChild(form);
+  form.submit();
+}
+
 function setSystemLanguage(lang) {
   localStorage.setItem('clan_lang', lang);
   document.querySelectorAll('.lang-btn').forEach(btn => {

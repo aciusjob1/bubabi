@@ -143,22 +143,38 @@
 </div>
 <script>
     function setSystemLanguage(lang) {
-      localStorage.setItem('clan_lang', lang);
-      document.querySelectorAll('.lang-btn').forEach(btn => {
-        const isSwahili = btn.textContent.toLowerCase().includes('swahili');
-        const isEnglish = btn.textContent.toLowerCase().includes('english');
-        btn.classList.toggle('active-lang', (lang === 'sw' && isSwahili) || (lang === 'en' && isEnglish));
-      });
-      document.querySelectorAll('[data-en]').forEach(el => {
-        const text = el.getAttribute(lang === 'sw' ? 'data-sw' : 'data-en');
-        if (!text) return;
-        if (el.tagName === 'INPUT') {
-          el.placeholder = text;
-        } else {
-          el.textContent = text;
+      // Create a form to POST to Django's setlang view
+      var form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '/i18n/setlang/';
+      
+      var csrfInput = document.createElement('input');
+      csrfInput.type = 'hidden';
+      csrfInput.name = 'csrfmiddlewaretoken';
+      csrfInput.value = '{{ csrf_token }}';
+      form.appendChild(csrfInput);
+      
+      var langInput = document.createElement('input');
+      langInput.type = 'hidden';
+      langInput.name = 'language';
+      langInput.value = lang;
+      form.appendChild(langInput);
+      
+      document.body.appendChild(form);
+      form.submit();
+    }
+    
+    // Highlight active language on page load
+    (function() {
+      var currentLang = '{{ LANGUAGE_CODE }}';
+      document.querySelectorAll('.lang-btn').forEach(function(btn) {
+        btn.classList.remove('active-lang');
+        if ((currentLang === 'sw' && btn.textContent.toLowerCase().includes('swahili')) ||
+            (currentLang === 'en' && btn.textContent.toLowerCase().includes('english'))) {
+          btn.classList.add('active-lang');
         }
       });
-    }
+    })();
   </script>
 </body>
 </html>

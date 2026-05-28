@@ -56,6 +56,23 @@
     .btn-danger:hover { background:#dc2626; transform:translateY(-1px); }
     
     .info-row { display:flex; align-items:center; gap:0.5rem; font-size:0.72rem; color:#64748b; justify-content:center; margin-top:0.75rem; }
+    .lang-row {
+      display: flex; justify-content: center; gap: 0.5rem;
+      margin-top: 1.5rem; padding-top: 1.25rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .lang-btn {
+      padding: 0.45rem 1rem; min-height: 34px;
+      background: rgba(255,255,255,0.02); color: #94a3b8;
+      border: 1px solid rgba(255,255,255,0.06); border-radius: 20px;
+      font-size: 0.72rem; cursor: pointer; transition: all 0.15s; font-weight: 600;
+    }
+    .lang-btn:hover { color: #f1f5f9; background: rgba(255,255,255,0.05); }
+    .lang-btn.active-lang {
+      background: var(--primary); color: #ffffff; border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(var(--clan-primary-raw), 0.2);
+    }
+    
     .footer-text { text-align:center; font-size:0.65rem; color:rgba(148,163,184,0.5); margin-top:1.25rem; }
     
     @media (max-width:480px) {
@@ -117,7 +134,31 @@
     </div>
   </div>
 
+  <div class="lang-row">
+    <button class="lang-btn active-lang" onclick="setSystemLanguage('en')">English</button>
+    <button class="lang-btn" onclick="setSystemLanguage('sw')">Kiswahili</button>
+  </div>
+
   <div class="footer-text">© {% now "Y" %} {% if clan %}{{ clan.name }}{% else %}BUBABI{% endif %}</div>
 </div>
+<script>
+    function setSystemLanguage(lang) {
+      localStorage.setItem('clan_lang', lang);
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        const isSwahili = btn.textContent.toLowerCase().includes('swahili');
+        const isEnglish = btn.textContent.toLowerCase().includes('english');
+        btn.classList.toggle('active-lang', (lang === 'sw' && isSwahili) || (lang === 'en' && isEnglish));
+      });
+      document.querySelectorAll('[data-en]').forEach(el => {
+        const text = el.getAttribute(lang === 'sw' ? 'data-sw' : 'data-en');
+        if (!text) return;
+        if (el.tagName === 'INPUT') {
+          el.placeholder = text;
+        } else {
+          el.textContent = text;
+        }
+      });
+    }
+  </script>
 </body>
 </html>

@@ -1835,7 +1835,12 @@ def view_document(request, pk):
 
 
 def registration_pending_view(request):
-    return render(request, "registration_pending.html")
+    clan = request.user.clan if request.user.is_authenticated and hasattr(request.user, 'clan') else Clan.objects.first()
+    clan_banner = clan.banner_image if clan and clan.banner_image else None
+    return render(request, "registration_pending.html", {
+        'clan': clan,
+        'clan_banner': clan_banner,
+    })
 
 def privacy_view(request):
     """Display privacy policy page."""

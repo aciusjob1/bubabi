@@ -1,60 +1,123 @@
-{% extends 'base.html' %}
 {% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="{{ clan.primary_color|default:'#10b981' }}">
+  <title>{% if clan %}{{ clan.name }}{% else %}BUBABI{% endif %} — {% trans "Registration Submitted" %}</title>
+  <link rel="icon" href="{% if clan and clan.logo %}{{ clan.logo.url }}{% endif %}">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    :root { --primary: {{ clan.primary_color|default:'#10b981' }}; --primary-dark: {{ clan.accent_color|default:'#059669' }}; }
+    body {
+      font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height:100vh; min-height:100dvh;
+      display:flex; align-items:center; justify-content:center; padding:1rem;
+      {% if clan_banner %}
+      background: linear-gradient({{ clan_sidebar_color|default:'#3d1a1a' }}dd, {{ clan_sidebar_color|default:'#3d1a1a' }}ee), url('{{ clan_banner.url }}') center/cover no-repeat fixed;
+      {% else %}
+      background: linear-gradient({{ clan_sidebar_color|default:'#3d1a1a' }}dd, {{ clan_sidebar_color|default:'#3d1a1a' }}ee), url('https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=1920&q=80') center/cover no-repeat fixed;
+      {% endif %}
+      position:relative; -webkit-tap-highlight-color:transparent;
+    }
+    .container { width:100%; max-width:480px; position:relative; z-index:1; animation: fadeUp 0.5s ease; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes pulse { 0%,100% { box-shadow:0 0 0 0 rgba(16,185,129,0.4); } 50% { box-shadow:0 0 0 12px rgba(16,185,129,0); } }
+    
+    .logo-area { display:flex; align-items:center; justify-content:center; gap:0.75rem; margin-bottom:1.25rem; }
+    .brand-icon { width:52px; height:52px; min-width:52px; background:linear-gradient(135deg, var(--primary), #34d399); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; box-shadow:0 8px 24px rgba(16,185,129,0.3); }
+    .brand-icon img { width:52px; height:52px; border-radius:14px; object-fit:cover; }
+    .brand-name { font-size:1.4rem; font-weight:800; color:#fff; letter-spacing:2px; text-shadow:0 2px 8px rgba(0,0,0,0.3); }
+    .brand-sub { font-size:0.62rem; color:#94a3b8; letter-spacing:1px; margin-top:2px; font-style:italic; }
+    
+    .card { background:rgba(30,41,59,0.85); backdrop-filter:blur(24px); padding:2rem 1.75rem; border-radius:16px; border:1px solid rgba(255,255,255,0.08); box-shadow:0 16px 48px rgba(0,0,0,0.4); text-align:center; }
+    
+    .success-icon { width:72px; height:72px; line-height:72px; background:rgba(16,185,129,0.15); border-radius:50%; margin:0 auto 0.75rem; font-size:2.5rem; animation:pulse 2s ease-in-out infinite; }
+    
+    .card h2 { font-size:1.1rem; font-weight:700; color:#fff; margin:0 0 0.4rem; }
+    .card .subtitle { font-size:0.85rem; color:#6ee7b7; margin:0 0 1rem; }
+    .card p { font-size:0.82rem; color:#94a3b8; margin:0 0 0.75rem; line-height:1.6; }
+    
+    .steps { display:flex; justify-content:center; gap:0; margin:1.25rem 0; }
+    .step { display:flex; align-items:center; gap:0.4rem; font-size:0.7rem; padding:0.4rem 0.6rem; }
+    .step.done { color:#6ee7b7; } .step.current { color:#fbbf24; font-weight:700; } .step.next { color:#475569; }
+    .step-arrow { color:#334155; margin:0 0.15rem; }
+    
+    .divider { height:1px; background:rgba(255,255,255,0.06); margin:1rem 0; }
+    
+    .actions { display:flex; flex-direction:column; gap:0.5rem; }
+    .btn { display:block; width:100%; padding:0.7rem; border-radius:10px; font-size:0.85rem; font-weight:600; cursor:pointer; text-decoration:none; text-align:center; transition:all 0.2s; }
+    .btn-primary { background:var(--primary); color:#fff; box-shadow:0 4px 16px rgba(16,185,129,0.3); }
+    .btn-primary:hover { background:var(--primary-dark); transform:translateY(-1px); }
+    .btn-outline { background:transparent; color:#94a3b8; border:1px solid rgba(255,255,255,0.08); }
+    .btn-outline:hover { background:rgba(255,255,255,0.04); color:#fff; }
+    .btn-danger { background:#ef4444; color:#fff; }
+    .btn-danger:hover { background:#dc2626; transform:translateY(-1px); }
+    
+    .info-row { display:flex; align-items:center; gap:0.5rem; font-size:0.72rem; color:#64748b; justify-content:center; margin-top:0.75rem; }
+    .footer-text { text-align:center; font-size:0.65rem; color:rgba(148,163,184,0.5); margin-top:1.25rem; }
+    
+    @media (max-width:480px) {
+      .container { max-width:100%; }
+      .brand-icon { width:44px; height:44px; min-width:44px; font-size:1.2rem; border-radius:12px; }
+      .brand-name { font-size:1.2rem; }
+      .card { padding:1.5rem 1.25rem; border-radius:14px; }
+      .step { font-size:0.62rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
 
-{% block title %}{% trans "Registration Pending" %}{% endblock %}
+  <!-- Logo -->
+  <div class="logo-area">
+    {% if clan and clan.logo %}<div class="brand-icon"><img src="{{ clan.logo.url }}" alt="{{ clan.name }} Logo"></div>{% else %}<div class="brand-icon">⚔</div>{% endif %}
+    <div>
+      <div class="brand-name">{% if clan %}{{ clan.name }}{% else %}BUBABI{% endif %}</div>
+      <div class="brand-sub">{% if clan and clan.motto %}{{ clan.motto }}{% else %}{% trans "Clan Management" %}{% endif %}</div>
+    </div>
+  </div>
 
-{% block sidebar %}{% endblock %}
-
-{% block content %}
-<div style="max-width:600px; margin:3rem auto; text-align:center; padding:2rem;">
-    <div style="font-size:4rem; margin-bottom:1rem;">⏳</div>
-    <h2 style="color:#6366f1; margin-bottom:0.5rem;">{% trans "Registration Successful!" %}</h2>
-    <p style="color:#6ee7b7; margin-bottom:1.5rem; font-size:0.95rem;">{% trans "You're almost in! 🎉" %}</p>
+  <!-- Card -->
+  <div class="card">
+    <div class="success-icon">✅</div>
+    <h2>{% trans "Registration Successful!" %}</h2>
+    <p class="subtitle">{% trans "You're almost in! 🎉" %}</p>
+    <p>{% trans "Your account is awaiting approval from your clan leaders. This is a quick review to confirm your membership." %}</p>
     
     <!-- Progress Steps -->
-    <div style="display:flex; justify-content:center; gap:0; margin:1.5rem 0; font-size:0.8rem;">
-        <span style="color:#6ee7b7;">✅ {% trans "Created" %}</span>
-        <span style="color:#334155; margin:0 0.3rem;">→</span>
-        <span style="color:#fbbf24; font-weight:700;">⏳ {% trans "Pending" %}</span>
-        <span style="color:#334155; margin:0 0.3rem;">→</span>
-        <span style="color:#475569;">🔒 {% trans "Approved" %}</span>
+    <div class="steps">
+      <span class="step done">✅ {% trans "Created" %}</span>
+      <span class="step-arrow">→</span>
+      <span class="step current">⏳ {% trans "Pending" %}</span>
+      <span class="step-arrow">→</span>
+      <span class="step next">🔒 {% trans "Approved" %}</span>
     </div>
     
-    <p style="color:#64748b; margin-bottom:1.5rem; line-height:1.6; font-size:0.9rem;">
-        {% trans "Your account is awaiting approval from your clan leaders. This is a quick review to confirm your membership." %}
-    </p>
-    <p style="color:#fbbf24; font-size:0.8rem; margin-bottom:1.5rem;">🕒 {% trans "Most approvals happen within 24 hours" %}</p>
+    <p style="font-size:0.78rem; color:#fbbf24;">🕒 {% trans "Most approvals happen within 24 hours" %}</p>
     
-    <div style="background:#f8fafc; border-radius:12px; padding:1.5rem; margin-bottom:2rem;">
-        <p style="color:#475569; font-size:0.9rem;">
-            📧 {% trans "Check your email for updates" %}<br>
-            ⏰ {% trans "Approval typically takes 1-3 business days" %}
-        </p>
+    <div class="divider"></div>
+    
+    <!-- Actions -->
+    <div class="actions">
+      {% if clan and clan.contact_phone %}
+      <a href="tel:{{ clan.contact_phone }}" class="btn btn-outline">📞 {% trans "Call Clan Leadership" %}</a>
+      {% endif %}
+      {% if clan and clan.contact_email %}
+      <a href="mailto:{{ clan.contact_email }}" class="btn btn-outline">📧 {% trans "Email Leadership" %}</a>
+      {% endif %}
+      <a href="{% url 'logout' %}" class="btn btn-danger">🚪 {% trans "Sign Out" %}</a>
+      <a href="{% url 'login' %}" class="btn btn-primary">🔄 {% trans "Check Status" %}</a>
     </div>
     
-    <!-- Contact Actions -->
-    <div style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom:1rem;">
-        {% if clan and clan.contact_phone %}
-        <a href="tel:{{ clan.contact_phone }}" style="display:block; width:100%; padding:0.7rem; border-radius:10px; font-size:0.85rem; font-weight:600; text-decoration:none; text-align:center; background:transparent; color:#94a3b8; border:1px solid rgba(255,255,255,0.08);">
-            📞 {% trans "Call Clan Leadership" %}
-        </a>
-        {% endif %}
-        {% if clan and clan.contact_email %}
-        <a href="mailto:{{ clan.contact_email }}" style="display:block; width:100%; padding:0.7rem; border-radius:10px; font-size:0.85rem; font-weight:600; text-decoration:none; text-align:center; background:transparent; color:#94a3b8; border:1px solid rgba(255,255,255,0.08);">
-            📧 {% trans "Email Leadership" %}
-        </a>
-        {% endif %}
+    <div class="info-row">
+      <span>📢</span>
+      <span>{% trans "You'll be notified when approved" %}</span>
     </div>
-    
-    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
-        <a href="{% url 'logout' %}" style="display:inline-block; padding:0.75rem 2rem; background:#ef4444; color:#fff; border-radius:8px; text-decoration:none; font-weight:600;">
-            🚪 {% trans "Sign Out" %}
-        </a>
-        <a href="{% url 'login' %}" style="display:inline-block; padding:0.75rem 2rem; background:#6366f1; color:#fff; border-radius:8px; text-decoration:none; font-weight:600;">
-            🔄 {% trans "Check Status" %}
-        </a>
-    </div>
-    
-    <p style="color:#64748b; font-size:0.75rem; margin-top:1rem;">📢 {% trans "You'll be notified when approved" %}</p>
+  </div>
+
+  <div class="footer-text">© {% now "Y" %} {% if clan %}{{ clan.name }}{% else %}BUBABI{% endif %}</div>
 </div>
-{% endblock %}
+</body>
+</html>

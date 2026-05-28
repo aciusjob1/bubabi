@@ -143,6 +143,15 @@
 </div>
 <script>
     function setSystemLanguage(lang) {
+      // Update buttons instantly
+      document.querySelectorAll('.lang-btn').forEach(function(btn) {
+        btn.classList.remove('active-lang');
+        if ((lang === 'sw' && btn.textContent.toLowerCase().includes('swahili')) ||
+            (lang === 'en' && btn.textContent.toLowerCase().includes('english'))) {
+          btn.classList.add('active-lang');
+        }
+      });
+      
       // Create a form to POST to Django's setlang view
       var form = document.createElement('form');
       form.method = 'POST';

@@ -11,3 +11,34 @@ services:
         generateValue: true
       - key: PYTHON_VERSION
         value: 3.13.0
+      - key: SMS_PROVIDER
+        value: africastalking
+      - key: AT_USERNAME
+        sync: false
+      - key: AT_API_KEY
+        sync: false
+      - key: AT_SENDER_ID
+        value: BUBABI
+      - key: BEEM_API_KEY
+        sync: false
+      - key: BEEM_SECRET_KEY
+        sync: false
+      - key: BEEM_SENDER_ID
+        value: BUBABI
+      - key: BULKSMS_USERNAME
+        sync: false
+      - key: BULKSMS_PASSWORD
+        sync: false
+      - key: WA_PHONE_NUMBER_ID
+        sync: false
+      - key: WA_ACCESS_TOKEN
+        sync: false
+      - key: EMAIL_PROVIDER
+        value: resend
+      - key: RESEND_API_KEY
+        sync: false
+      - key: FROM_EMAIL
+        value: noreply@bubabi.com
+      - key: FROM_NAME
+        value: BUBABI Clan System
+

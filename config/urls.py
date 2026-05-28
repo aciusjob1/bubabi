@@ -36,7 +36,8 @@ urlpatterns = [
     path('registration-pending/', identity_views.registration_pending_view, name='registration-pending'),
     
     # Dashboards
-    path('', identity_views.dashboard, name='dashboard'),
+    path('', identity_views.home_view, name='home'),
+    path('dashboard/', identity_views.dashboard, name='dashboard'),
     path('treasurer/', identity_views.treasurer_dashboard, name='treasurer'),
     path('secretary/', identity_views.secretary_dashboard, name='secretary'),
     path('elder/', identity_views.elder_dashboard, name='elder'),

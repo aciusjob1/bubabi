@@ -272,6 +272,13 @@ def register_view(request):
 # ══════════════════════════════════════════════
 
 
+def home_view(request):
+    """Redirect to the appropriate dashboard based on user role."""
+    if not request.user.is_authenticated:
+        return redirect('login')
+    return redirect(get_role_dashboard(request.user))
+
+
 @leader_required
 def dashboard(request):
     clan = request.user.clan

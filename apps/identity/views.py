@@ -107,9 +107,10 @@ def login_view(request):
                 login(request, user)
                 return redirect('registration-pending')
             elif user.status == 'suspended':
-                error = 'Your account has been suspended. Contact clan leadership.'
+                login(request, user)
+                return render(request, "account_suspended.html", {"reason": "Your account has been suspended. Contact clan leadership for more information."}, status=403)
             elif user.status == 'removed':
-                error = 'Your account has been removed from the clan.'
+                return render(request, "account_blocked.html", {"reason": "Your account has been removed from the clan. Contact clan leadership if you believe this is an error."}, status=403)
             else:
                 login(request, user)
                 

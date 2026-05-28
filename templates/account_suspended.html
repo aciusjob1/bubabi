@@ -1,0 +1,187 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#f59e0b">
+  <title>{% trans "Account Suspended" %} — BUBABI</title>
+  <style>
+    /* Reset & Base Elements */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh; 
+      min-height: 100dvh;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      padding: 1rem;
+      position: relative; 
+      -webkit-tap-highlight-color: transparent;
+      {% if clan_banner %}
+      background: linear-gradient(#1e293b99, #0f172abb), url('{{ clan_banner.url }}') center/cover no-repeat fixed;
+      {% else %}
+      background: linear-gradient(#1e293b99, #0f172abb), url('https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=1920&q=80') center/cover no-repeat fixed;
+      {% endif %}
+    }
+    
+    body::after {
+      content: ''; 
+      position: fixed; 
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.08) 0%, transparent 60%);
+      z-index: 0; 
+      pointer-events: none;
+    }
+    
+    /* Layout Containers */
+    .container { 
+      width: 100%; 
+      max-width: 460px; 
+      position: relative; 
+      z-index: 1; 
+      animation: fadeUp 0.5s ease; 
+    }
+    
+    @keyframes fadeUp { 
+      from { opacity: 0; transform: translateY(20px); } 
+      to { opacity: 1; transform: translateY(0); } 
+    }
+    
+    /* Main Card Layout */
+    .card {
+      background: rgba(30,41,59,0.85); 
+      backdrop-filter: blur(20px); 
+      -webkit-backdrop-filter: blur(20px);
+      padding: 2.5rem 2rem; 
+      border-radius: 16px;
+      border: 1px solid rgba(245,158,11,0.2);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+    
+    .icon {
+      width: 80px; 
+      height: 80px; 
+      line-height: 80px;
+      background: rgba(245,158,11,0.1); 
+      border-radius: 50%;
+      margin: 0 auto 1.5rem; 
+      font-size: 2.5rem;
+      border: 2px solid rgba(245,158,11,0.2);
+    }
+    
+    .card h1 { 
+      font-size: 1.3rem; 
+      font-weight: 700; 
+      color: #fff; 
+      margin: 0 0 0.5rem; 
+    }
+    
+    .card-desc { 
+      font-size: 0.88rem; 
+      color: #94a3b8; 
+      margin: 0 0 1rem; 
+      line-height: 1.6; 
+    }
+    
+    .card-help-text {
+      font-size: 0.78rem; 
+      color: #64748b;
+      margin-bottom: 1rem;
+    }
+    
+    /* Reason Box Block */
+    .reason-box {
+      background: rgba(245,158,11,0.08); 
+      border: 1px solid rgba(245,158,11,0.15);
+      border-radius: 10px; 
+      padding: 0.85rem 1rem; 
+      margin: 1rem 0; 
+      text-align: left;
+    }
+    
+    .reason-box strong { 
+      color: #fca5a5; 
+      font-size: 0.68rem; 
+      text-transform: uppercase; 
+      letter-spacing: 1px; 
+      display: block; 
+      margin-bottom: 0.25rem; 
+    }
+    
+    .reason-box p { 
+      color: #fecaca; 
+      font-size: 0.82rem; 
+      margin: 0; 
+      line-height: 1.5;
+    }
+    
+    /* Interactive Elements */
+    .btn {
+      display: block; 
+      width: 100%; 
+      padding: 0.75rem; 
+      margin-top: 0.75rem;
+      border-radius: 10px; 
+      font-size: 0.88rem; 
+      font-weight: 600;
+      cursor: pointer; 
+      text-decoration: none; 
+      text-align: center; 
+      transition: all 0.2s;
+    }
+    
+    .btn-signout { 
+      background: rgba(245,158,11,0.15); 
+      color: #fca5a5; 
+      border: 1px solid rgba(245,158,11,0.25); 
+    }
+    
+    .btn-signout:hover { 
+      background: rgba(245,158,11,0.25); 
+      color: #fff; 
+    }
+    
+    .footer-text { 
+      text-align: center; 
+      font-size: 0.65rem; 
+      color: rgba(148,163,184,0.4); 
+      margin-top: 1.5rem; 
+    }
+    
+    /* Mobile Responsiveness */
+    @media (max-width: 480px) {
+      .container { max-width: 100%; }
+      .card { padding: 2rem 1.25rem; border-radius: 14px; }
+      .icon { width: 64px; height: 64px; line-height: 64px; font-size: 2rem; }
+      .card h1 { font-size: 1.15rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="card">
+    <div class="icon">⏸️</div>
+    <h1>{% trans "Account Suspended" %}</h1>
+    <p class="card-desc">{% trans "Your account has been temporarily suspended. You cannot access the system at this time." %}</p>
+    
+    {% if reason %}
+    <div class="reason-box">
+      <strong>📋 {% trans "Reason" %}</strong>
+      <p>{{ reason }}</p>
+    </div>
+    {% endif %}
+    
+    <p class="card-help-text">{% trans "If you believe this is a mistake, please contact your clan leadership." %}</p>
+    
+    <a href="{% url 'logout' %}" class="btn btn-signout">🚪 {% trans "Sign Out" %}</a>
+  </div>
+  <div class="footer-text">© {% now "Y" %} BUBABI — {% trans "Clan Management System" %}</div>
+</div>
+
+</body>
+</html>

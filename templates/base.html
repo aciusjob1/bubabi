@@ -398,11 +398,6 @@
       <span class="nav-icon">🏠</span>
       <span class="nav-label">{% trans "Overview" %}</span>
     </a>
-    <a href="{% url 'system' %}" data-label="{% trans 'Control Panel' %}"
-       class="nav-item {% if request.resolver_match.url_name == 'system' %}active{% endif %}">
-      <span class="nav-icon">⚙</span>
-      <span class="nav-label">{% trans "Control Panel" %}</span>
-    </a>
     <a href="{% url 'clan-settings' %}" data-label="{% trans 'Clan Settings' %}"
        class="nav-item {% if request.resolver_match.url_name == 'clan-settings' %}active{% endif %}">
       <span class="nav-icon">🎨</span>

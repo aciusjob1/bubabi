@@ -30,12 +30,12 @@
   <div class="document-preview">
 
     {% if is_image %}
-      <img src="{% url 'stream-document' document.id %}" alt="{{ document.title }}"
+      <img src="{{ stream_url|default:doc.file.url }}" alt="{{ document.title }}"
            style="width:100%; max-height:80vh; object-fit:contain; cursor:zoom-in;"
            class="preview-img">
 
     {% elif is_pdf %}
-      <iframe src="{% url 'stream-document' document.id %}"
+      <iframe src="{{ stream_url|default:doc.file.url }}"
               style="width:100%; height:min(80vh, 600px); border:none; opacity:0; transition:opacity 0.3s;"
               onload="this.style.opacity=1">
       </iframe>

@@ -1337,6 +1337,7 @@ def moderator_dashboard(request):
 # ══════════════════════════════════════════════
 
 
+@login_required
 def documents_view(request):
     from apps.identity.models import ClanDocument, JudicialCase
     clan = request.user.clan

@@ -490,6 +490,7 @@ def loans_view(request):
 
 
 
+@login_required
 def fines_view(request):
     fines = Fine.objects.filter(member__clan=request.user.clan).select_related('member__person', 'issued_by__person').order_by('-created_at')
     return render(request, 'fines.html', {'fines': fines})

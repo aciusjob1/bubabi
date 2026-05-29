@@ -1,24 +1,19 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import FileResponse, Http404
+from django.http import FileResponse, HttpResponse, Http404
 from django.views.decorators.clickjacking import xframe_options_exempt
 import mimetypes
+import requests
 from apps.identity.models import ClanDocument
 
-@login_required
-def registration_pending_view(request):
-    """Show pending approval page after registration."""
-    from apps.identity.models import Clan
-    clan = Clan.objects.first()
-    return render(request, 'registration/pending.html', {'clan': clan})
 
 @xframe_options_exempt
 @login_required
 def view_document(request, pk):
-    """Preview a document inline instead of downloading."""
+    """Preview a document inline."""
     doc = get_object_or_404(ClanDocument, pk=pk, clan=request.user.clan, is_active=True)
     mime_type, _ = mimetypes.guess_type(doc.file.name)
-    
+
     file_content = None
     if doc.file.name.lower().endswith(('.txt', '.log', '.md', '.csv')):
         try:
@@ -26,7 +21,12 @@ def view_document(request, pk):
             file_content = doc.file.read().decode('utf-8', errors='replace')
             doc.file.close()
         except Exception:
-            file_content = None
+            try:
+                # Fallback: try reading via URL (for Cloudinary)
+                resp = requests.get(doc.file.url, timeout=10)
+                file_content = resp.text
+            except Exception:
+                file_content = None
 
     context = {
         'document': doc,
@@ -38,27 +38,52 @@ def view_document(request, pk):
     }
     return render(request, 'view_document.html', context)
 
+
 @login_required
 def download_document(request, pk):
-    """Secure file download — enforces permission check."""
+    """Secure file download — works with both local and Cloudinary storage."""
     doc = get_object_or_404(ClanDocument, pk=pk, clan=request.user.clan, is_active=True)
+    filename = doc.file.name.split("/")[-1]
+    
     try:
-        response = FileResponse(doc.file.open("rb"))
-        filename = doc.file.name.split("/")[-1]
+        # Try local file first
+        doc.file.open("rb")
+        response = FileResponse(doc.file, content_type='application/octet-stream')
         response["Content-Disposition"] = f'attachment; filename="{filename}"'
         return response
     except Exception:
-        raise Http404("File not available")
+        # Fallback: proxy download from Cloudinary URL
+        try:
+            resp = requests.get(doc.file.url, stream=True, timeout=30)
+            response = HttpResponse(resp.content, content_type='application/octet-stream')
+            response["Content-Disposition"] = f'attachment; filename="{filename}"'
+            response["Content-Length"] = resp.headers.get('Content-Length', '')
+            return response
+        except Exception:
+            raise Http404("File not available")
+
 
 @login_required
 def stream_document(request, pk):
-    """Secure file streaming for inline preview — enforces permission check."""
+    """Secure file streaming — works with both local and Cloudinary storage."""
     doc = get_object_or_404(ClanDocument, pk=pk, clan=request.user.clan, is_active=True)
     mime_type, _ = mimetypes.guess_type(doc.file.name)
+    filename = doc.file.name.split("/")[-1]
+    
     try:
-        response = FileResponse(doc.file.open("rb"), content_type=mime_type or "application/octet-stream")
-        filename = doc.file.name.split("/")[-1]
+        # Try local file first
+        doc.file.open("rb")
+        response = FileResponse(doc.file, content_type=mime_type or "application/octet-stream")
         response["Content-Disposition"] = f'inline; filename="{filename}"'
         return response
     except Exception:
-        raise Http404("File cannot be streamed")
+        # Fallback: proxy from Cloudinary URL
+        try:
+            resp = requests.get(doc.file.url, stream=True, timeout=30)
+            response = HttpResponse(resp.content, content_type=mime_type or "application/octet-stream")
+            response["Content-Disposition"] = f'inline; filename="{filename}"'
+            response["Content-Length"] = resp.headers.get('Content-Length', '')
+            return response
+        except Exception:
+            # Last resort: redirect to Cloudinary URL directly
+            return redirect(doc.file.url)

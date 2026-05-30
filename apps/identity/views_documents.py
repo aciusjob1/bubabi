@@ -46,36 +46,12 @@ def view_document(request, pk):
 
 @login_required
 def download_document(request, pk):
-    """Secure file download — proxies from Cloudinary/local storage."""
+    """Secure file download — redirects to Cloudinary URL."""
     doc = get_object_or_404(ClanDocument, pk=pk, clan=request.user.clan, is_active=True)
-    filename = doc.file.name.split("/")[-1]
-    
-    try:
-        # Stream the file from the URL (works for both Cloudinary and local)
-        resp = requests.get(doc.file.url, stream=True, timeout=60)
-        resp.raise_for_status()
-        
-        response = StreamingHttpResponse(
-            resp.iter_content(chunk_size=8192),
-            content_type=resp.headers.get('Content-Type', 'application/octet-stream')
-        )
-        response["Content-Disposition"] = f'attachment; filename="{filename}"'
-        response["Content-Length"] = resp.headers.get('Content-Length', '')
-        return response
-    except requests.exceptions.ConnectionError:
-        # Local file fallback
-        try:
-            doc.file.open("rb")
-            response = FileResponse(doc.file, content_type='application/octet-stream')
-            response["Content-Disposition"] = f'attachment; filename="{filename}"'
-            return response
-        except Exception:
-            raise Http404("File not available")
-    except Exception:
-        raise Http404("File not available")
+    from django.http import HttpResponseRedirect
+    return HttpResponseRedirect(doc.file.url)
 
 
-@login_required
 def stream_document(request, pk):
     """Secure file streaming for inline preview."""
     doc = get_object_or_404(ClanDocument, pk=pk, clan=request.user.clan, is_active=True)

@@ -4,6 +4,7 @@
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
   <meta charset="UTF-8">
+  {% if clan_logo %}<link rel="icon" href="{{ clan_logo.url }}">{% endif %}
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}BUBABI — Clan System{% endblock %}</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>

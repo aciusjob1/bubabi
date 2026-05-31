@@ -130,6 +130,7 @@ urlpatterns = [
     path('documents/upload/', identity_views.upload_document_view, name='upload-document'),
     path('documents/<uuid:pk>/', views_documents.view_document, name='view-document'),
     path('documents/<uuid:pk>/download/', views_documents.download_document, name='download-document'),
+    path('documents/<uuid:pk>/delete/', views_documents.delete_document, name='delete-document'),
     path('documents/<uuid:pk>/stream/', views_documents.stream_document, name='stream-document'),
     path('constitution/upload/', identity_views.upload_constitution_view, name='upload-constitution'),
     

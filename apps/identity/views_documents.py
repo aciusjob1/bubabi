@@ -125,3 +125,13 @@ def stream_document(request, pk):
     except Exception:
         from django.http import HttpResponseRedirect
         return HttpResponseRedirect(doc.file.url)
+
+@login_required
+def delete_document(request, pk):
+    """Delete a document - soft delete."""
+    from django.contrib import messages
+    doc = get_object_or_404(ClanDocument, pk=pk, clan=request.user.clan, is_active=True)
+    doc.is_active = False
+    doc.save()
+    messages.success(request, f'Document "{doc.title}" deleted.')
+    return redirect('documents')

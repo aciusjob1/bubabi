@@ -59,7 +59,14 @@ def download_document(request, pk):
     import requests
     from django.http import HttpResponse
 
-    file_url = doc.file.url
+    import cloudinary.utils, time
+
+file_url, _ = cloudinary.utils.cloudinary_url(
+    doc.file.name,
+    resource_type="raw",
+    sign_url=True,
+    expires_at=int(time.time()) + 60,
+)
 
     r = requests.get(file_url, stream=True)
 

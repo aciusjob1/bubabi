@@ -22,7 +22,6 @@ urlpatterns = [
     path('documents/<uuid:pk>/', views.view_document, name='view-document'),
     path('documents/<uuid:pk>/delete/', views.delete_document, name='delete-document'),
     path('documents/<uuid:pk>/download/', views.download_document, name='download-document'),
-    path('documents/<uuid:pk>/debug/', views.debug_document_url, name='debug-document'),
     
     # Judicial/Cases
     path('judicial/', views.file_judicial_case_view, name='judicial'),

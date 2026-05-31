@@ -1856,12 +1856,20 @@ def view_document(request, pk):
 
 
 
+
+import cloudinary.utils
+from datetime import datetime, timedelta
+
+
+
 def download_document(request, pk):
-    """Download document with proper Cloudinary transformation."""
+    """Download document with proper Cloudinary resource type."""
     from django.shortcuts import get_object_or_404
     from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponseNotFound
     from apps.identity.models import ClanDocument
+    from datetime import datetime, timedelta
     import cloudinary.utils
+    import re
     
     if not request.user.is_authenticated:
         return HttpResponseForbidden("Please log in")
@@ -1874,21 +1882,40 @@ def download_document(request, pk):
     if not doc.file or not doc.file.url:
         return HttpResponseNotFound("File not found")
     
-    # Extract public_id from the Cloudinary URL
     cloudinary_url = doc.file.url
+    print(f"Original URL: {cloudinary_url}")  # Debug
     
-    # Method 1: Add attachment flag via transformation
-    if 'cloudinary' in cloudinary_url:
-        # Get the public_id from the URL
-        # URL pattern: .../upload/v1/.../public_id.ext
-        parts = cloudinary_url.split('/upload/')
-        if len(parts) > 1:
-            public_part = parts[1].split('?')[0]
-            # Build download URL with attachment flag
-            download_url = f"{parts[0]}/upload/fl_attachment/{public_part}"
-            return HttpResponseRedirect(download_url)
+    # Extract public_id and resource type from URL
+    # Pattern: .../TYPE/upload/v1/PUBLIC_ID
+    match = re.search(r'/(raw|image|video)/upload/v1/(.+?)(?:\?|$)', cloudinary_url)
     
-    # Fallback: redirect to original
+    if match:
+        resource_type = match.group(1)
+        public_id = match.group(2)
+        
+        # For PDF files, use 'raw' resource type
+        if public_id.endswith('.pdf') or 'pdf' in public_id.lower():
+            resource_type = 'raw'
+        
+        try:
+            # Generate signed URL
+            signed_url = cloudinary.utils.cloudinary_url(
+                public_id,
+                resource_type=resource_type,
+                sign_url=True,
+                expires_at=datetime.now() + timedelta(hours=1)
+            )[0]
+            print(f"Signed URL: {signed_url}")  # Debug
+            return HttpResponseRedirect(signed_url)
+        except Exception as e:
+            print(f"Error generating signed URL: {e}")
+            # Fallback: add raw flag
+            fallback_url = cloudinary_url
+            if 'image' in fallback_url and public_id.endswith('.pdf'):
+                fallback_url = fallback_url.replace('/image/', '/raw/')
+            return HttpResponseRedirect(fallback_url)
+    
+    # Fallback to original
     return HttpResponseRedirect(cloudinary_url)
 
 

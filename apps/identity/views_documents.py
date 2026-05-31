@@ -30,7 +30,14 @@ def view_document(request, pk):
     # For PDF and images, use the stream URL directly
     stream_url = None
     if mime_type and (mime_type.startswith('image/') or mime_type == 'application/pdf'):
-        stream_url = doc.file.url  # Use direct URL for Cloudinary PDFs/images
+        try:
+            import cloudinary.utils, time
+            stream_url, _ = cloudinary.utils.cloudinary_url(
+                doc.file.name, resource_type="raw",
+                sign_url=True, expires_at=int(time.time()) + 600,
+            )
+        except Exception:
+            stream_url = doc.file.url
 
     context = {
         'document': doc,
@@ -65,3 +72,23 @@ def download_document(request, pk):
         return HttpResponseRedirect(doc.file.url)
 
 
+
+@login_required
+def stream_document(request, pk):
+    """Generate signed Cloudinary URL for inline viewing."""
+    doc = get_object_or_404(ClanDocument, pk=pk, clan=request.user.clan, is_active=True)
+    try:
+        import cloudinary
+        import cloudinary.utils
+        public_id = doc.file.name
+        signed_url, _ = cloudinary.utils.cloudinary_url(
+            public_id,
+            resource_type="raw",
+            sign_url=True,
+            expires_at=int(__import__("time").time()) + 600,
+        )
+        from django.http import HttpResponseRedirect
+        return HttpResponseRedirect(signed_url)
+    except Exception:
+        from django.http import HttpResponseRedirect
+        return HttpResponseRedirect(doc.file.url)

@@ -250,6 +250,56 @@ def treasurer_dashboard(request):
     return render(request, 'treasurer.html', context)
 
 
+
+
+# ══════════════════════════════════════════════
+# REPORTS
+# ══════════════════════════════════════════════
+
+def reports_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    
+    if not hasattr(request.user, 'clan') or not request.user.clan:
+        from django.http import HttpResponseBadRequest
+        return HttpResponseBadRequest("User not associated with any clan")
+    
+    clan = request.user.clan
+    monthly_data = []
+    periods = Contribution.objects.filter(member__clan=clan).values('period_label').distinct().order_by('period_label')
+    for p in periods:
+        label = p['period_label']
+        paid = Contribution.objects.filter(member__clan=clan, period_label=label, status=ContributionStatus.PAID).aggregate(Sum('amount_paid'))['amount_paid__sum'] or 0
+        expected = Contribution.objects.filter(member__clan=clan, period_label=label).aggregate(Sum('amount_due'))['amount_due__sum'] or 0
+        monthly_data.append({'period': label, 'paid': paid, 'expected': expected, 'rate': round((paid / expected * 100) if expected else 0, 1)})
+    expense_by_category = Expense.objects.filter(clan=clan).values('category').annotate(total=Sum('amount'), count=Count('id')).order_by('-total')
+    return render(request, 'reports.html', {
+        'monthly_data': monthly_data,
+        'expense_by_category': expense_by_category,
+        'total_collected': sum(m['paid'] for m in monthly_data),
+        'collection_rate': round(sum(m['paid'] for m in monthly_data) / sum(m['expected'] for m in monthly_data) * 100 if monthly_data and sum(m['expected'] for m in monthly_data) > 0 else 0, 1),
+        'balance': svc.get_clan_balance(clan),
+    })
+
+
+# ══════════════════════════════════════════════
+# PDF REPORTS
+# ══════════════════════════════════════════════
+
+
+def download_owing_pdf(request):
+    buffer = generate_owing_list(request.user.clan)
+    response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="bubabi-owing-list.pdf"'
+    return response
+
+
+def download_annual_pdf(request, year):
+    buffer = generate_annual_summary(request.user.clan, year)
+    response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="bubabi-annual-{year}.pdf"'
+    return response
+
 # ══════════════════════════════════════════════
 # DOCUMENT MANAGEMENT
 # ══════════════════════════════════════════════

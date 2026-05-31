@@ -1821,47 +1821,39 @@ def upload_constitution_view(request):
 
 
 @xframe_options_exempt
-def view_document(request, pk):
-    """Preview a document inline instead of downloading."""
-    from apps.identity.models import ClanDocument
-    doc = get_object_or_404(ClanDocument, pk=pk, clan=request.user.clan, is_active=True)
-    
-    # Determine file type
-    import mimetypes
-    mime_type, _ = mimetypes.guess_type(doc.file.name)
-    
-        # Read text file content server-side (Django templates cannot call .read())
-    file_content = None
-    if doc.file.name.lower().endswith((".txt", ".log", ".md", ".csv")):
-        try:
-            doc.file.open("rb")
-            file_content = doc.file.read().decode("utf-8", errors="replace")
-            doc.file.close()
-        except Exception:
-            file_content = None
 
+def view_document(request, pk):
+    """View document - for preview/in-browser viewing."""
+    from django.shortcuts import get_object_or_404, render
+    from django.http import HttpResponseForbidden, HttpResponseNotFound
+    from apps.identity.models import ClanDocument
+    
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden("Please log in")
+    
+    try:
+        doc = get_object_or_404(ClanDocument, pk=pk, clan=request.user.clan, is_active=True)
+    except AttributeError:
+        return HttpResponseForbidden("No clan association")
+    
+    if not doc.file or not doc.file.url:
+        return HttpResponseNotFound("File not found")
+    
+    # For preview, use the original URL without force download
+    preview_url = doc.file.url
+    
+    # For PDFs, use /raw/upload/ but WITHOUT fl_attachment
+    if '.pdf' in preview_url.lower():
+        preview_url = preview_url.replace('/image/', '/raw/')
+        preview_url = preview_url.split('?')[0]  # Remove any existing flags
+    
     context = {
         'document': doc,
-        'mime_type': mime_type or 'application/octet-stream',
-        'is_image': mime_type and mime_type.startswith('image/'),
-        'is_pdf': mime_type == 'application/pdf',
-        'is_text': doc.file.name.lower().endswith((".txt", ".log", ".md", ".csv")) or (mime_type and mime_type.startswith('text/')),
-        'file_content': file_content,
+        'preview_url': preview_url,
+        'is_pdf': doc.file.name.lower().endswith('.pdf')
     }
+    
     return render(request, 'view_document.html', context)
-
-
-
-
-
-
-
-
-import cloudinary.utils
-from datetime import datetime, timedelta
-
-
-
 
 
 def download_document(request, pk):

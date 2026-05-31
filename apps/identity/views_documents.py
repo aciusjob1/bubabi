@@ -53,20 +53,25 @@ def view_document(request, pk):
 
 @login_required
 def download_document(request, pk):
-    """Secure download via Django (fixes Cloudinary 401)."""
-    doc = get_object_or_404(ClanDocument, pk=pk, clan=request.user.clan, is_active=True)
+    """Secure download via Django with signed Cloudinary URL."""
+    doc = get_object_or_404(
+        ClanDocument,
+        pk=pk,
+        clan=request.user.clan,
+        is_active=True
+    )
 
+    import cloudinary.utils
+    import time
     import requests
     from django.http import HttpResponse
 
-    import cloudinary.utils, time
-
-file_url, _ = cloudinary.utils.cloudinary_url(
-    doc.file.name,
-    resource_type="raw",
-    sign_url=True,
-    expires_at=int(time.time()) + 60,
-)
+    file_url, _ = cloudinary.utils.cloudinary_url(
+        doc.file.name,
+        resource_type="raw",
+        sign_url=True,
+        expires_at=int(time.time()) + 60,
+    )
 
     r = requests.get(file_url, stream=True)
 
@@ -80,8 +85,6 @@ file_url, _ = cloudinary.utils.cloudinary_url(
     response['Content-Disposition'] = f'attachment; filename="{doc.name}"'
 
     return response
-
-
 
 @login_required
 def stream_document(request, pk):

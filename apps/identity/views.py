@@ -1863,8 +1863,9 @@ from datetime import datetime, timedelta
 
 
 
+
 def download_document(request, pk):
-    """Download document - always use raw resource type for PDFs."""
+    """Download document using correct Cloudinary URL format."""
     from django.shortcuts import get_object_or_404
     from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponseNotFound
     from apps.identity.models import ClanDocument
@@ -1880,22 +1881,25 @@ def download_document(request, pk):
     if not doc.file or not doc.file.url:
         return HttpResponseNotFound("File not found")
     
-    # Get the Cloudinary URL
-    original_url = doc.file.url
+    # Get the Cloudinary URL from the database
+    cloudinary_url = doc.file.url
     
-    # For PDF documents, convert to raw resource type
-    if '.pdf' in original_url.lower() or doc.file.name.endswith('.pdf'):
-        # Replace /image/ with /raw/ in the URL
-        corrected_url = original_url.replace('/image/', '/raw/')
+    # For PDF files, ensure we're using the correct format
+    if '.pdf' in cloudinary_url.lower():
         # Remove any existing query parameters
-        corrected_url = corrected_url.split('?')[0]
-        # Add download flag
-        corrected_url = f"{corrected_url}?fl_attachment=1"
+        base_url = cloudinary_url.split('?')[0]
         
-        return HttpResponseRedirect(corrected_url)
+        # Ensure it uses /raw/upload/ instead of /image/upload/
+        if '/image/' in base_url:
+            base_url = base_url.replace('/image/', '/raw/')
+        
+        # Add force download flag
+        download_url = f"{base_url}?fl_attachment=1"
+        
+        return HttpResponseRedirect(download_url)
     
-    # For other files, use original URL
-    return HttpResponseRedirect(original_url)
+    # For other files, redirect directly
+    return HttpResponseRedirect(cloudinary_url)
 
 
 def registration_pending_view(request):
@@ -1970,3 +1974,24 @@ def force_download_document(request, pk):
     response['Content-Disposition'] = f'attachment; filename="{doc.file.name.split("/")[-1]}"'
     return response
 
+
+def debug_document_url(request, pk):
+    """Debug endpoint to see the actual Cloudinary URL."""
+    from django.shortcuts import get_object_or_404
+    from django.http import JsonResponse, HttpResponseForbidden
+    from apps.identity.models import ClanDocument
+    
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden("Please log in")
+    
+    try:
+        doc = get_object_or_404(ClanDocument, pk=pk, clan=request.user.clan, is_active=True)
+    except AttributeError:
+        return HttpResponseForbidden("No clan association")
+    
+    return JsonResponse({
+        'title': doc.title,
+        'original_url': doc.file.url,
+        'file_name': doc.file.name,
+        'file_type': doc.file.name.split('.')[-1] if '.' in doc.file.name else 'unknown'
+    })

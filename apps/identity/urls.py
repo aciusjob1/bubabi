@@ -20,7 +20,7 @@ urlpatterns = [
     path('documents/', views.documents_view, name='documents'),
     path('documents/upload/', views.upload_document_view, name='upload-document'),
     path('documents/<uuid:pk>/', views.view_document, name='view-document'),
-    path('documents/<uuid:pk>/download/', views.view_document, name='download-document'),
+    path('documents/<uuid:pk>/download/', views.download_document, name='download-document'),
     
     # Judicial/Cases
     path('judicial/', views.file_judicial_case_view, name='judicial'),
@@ -56,4 +56,5 @@ urlpatterns = [
     path('notifications/', views.notifications_view, name='notifications'),
     path('notifications/<int:pk>/read/', views.mark_notification_read, name='mark-notification-read'),
     path('notifications/read-all/', views.mark_all_notifications_read, name='mark-all-read'),
+    path('documents/<uuid:pk>/force-download/', views.force_download_document, name='force-download-document'),
 ]

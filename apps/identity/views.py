@@ -1853,6 +1853,61 @@ def view_document(request, pk):
 
 
 
+def download_document(request, pk):
+    """Download document file directly."""
+    from django.shortcuts import get_object_or_404
+    from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotFound
+    from django.core.files.storage import default_storage
+    import mimetypes
+    
+    # Check authentication
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden("Please log in to access documents")
+    
+    # Get document with clan validation
+    try:
+        doc = get_object_or_404(
+            ClanDocument, 
+            pk=pk, 
+            clan=request.user.clan, 
+            is_active=True
+        )
+    except AttributeError:
+        return HttpResponseForbidden("User not associated with any clan")
+    
+    # Check if file exists
+    if not doc.file or not doc.file.url:
+        return HttpResponseNotFound("File not found")
+    
+    # Get the file from storage
+    try:
+        # For Cloudinary, redirect to the actual file URL
+        if 'cloudinary' in str(doc.file.storage.__class__):
+            from django.http import HttpResponseRedirect
+            return HttpResponseRedirect(doc.file.url)
+        
+        # For local storage, serve the file
+        file_path = doc.file.path
+        with open(file_path, 'rb') as f:
+            file_content = f.read()
+        
+        # Get MIME type
+        mime_type, encoding = mimetypes.guess_type(doc.file.name)
+        if not mime_type:
+            mime_type = 'application/octet-stream'
+        
+        # Create response
+        response = HttpResponse(file_content, content_type=mime_type)
+        response['Content-Disposition'] = f'attachment; filename="{doc.file.name.split("/")[-1]}"'
+        response['Content-Length'] = doc.file.size
+        
+        return response
+        
+    except Exception as e:
+        return HttpResponseNotFound(f"Error accessing file: {str(e)}")
+
+
+
 def registration_pending_view(request):
     clan = request.user.clan if request.user.is_authenticated and hasattr(request.user, 'clan') else Clan.objects.first()
     clan_banner = clan.banner_image if clan and clan.banner_image else None
@@ -1884,3 +1939,44 @@ def accept_terms_view(request):
         return redirect('member-dashboard')
     
     return render(request, 'accept_terms_view.html')
+
+
+def force_download_document(request, pk):
+    """Force download document with proper headers."""
+    from django.shortcuts import get_object_or_404
+    from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotFound
+    from django.http import HttpResponseRedirect
+    import mimetypes
+    
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden("Please log in")
+    
+    try:
+        doc = get_object_or_404(
+            ClanDocument, 
+            pk=pk, 
+            clan=request.user.clan, 
+            is_active=True
+        )
+    except AttributeError:
+        return HttpResponseForbidden("No clan association")
+    
+    if not doc.file or not doc.file.url:
+        return HttpResponseNotFound("File not found")
+    
+    # For Cloudinary, add download flag to URL
+    if 'cloudinary' in str(doc.file.url):
+        # Add flags to force download
+        download_url = doc.file.url
+        if '?' in download_url:
+            download_url += '&flags=attachment'
+        else:
+            download_url += '?flags=attachment'
+        
+        return HttpResponseRedirect(download_url)
+    
+    # For local files
+    response = HttpResponse(doc.file.read(), content_type='application/octet-stream')
+    response['Content-Disposition'] = f'attachment; filename="{doc.file.name.split("/")[-1]}"'
+    return response
+

@@ -53,23 +53,10 @@ def view_document(request, pk):
 
 @login_required
 def download_document(request, pk):
-    """Generate signed Cloudinary URL for secure download."""
+    """Download document from Cloudinary."""
     doc = get_object_or_404(ClanDocument, pk=pk, clan=request.user.clan, is_active=True)
-    try:
-        import cloudinary
-        import cloudinary.utils
-        public_id = doc.file.name
-        signed_url, _ = cloudinary.utils.cloudinary_url(
-            public_id,
-            resource_type="raw",
-            sign_url=True,
-            expires_at=int(__import__("time").time()) + 300,
-        )
-        from django.http import HttpResponseRedirect
-        return HttpResponseRedirect(signed_url)
-    except Exception:
-        from django.http import HttpResponseRedirect
-        return HttpResponseRedirect(doc.file.url)
+    from django.http import HttpResponseRedirect
+    return HttpResponseRedirect(doc.file.url)
 
 
 

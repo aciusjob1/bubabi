@@ -1444,6 +1444,17 @@ def moderator_dashboard(request):
 
 @login_required
 def documents_view(request):
+
+    # Get user's role for permission checking
+    user_role = None
+    try:
+        from apps.identity.models import ClanMembership
+        membership = ClanMembership.objects.get(user=request.user, clan=request.user.clan)
+        user_role = membership.role
+    except:
+        pass
+    
+
     from apps.identity.models import ClanDocument, JudicialCase
     clan = request.user.clan
     documents = ClanDocument.objects.filter(clan=clan, is_active=True, is_public=True).select_related('uploaded_by__person').order_by('-created_at')
@@ -1930,8 +1941,9 @@ def upload_constitution_view(request):
 
 @xframe_options_exempt
 
+
 def view_document(request, pk):
-    """View document - for preview/in-browser viewing."""
+    """View document - optimized for in-app preview."""
     from django.shortcuts import get_object_or_404, render
     from django.http import HttpResponseForbidden, HttpResponseNotFound
     from apps.identity.models import ClanDocument
@@ -1947,30 +1959,30 @@ def view_document(request, pk):
     if not doc.file or not doc.file.url:
         return HttpResponseNotFound("File not found")
     
-    # For preview, use the original URL without force download
+    # Get the Cloudinary URL for preview
     preview_url = doc.file.url
     
-    # For PDFs, use /raw/upload/ but WITHOUT fl_attachment
-    if '.pdf' in preview_url.lower():
-        preview_url = preview_url.replace('/image/', '/raw/')
-        preview_url = preview_url.split('?')[0]  # Remove any existing flags
+    # For PDFs, convert to raw and remove download flags
+    if doc.file.name.lower().endswith('.pdf'):
+        # Use raw resource type
+        if '/image/' in preview_url:
+            preview_url = preview_url.replace('/image/', '/raw/')
+        # Remove any forced download parameters
+        preview_url = preview_url.split('?')[0]
     
+    # Check file type for preview compatibility
+    file_extension = doc.file.name.split('.')[-1].lower()
+    previewable_types = ['pdf', 'jpg', 'jpeg', 'png', 'gif', 'txt', 'md']
+    is_previewable = file_extension in previewable_types
     
-        # Get user's role for permission checking
-        user_role = None
-        try:
-            from apps.identity.models import ClanMembership
-            membership = ClanMembership.objects.get(user=request.user, clan=request.user.clan)
-            user_role = membership.role
-        except:
-            pass
-        
-        context['user_role'] = user_role
-
-        context = {
+    context = {
         'document': doc,
         'preview_url': preview_url,
-        'is_pdf': doc.file.name.lower().endswith('.pdf')
+        'is_previewable': is_previewable,
+        'file_extension': file_extension,
+        'is_pdf': file_extension == 'pdf',
+        'is_image': file_extension in ['jpg', 'jpeg', 'png', 'gif'],
+        'is_text': file_extension in ['txt', 'md'],
     }
     
     return render(request, 'view_document.html', context)
@@ -2109,9 +2121,15 @@ def debug_document_url(request, pk):
     })
 
 @login_required
+
+@login_required
 def delete_document(request, pk):
-    """Delete a document - only admins, document uploader, or clan leaders can delete."""
-    from django.shortcuts import get_object_or_404, redirect
+    """Delete a document with role-based permissions.
+    
+    Constitution: Only System Admin and Moderator can delete
+    Other documents: Uploader, Clan leaders, Admin, Moderator
+    """
+    from django.shortcuts import get_object_or_404, redirect, render
     from django.http import HttpResponseForbidden, JsonResponse
     from django.contrib import messages
     from apps.identity.models import ClanDocument, ClanMembership
@@ -2122,6 +2140,11 @@ def delete_document(request, pk):
     except AttributeError:
         messages.error(request, "You are not associated with any clan")
         return redirect('documents')
+    
+    # Check if this is the Constitution
+    is_constitution = (doc.document_type == 'constitution' or 
+                       'constitution' in doc.title.lower() or
+                       doc.title.lower() == 'constitution')
     
     # Check permissions
     can_delete = False
@@ -2134,29 +2157,39 @@ def delete_document(request, pk):
     except ClanMembership.DoesNotExist:
         user_role = None
     
-    # Permission logic:
-    # 1. Document uploader can delete their own documents
-    if doc.uploaded_by == request.user:
-        can_delete = True
-        reason = "You are the document uploader"
+    # SPECIAL RULE: Constitution can only be deleted by System Admin or Moderator
+    if is_constitution:
+        if request.user.is_superuser or request.user.is_staff or user_role == 'moderator':
+            can_delete = True
+            reason = "You are a System Administrator or Moderator (Constitution deletion)"
+        else:
+            messages.error(request, "Only System Administrators and Moderators can delete the Constitution.")
+            return redirect('view-document', pk=pk)
     
-    # 2. Clan leaders (Chairman, Secretary, Treasurer) can delete any document
-    elif user_role in ['chairman', 'secretary', 'treasurer', 'elder']:
-        can_delete = True
-        reason = f"You are a clan {user_role}"
-    
-    # 3. System admins can delete any document
-    elif request.user.is_superuser or request.user.is_staff:
-        can_delete = True
-        reason = "You are a system administrator"
-    
-    # 4. Moderators can delete documents they have moderation rights for
-    elif user_role == 'moderator' and doc.document_type in ['general', 'announcement']:
-        can_delete = True
-        reason = "You are a moderator for this document type"
+    # Regular documents: Normal permission rules apply
+    else:
+        # 1. Document uploader can delete their own documents
+        if doc.uploaded_by == request.user:
+            can_delete = True
+            reason = "You are the document uploader"
+        
+        # 2. Clan leaders can delete any document
+        elif user_role in ['chairman', 'secretary', 'treasurer', 'elder']:
+            can_delete = True
+            reason = f"You are a clan {user_role}"
+        
+        # 3. System admins can delete any document
+        elif request.user.is_superuser or request.user.is_staff:
+            can_delete = True
+            reason = "You are a system administrator"
+        
+        # 4. Moderators can delete general/announcement documents
+        elif user_role == 'moderator' and doc.document_type in ['general', 'announcement']:
+            can_delete = True
+            reason = "You are a moderator for this document type"
     
     if not can_delete:
-        messages.error(request, f"You don't have permission to delete this document. Only the uploader, clan leaders, or admins can delete documents.")
+        messages.error(request, f"You don't have permission to delete this document.")
         return redirect('view-document', pk=pk)
     
     # Delete the document
@@ -2177,5 +2210,6 @@ def delete_document(request, pk):
     return render(request, 'confirm_delete_document.html', {
         'document': doc,
         'reason': reason,
-        'can_delete': can_delete
+        'can_delete': can_delete,
+        'is_constitution': is_constitution
     })

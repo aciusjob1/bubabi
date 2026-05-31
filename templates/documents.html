@@ -102,6 +102,13 @@
                 <div style="display:inline-flex; gap:0.35rem;">
                   <a href="{% url 'view-document' doc.id %}" class="panel-btn-link" style="background:#6366f1; font-size:0.7rem; padding:0.25rem 0.6rem; border-radius:6px;">👁 {% trans "View" %}</a>
                   <a href="{% url 'download-document' doc.id %}" class="panel-btn-link" style="background:#3b82f6; font-size:0.7rem; padding:0.25rem 0.6rem; border-radius:6px;">📥 {% trans "Download" %}</a>
+
+                  {% if user.is_superuser or user_role == 'moderator' %}
+                  <a href="{% url 'delete-document' doc.id %}" class="panel-btn-link" style="background:#dc3545; font-size:0.7rem; padding:0.25rem 0.6rem; border-radius:6px;" onclick="return confirm('Are you sure you want to delete this document?')">
+                    🗑️ {% trans "Delete" %}
+                  </a>
+                  {% endif %}
+
                 </div>
               </td>
             </tr>

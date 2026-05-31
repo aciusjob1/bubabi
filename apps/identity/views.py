@@ -286,7 +286,19 @@ def home_view(request):
 def dashboard(request):
     clan = request.user.clan
     from apps.genealogy.models import Family
-    context = {
+    
+        # Get user's role for permission checking
+        user_role = None
+        try:
+            from apps.identity.models import ClanMembership
+            membership = ClanMembership.objects.get(user=request.user, clan=request.user.clan)
+            user_role = membership.role
+        except:
+            pass
+        
+        context['user_role'] = user_role
+
+        context = {
         'clan': clan, 'balance': svc.get_clan_balance(clan),
         'active_count': Member.objects.filter(clan=clan, status=MemberStatus.ACTIVE).count(),
         'total_members': Member.objects.filter(clan=clan).count(),
@@ -315,7 +327,19 @@ def treasurer_dashboard(request):
     loans_outstanding = Loan.objects.filter(borrower__clan=clan, status__in=['approved', 'disbursed']).aggregate(Sum('amount_approved'))['amount_approved__sum'] or 0
     unverified = Contribution.objects.filter(member__clan=clan, status=ContributionStatus.PAID, verified_by__isnull=True).select_related('member__person', 'recorded_by__person')
     
-    context = {
+    
+        # Get user's role for permission checking
+        user_role = None
+        try:
+            from apps.identity.models import ClanMembership
+            membership = ClanMembership.objects.get(user=request.user, clan=request.user.clan)
+            user_role = membership.role
+        except:
+            pass
+        
+        context['user_role'] = user_role
+
+        context = {
         'balance': svc.get_clan_balance(clan),
         'total_collected': Contribution.objects.filter(member__clan=clan, status=ContributionStatus.PAID).aggregate(Sum('amount_paid'))['amount_paid__sum'] or 0,
         'total_expenses': Expense.objects.filter(clan=clan).aggregate(Sum('amount'))['amount__sum'] or 0,
@@ -337,7 +361,19 @@ def secretary_dashboard(request):
     from apps.events.models import ClanEvent
     clan = request.user.clan
     now = timezone.now()
-    context = {
+    
+        # Get user's role for permission checking
+        user_role = None
+        try:
+            from apps.identity.models import ClanMembership
+            membership = ClanMembership.objects.get(user=request.user, clan=request.user.clan)
+            user_role = membership.role
+        except:
+            pass
+        
+        context['user_role'] = user_role
+
+        context = {
         'active_count': Member.objects.filter(clan=clan, status=MemberStatus.ACTIVE).count(),
         'pending_count': Member.objects.filter(clan=clan, status=MemberStatus.PENDING).count(),
         'pending_members': Member.objects.filter(clan=clan, status__in=[MemberStatus.INVITED, MemberStatus.PENDING]).select_related('person', 'invited_by__person')[:10],
@@ -354,7 +390,19 @@ def elder_dashboard(request):
     from apps.governance.constants import VoteStatus
     clan = request.user.clan
     elders = [m for m in Member.objects.filter(clan=clan, status=MemberStatus.ACTIVE).select_related('person').prefetch_related('clan_roles__role') if m.is_elder]
-    context = {
+    
+        # Get user's role for permission checking
+        user_role = None
+        try:
+            from apps.identity.models import ClanMembership
+            membership = ClanMembership.objects.get(user=request.user, clan=request.user.clan)
+            user_role = membership.role
+        except:
+            pass
+        
+        context['user_role'] = user_role
+
+        context = {
         'clan': clan,
         'family_count': Family.objects.filter(clan=clan).count(),
         'persons_count': Person.objects.count(),
@@ -381,7 +429,19 @@ def member_dashboard(request):
     member = request.user
     my_contributions = Contribution.objects.filter(member=member).order_by('-due_date')
     my_balance_due = my_contributions.filter(status__in=[ContributionStatus.DUE, ContributionStatus.LATE, ContributionStatus.PENALIZED]).aggregate(total=Sum('amount_due'))['total'] or 0
-    context = {
+    
+        # Get user's role for permission checking
+        user_role = None
+        try:
+            from apps.identity.models import ClanMembership
+            membership = ClanMembership.objects.get(user=request.user, clan=request.user.clan)
+            user_role = membership.role
+        except:
+            pass
+        
+        context['user_role'] = user_role
+
+        context = {
         'my_contributions': my_contributions[:10],
         'my_balance_due': my_balance_due,
         'my_unpaid_fines': Fine.objects.filter(member=member, status=FineStatus.UNPAID).count(),
@@ -397,7 +457,19 @@ def system_dashboard(request):
     from apps.genealogy.models import Relationship
     from apps.governance.models import VoteCast
     all_clans = [{'clan': c, 'member_count': Member.objects.filter(clan=c).count(), 'balance': svc.get_clan_balance(c)} for c in Clan.objects.all()]
-    context = {
+    
+        # Get user's role for permission checking
+        user_role = None
+        try:
+            from apps.identity.models import ClanMembership
+            membership = ClanMembership.objects.get(user=request.user, clan=request.user.clan)
+            user_role = membership.role
+        except:
+            pass
+        
+        context['user_role'] = user_role
+
+        context = {
         'total_clans': Clan.objects.count(), 'total_members': Member.objects.count(),
         'total_persons': Person.objects.count(), 'audit_count': AuditLog.objects.count(),
         'contribution_count': Contribution.objects.count(), 'ledger_count': LedgerEntry.objects.count(),
@@ -423,7 +495,19 @@ def members_view(request):
     if search:
         members = members.filter(Q(person__full_name__icontains=search) | Q(email__icontains=search) | Q(phone__icontains=search))
     members = members.order_by('person__full_name')
-    context = {
+    
+        # Get user's role for permission checking
+        user_role = None
+        try:
+            from apps.identity.models import ClanMembership
+            membership = ClanMembership.objects.get(user=request.user, clan=request.user.clan)
+            user_role = membership.role
+        except:
+            pass
+        
+        context['user_role'] = user_role
+
+        context = {
         'members': members,
         'active_count': members.filter(status=MemberStatus.ACTIVE).count(),
         'pending_count': members.filter(status=MemberStatus.PENDING).count(),
@@ -439,7 +523,19 @@ def member_profile(request, pk):
     member = get_object_or_404(Member, pk=pk, clan=request.user.clan)
     from apps.genealogy.models import PersonFamilyMembership
     from apps.governance.models import MemberRole
-    context = {
+    
+        # Get user's role for permission checking
+        user_role = None
+        try:
+            from apps.identity.models import ClanMembership
+            membership = ClanMembership.objects.get(user=request.user, clan=request.user.clan)
+            user_role = membership.role
+        except:
+            pass
+        
+        context['user_role'] = user_role
+
+        context = {
         'profile_member': member,
         'contributions': Contribution.objects.filter(member=member).order_by('-due_date')[:10],
         'loans': Loan.objects.filter(borrower=member).order_by('-created_at')[:5],
@@ -1752,7 +1848,19 @@ def system_cleanup_view(request):
         return redirect('system-cleanup')
     
     # GET — show current counts
-    context = {
+    
+        # Get user's role for permission checking
+        user_role = None
+        try:
+            from apps.identity.models import ClanMembership
+            membership = ClanMembership.objects.get(user=request.user, clan=request.user.clan)
+            user_role = membership.role
+        except:
+            pass
+        
+        context['user_role'] = user_role
+
+        context = {
         'clan': clan,
         'stats': {
             'contributions': Contribution.objects.filter(member__clan=clan).count(),
@@ -1847,7 +1955,19 @@ def view_document(request, pk):
         preview_url = preview_url.replace('/image/', '/raw/')
         preview_url = preview_url.split('?')[0]  # Remove any existing flags
     
-    context = {
+    
+        # Get user's role for permission checking
+        user_role = None
+        try:
+            from apps.identity.models import ClanMembership
+            membership = ClanMembership.objects.get(user=request.user, clan=request.user.clan)
+            user_role = membership.role
+        except:
+            pass
+        
+        context['user_role'] = user_role
+
+        context = {
         'document': doc,
         'preview_url': preview_url,
         'is_pdf': doc.file.name.lower().endswith('.pdf')
@@ -1986,4 +2106,76 @@ def debug_document_url(request, pk):
         'original_url': doc.file.url,
         'file_name': doc.file.name,
         'file_type': doc.file.name.split('.')[-1] if '.' in doc.file.name else 'unknown'
+    })
+
+@login_required
+def delete_document(request, pk):
+    """Delete a document - only admins, document uploader, or clan leaders can delete."""
+    from django.shortcuts import get_object_or_404, redirect
+    from django.http import HttpResponseForbidden, JsonResponse
+    from django.contrib import messages
+    from apps.identity.models import ClanDocument, ClanMembership
+    
+    # Get the document
+    try:
+        doc = get_object_or_404(ClanDocument, pk=pk, clan=request.user.clan, is_active=True)
+    except AttributeError:
+        messages.error(request, "You are not associated with any clan")
+        return redirect('documents')
+    
+    # Check permissions
+    can_delete = False
+    reason = ""
+    
+    # Get user's role in the clan
+    try:
+        membership = ClanMembership.objects.get(user=request.user, clan=request.user.clan)
+        user_role = membership.role
+    except ClanMembership.DoesNotExist:
+        user_role = None
+    
+    # Permission logic:
+    # 1. Document uploader can delete their own documents
+    if doc.uploaded_by == request.user:
+        can_delete = True
+        reason = "You are the document uploader"
+    
+    # 2. Clan leaders (Chairman, Secretary, Treasurer) can delete any document
+    elif user_role in ['chairman', 'secretary', 'treasurer', 'elder']:
+        can_delete = True
+        reason = f"You are a clan {user_role}"
+    
+    # 3. System admins can delete any document
+    elif request.user.is_superuser or request.user.is_staff:
+        can_delete = True
+        reason = "You are a system administrator"
+    
+    # 4. Moderators can delete documents they have moderation rights for
+    elif user_role == 'moderator' and doc.document_type in ['general', 'announcement']:
+        can_delete = True
+        reason = "You are a moderator for this document type"
+    
+    if not can_delete:
+        messages.error(request, f"You don't have permission to delete this document. Only the uploader, clan leaders, or admins can delete documents.")
+        return redirect('view-document', pk=pk)
+    
+    # Delete the document
+    if request.method == 'POST':
+        doc_title = doc.title
+        doc.is_active = False  # Soft delete
+        doc.save()
+        
+        messages.success(request, f'Document "{doc_title}" has been deleted successfully by {reason}.')
+        
+        # If it's an AJAX request
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'success': True, 'message': f'Document "{doc_title}" deleted'})
+        
+        return redirect('documents')
+    
+    # GET request - show confirmation page
+    return render(request, 'confirm_delete_document.html', {
+        'document': doc,
+        'reason': reason,
+        'can_delete': can_delete
     })

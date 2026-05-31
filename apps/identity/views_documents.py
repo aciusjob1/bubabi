@@ -53,10 +53,26 @@ def view_document(request, pk):
 
 @login_required
 def download_document(request, pk):
-    """Download document from Cloudinary."""
+    """Secure download via Django (fixes Cloudinary 401)."""
     doc = get_object_or_404(ClanDocument, pk=pk, clan=request.user.clan, is_active=True)
-    from django.http import HttpResponseRedirect
-    return HttpResponseRedirect(doc.file.url)
+
+    import requests
+    from django.http import HttpResponse
+
+    file_url = doc.file.url
+
+    r = requests.get(file_url, stream=True)
+
+    if r.status_code != 200:
+        return HttpResponse("File not accessible", status=403)
+
+    response = HttpResponse(
+        r.content,
+        content_type='application/octet-stream'
+    )
+    response['Content-Disposition'] = f'attachment; filename="{doc.name}"'
+
+    return response
 
 
 

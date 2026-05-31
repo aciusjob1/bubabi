@@ -1444,7 +1444,6 @@ def moderator_dashboard(request):
 
 @login_required
 def documents_view(request):
-
     # Get user's role for permission checking
     user_role = None
     try:
@@ -1454,25 +1453,22 @@ def documents_view(request):
     except:
         pass
     
-
-    from apps.identity.models import ClanDocument, JudicialCase
-    clan = request.user.clan
-    documents = ClanDocument.objects.filter(clan=clan, is_active=True, is_public=True).select_related('uploaded_by__person').order_by('-created_at')
-    if request.user.is_moderator or request.user.is_superuser:
-        cases = JudicialCase.objects.filter(clan=clan)
-    else:
-        cases = JudicialCase.objects.filter(clan=clan, is_confidential=False)
-    cases = cases.select_related('filed_by__person', 'presided_by__person').order_by('-created_at')
+    documents = ClanDocument.objects.filter(clan=request.user.clan, is_active=True).order_by('-created_at')
+    
+    # Group documents by type
     documents_by_type = {}
     for doc in documents:
-        type_name = doc.get_document_type_display()
-        if type_name not in documents_by_type: documents_by_type[type_name] = []
-        documents_by_type[type_name].append(doc)
-    return render(request, 'documents.html', {
-        'documents': documents, 'documents_by_type': documents_by_type, 'cases': cases,
-        'can_upload': request.user.is_moderator or request.user.is_superuser or request.user.clan_roles.filter(is_active=True, role__hierarchy_level__gte=4).exists(),
-    })
-
+        doc_type = doc.document_type
+        if doc_type not in documents_by_type:
+            documents_by_type[doc_type] = []
+        documents_by_type[doc_type].append(doc)
+    
+    context = {
+        'documents': documents,
+        'documents_by_type': documents_by_type,
+        'user_role': user_role,
+    }
+    return render(request, 'documents.html', context)
 
 
 def upload_document_view(request):

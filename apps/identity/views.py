@@ -14,7 +14,7 @@ from django.utils import timezone
 from datetime import datetime, timedelta
 import json
 
-from apps.identity.models import Member, Person, Clan, Announcement, AnnouncementComment, Notification
+from apps.identity.models import Member, Person, Clan, Announcement, AnnouncementComment, Notification, ClanDocument
 from apps.identity.constants import MemberStatus
 from apps.identity.services.membership_service import MembershipService
 from apps.identity.notification_service import NotificationService
@@ -1853,12 +1853,12 @@ def view_document(request, pk):
 
 
 
+
 def download_document(request, pk):
-    """Download document file directly."""
+    """Download document file directly from Cloudinary."""
     from django.shortcuts import get_object_or_404
-    from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotFound
-    from django.core.files.storage import default_storage
-    import mimetypes
+    from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponseNotFound
+    from apps.identity.models import ClanDocument
     
     # Check authentication
     if not request.user.is_authenticated:
@@ -1879,33 +1879,15 @@ def download_document(request, pk):
     if not doc.file or not doc.file.url:
         return HttpResponseNotFound("File not found")
     
-    # Get the file from storage
-    try:
-        # For Cloudinary, redirect to the actual file URL
-        if 'cloudinary' in str(doc.file.storage.__class__):
-            from django.http import HttpResponseRedirect
-            return HttpResponseRedirect(doc.file.url)
-        
-        # For local storage, serve the file
-        file_path = doc.file.path
-        with open(file_path, 'rb') as f:
-            file_content = f.read()
-        
-        # Get MIME type
-        mime_type, encoding = mimetypes.guess_type(doc.file.name)
-        if not mime_type:
-            mime_type = 'application/octet-stream'
-        
-        # Create response
-        response = HttpResponse(file_content, content_type=mime_type)
-        response['Content-Disposition'] = f'attachment; filename="{doc.file.name.split("/")[-1]}"'
-        response['Content-Length'] = doc.file.size
-        
-        return response
-        
-    except Exception as e:
-        return HttpResponseNotFound(f"Error accessing file: {str(e)}")
-
+    # Redirect to Cloudinary URL with download flag
+    download_url = doc.file.url
+    if 'cloudinary' in download_url:
+        if '?' in download_url:
+            download_url += '&flags=attachment'
+        else:
+            download_url += '?flags=attachment'
+    
+    return HttpResponseRedirect(download_url)
 
 
 def registration_pending_view(request):

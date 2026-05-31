@@ -21,7 +21,7 @@
         {% if document.file.size %}· {{ document.file.size|filesizeformat }}{% endif %}
       </p>
     </div>
-    <a href="{% url 'force-download-document' document.id %}" class="btn btn-green" style="white-space:nowrap;">
+    <a href="{% url 'download-document' document.id %}" class="btn btn-green" style="white-space:nowrap;">
       📥 {% trans "Download" %}
     </a>
   </div>
@@ -48,7 +48,7 @@
         <div style="font-size:3rem; margin-bottom:0.5rem;">📎</div>
         <div style="font-weight:600; color:#374151; margin-bottom:0.3rem;">{{ document.title }}</div>
         <div style="font-size:0.85rem; color:#64748b;">{% trans "Preview not available for this file type." %}</div>
-        <a href="{% url 'force-download-document' document.id %}" class="btn btn-green" style="margin-top:1rem;">
+        <a href="{% url 'download-document' document.id %}" class="btn btn-green" style="margin-top:1rem;">
           📥 {% trans "Download File" %}
         </a>
       </div>

@@ -23,6 +23,9 @@ from apps.governance import views as governance_views
 from apps.financials import views as financials_views
 
 urlpatterns = [
+    path('robots.txt', lambda r: __import__('django.http', fromlist=['HttpResponse']).HttpResponse(
+        open('static/robots.txt').read(), content_type='text/plain'
+    )),
     # Admin
     path('admin/', admin.site.urls),
     

@@ -1,0 +1,11 @@
+User-agent: *
+Disallow: /system/
+Disallow: /documents/
+Disallow: /member/
+Disallow: /settings/
+Disallow: /admin/
+Disallow: /audit/
+Disallow: /financials/
+Allow: /login/
+Allow: /register/
+Allow: /about/

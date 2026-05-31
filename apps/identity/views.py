@@ -487,3 +487,17 @@ def delete_document(request, pk):
         'can_delete': can_delete,
         'is_constitution': is_constitution
     })
+
+@superuser_required
+def clan_settings_view(request):
+    """Update clan settings. Only superusers can access."""
+    clan = request.user.clan
+    if request.method == 'POST':
+        form = ClanSettingsForm(request.POST, request.FILES, instance=clan)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Clan settings updated successfully!")
+            return redirect('clan-settings')
+    else:
+        form = ClanSettingsForm(instance=clan)
+    return render(request, 'clan_settings.html', {'form': form, 'clan': clan})

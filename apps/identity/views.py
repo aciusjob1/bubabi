@@ -1,4 +1,6 @@
 from django.db.models import Q
+from apps.core.pdf.pdf_service import generate_annual_summary
+from apps.core.pdf.pdf_service import generate_owing_list
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.clickjacking import xframe_options_exempt
 from apps.core.decorators import rate_limit
@@ -505,6 +507,13 @@ def audit_view(request):
 
 
 def reports_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    
+    if not hasattr(request.user, 'clan') or not request.user.clan:
+        from django.http import HttpResponseBadRequest
+        return HttpResponseBadRequest("User not associated with any clan")
+    
     clan = request.user.clan
     monthly_data = []
     periods = Contribution.objects.filter(member__clan=clan).values('period_label').distinct().order_by('period_label')
@@ -1141,16 +1150,16 @@ def download_monthly_pdf(request, period_label):
     return response
 
 
+@login_required
 def download_owing_pdf(request):
-    from apps.core.pdf.pdf_service import generate_owing_list
     buffer = generate_owing_list(request.user.clan)
     response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="bubabi-owing-list.pdf"'
     return response
 
 
+@login_required
 def download_annual_pdf(request, year):
-    from apps.core.pdf.pdf_service import generate_annual_summary
     buffer = generate_annual_summary(request.user.clan, year)
     response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="bubabi-annual-{year}.pdf"'

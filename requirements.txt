@@ -15,3 +15,5 @@ africastalking
 requests
 cloudinary
 django-cloudinary-storage
+
+reportlab==4.2.5

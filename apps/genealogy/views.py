@@ -24,6 +24,8 @@ def family_list_view(request, person_pk=None):
         family.member_count = family.members.count()
         family.founder = gsvc.get_family_founder(family)
     
+    from apps.identity.models import Person
+    
     # Handle person selection for tree view
     person_pk = person_pk or request.GET.get('person')
     selected_person = None
@@ -35,7 +37,6 @@ def family_list_view(request, person_pk=None):
     
     if person_pk:
         try:
-            from apps.identity.models import Person
             selected_person = Person.objects.get(pk=person_pk)
             selected_member = selected_person.memberships.first()
             

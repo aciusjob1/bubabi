@@ -71,6 +71,7 @@ urlpatterns = [
     
     # Genealogy (family-tree is the main name templates expect)
     path('families/', genealogy_views.family_list_view, name='family-tree'),
+    path('families/<uuid:person_pk>/', genealogy_views.family_list_view, name='family-tree-person'),
     path('families/add/', genealogy_views.add_family_view, name='add-family'),
     path('families/<uuid:family_id>/', genealogy_views.family_detail_view, name='family-detail'),
     path('families/<uuid:family_id>/add-member/', genealogy_views.add_family_member_view, name='add-family-member'),

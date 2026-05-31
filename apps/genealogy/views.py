@@ -11,13 +11,56 @@ from apps.identity.models import Person, Member
 
 
 @login_required
-def family_list_view(request):
-    """List all families in the clan."""
+def family_list_view(request, person_pk=None):
+    """List all families and optionally show family tree for a person."""
+    from apps.genealogy.services.genealogy_service import GenealogyService
+    import json
+    
     clan = request.user.clan
+    gsvc = GenealogyService()
+    
     families = Family.objects.filter(clan=clan).select_related('founding_person')
     for family in families:
         family.member_count = family.members.count()
-    return render(request, 'family_tree.html', {'families': families})
+        family.founder = gsvc.get_family_founder(family)
+    
+    # Handle person selection for tree view
+    person_pk = person_pk or request.GET.get('person')
+    selected_person = None
+    tree_data = None
+    ancestors_tree = None
+    descendants_tree = None
+    person_details = None
+    selected_member = None
+    
+    if person_pk:
+        try:
+            from apps.identity.models import Person
+            selected_person = Person.objects.get(pk=person_pk)
+            selected_member = selected_person.memberships.first()
+            
+            ancestors = gsvc.get_ancestor_tree(selected_person, depth=4)
+            ancestors_tree = json.dumps(ancestors) if ancestors else None
+            
+            descendants = gsvc.get_family_tree(selected_person, depth=4)
+            descendants_tree = json.dumps(descendants) if descendants else None
+            tree_data = descendants_tree
+            person_details = gsvc.get_person_details(selected_person)
+        except (Person.DoesNotExist, ValueError):
+            pass
+    
+    all_persons = Person.objects.filter(family_memberships__family__clan=clan).distinct()
+    
+    return render(request, 'family_tree.html', {
+        'families': families,
+        'all_persons': all_persons,
+        'tree_data': tree_data,
+        'ancestors_tree': ancestors_tree,
+        'descendants_tree': descendants_tree,
+        'selected_person': selected_person,
+        'selected_member': selected_member,
+        'person_details': person_details,
+    })
 
 
 @login_required

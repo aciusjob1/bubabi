@@ -53,13 +53,33 @@ def view_document(request, pk):
 
 @login_required
 def download_document(request, pk):
-    """Secure download via Django with signed Cloudinary URL."""
-    doc = get_object_or_404(
-        ClanDocument,
-        pk=pk,
-        clan=request.user.clan,
-        is_active=True
-    )
+    """Download document from Cloudinary with proper error handling."""
+    from django.shortcuts import get_object_or_404
+    from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponseNotFound
+    from apps.identity.models import ClanDocument
+    
+    # Check authentication
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden("Please log in to access documents")
+    
+    # Get document with clan validation
+    try:
+        doc = get_object_or_404(
+            ClanDocument, 
+            pk=pk, 
+            clan=request.user.clan, 
+            is_active=True
+        )
+    except AttributeError:
+        return HttpResponseForbidden("User not associated with any clan")
+    
+    # Check if file exists
+    if not doc.file or not doc.file.url:
+        return HttpResponseNotFound("File not found")
+    
+    # Redirect to Cloudinary URL
+    return HttpResponseRedirect(doc.file.url)
+
 
     import cloudinary.utils
     import time

@@ -1854,40 +1854,42 @@ def view_document(request, pk):
 
 
 
+
+
 def download_document(request, pk):
-    """Download document file directly from Cloudinary."""
+    """Download document with proper Cloudinary transformation."""
     from django.shortcuts import get_object_or_404
     from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponseNotFound
     from apps.identity.models import ClanDocument
+    import cloudinary.utils
     
-    # Check authentication
     if not request.user.is_authenticated:
-        return HttpResponseForbidden("Please log in to access documents")
+        return HttpResponseForbidden("Please log in")
     
-    # Get document with clan validation
     try:
-        doc = get_object_or_404(
-            ClanDocument, 
-            pk=pk, 
-            clan=request.user.clan, 
-            is_active=True
-        )
+        doc = get_object_or_404(ClanDocument, pk=pk, clan=request.user.clan, is_active=True)
     except AttributeError:
-        return HttpResponseForbidden("User not associated with any clan")
+        return HttpResponseForbidden("No clan association")
     
-    # Check if file exists
     if not doc.file or not doc.file.url:
         return HttpResponseNotFound("File not found")
     
-    # Redirect to Cloudinary URL with download flag
-    download_url = doc.file.url
-    if 'cloudinary' in download_url:
-        if '?' in download_url:
-            download_url += '&flags=attachment'
-        else:
-            download_url += '?flags=attachment'
+    # Extract public_id from the Cloudinary URL
+    cloudinary_url = doc.file.url
     
-    return HttpResponseRedirect(download_url)
+    # Method 1: Add attachment flag via transformation
+    if 'cloudinary' in cloudinary_url:
+        # Get the public_id from the URL
+        # URL pattern: .../upload/v1/.../public_id.ext
+        parts = cloudinary_url.split('/upload/')
+        if len(parts) > 1:
+            public_part = parts[1].split('?')[0]
+            # Build download URL with attachment flag
+            download_url = f"{parts[0]}/upload/fl_attachment/{public_part}"
+            return HttpResponseRedirect(download_url)
+    
+    # Fallback: redirect to original
+    return HttpResponseRedirect(cloudinary_url)
 
 
 def registration_pending_view(request):

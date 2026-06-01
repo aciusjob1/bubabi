@@ -10,6 +10,7 @@ from apps.core import views as core_views
 # Identity
 from apps.identity import views as identity_views
 from apps.identity import views_documents
+from apps.security import views as security_views
 from apps.identity.views_terms import accept_terms_view
 from apps.identity.views_auditor import auditor_dashboard
 
@@ -159,6 +160,7 @@ urlpatterns = [
     path('privacy/', identity_views.privacy_view, name='privacy'),
     path('terms/', identity_views.terms_view, name='terms'),
     path('accept-terms/', accept_terms_view, name='accept-terms'),
+    path('verify-identity/', security_views.verify_identity, name='verify-identity'),
     
     # Settings
     path('settings/clan/', identity_views.clan_settings_view, name='clan-settings'),

@@ -173,8 +173,8 @@ AT_API_KEY = config('AT_API_KEY', default='')
 AT_SENDER_ID = config('AT_SENDER_ID', default='BUBABI')
 
 # ── Session ────────────────────────────────────────────────
-SESSION_COOKIE_AGE = 1209600  # 2 weeks
-SESSION_SAVE_EVERY_REQUEST = False
+SESSION_SAVE_EVERY_REQUEST = True  # Update session on every request (needed for idle timeout)
+SESSION_COOKIE_AGE = 600  # 10 minutes (overrides the 2-week default)
 
 # ── File Upload ────────────────────────────────────────────
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB

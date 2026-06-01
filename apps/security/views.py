@@ -1,5 +1,71 @@
+
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib import messages
+from django.utils import timezone
+from django.contrib.sessions.models import Session
+from apps.accounts.models_session import UserSession
+
+@staff_member_required
+def kill_session(request, session_id):
+    """Admin kills a user session."""
+    if request.method == 'POST':
+        try:
+            user_session = UserSession.objects.get(id=session_id, is_active=True)
+            
+            # Kill Django session
+            try:
+                django_session = Session.objects.get(session_key=user_session.session_key)
+                django_session.delete()
+            except Session.DoesNotExist:
+                pass
+            
+            # Mark as killed
+            user_session.is_active = False
+            user_session.logout_reason = 'admin_kill'
+            user_session.expired_at = timezone.now()
+            user_session.save()
+            
+            messages.success(request, f'Session for {user_session.user.email} terminated.')
+        except UserSession.DoesNotExist:
+            messages.error(request, 'Session not found.')
+    
+    return redirect('system')
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib import messages
+from django.utils import timezone
+from django.contrib.sessions.models import Session
+from apps.accounts.models_session import UserSession
+
+@staff_member_required
+def kill_session(request, session_id):
+    """Admin kills a user session."""
+    if request.method == 'POST':
+        try:
+            user_session = UserSession.objects.get(id=session_id, is_active=True)
+            
+            # Kill Django session
+            try:
+                django_session = Session.objects.get(session_key=user_session.session_key)
+                django_session.delete()
+            except Session.DoesNotExist:
+                pass
+            
+            # Mark as killed
+            user_session.is_active = False
+            user_session.logout_reason = 'admin_kill'
+            user_session.expired_at = timezone.now()
+            user_session.save()
+            
+            messages.success(request, f'Session for {user_session.user.email} terminated.')
+        except UserSession.DoesNotExist:
+            messages.error(request, 'Session not found.')
+    
+    return redirect('system')
+
 from django.contrib import messages
 from django.utils import timezone
 from apps.accounts.models_session import UserSession

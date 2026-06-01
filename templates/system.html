@@ -272,4 +272,81 @@ if (smsText && charCount) {
 }
 </script>
 
+
+  <!-- ═══════════════════════════════ -->
+  <!-- ACTIVE SESSIONS PANEL          -->
+  <!-- ═══════════════════════════════ -->
+  <div style="background:#fff; border-radius:12px; border:1px solid #e2e8f0; padding:1.5rem; margin-bottom:1.5rem; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+      <div>
+        <h3 style="font-size:1rem; font-weight:700; color:#1e293b; margin:0;">🔐 {% trans "Active Sessions" %}</h3>
+        <p style="font-size:0.75rem; color:#64748b; margin:0.2rem 0 0 0;">{% trans "Monitor and manage user sessions" %}</p>
+      </div>
+      <div style="display:flex; gap:0.5rem;">
+        <span style="background:#dbeafe; color:#1e40af; padding:0.3rem 0.8rem; border-radius:20px; font-size:0.75rem; font-weight:700;">
+          {{ active_sessions|default:0 }} {% trans "Active" %}
+        </span>
+        <span style="background:#f0fdf4; color:#166534; padding:0.3rem 0.8rem; border-radius:20px; font-size:0.75rem; font-weight:700;">
+          {{ total_sessions_today|default:0 }} {% trans "Today" %}
+        </span>
+      </div>
+    </div>
+    
+    {% if recent_sessions %}
+    <div style="overflow-x:auto;">
+      <table style="width:100%; font-size:0.8rem; border-collapse:collapse;">
+        <thead>
+          <tr style="background:#f8fafc; color:#64748b; font-weight:600; text-transform:uppercase; font-size:0.65rem; letter-spacing:0.5px;">
+            <th style="padding:0.6rem; text-align:left;">{% trans "User" %}</th>
+            <th style="padding:0.6rem; text-align:left;">{% trans "IP Address" %}</th>
+            <th style="padding:0.6rem; text-align:left;">{% trans "Device" %}</th>
+            <th style="padding:0.6rem; text-align:left;">{% trans "Risk" %}</th>
+            <th style="padding:0.6rem; text-align:left;">{% trans "Last Activity" %}</th>
+            <th style="padding:0.6rem; text-align:center;">{% trans "Action" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for sess in recent_sessions %}
+          <tr style="border-bottom:1px solid #f1f5f9;">
+            <td style="padding:0.5rem 0.6rem;">
+              <div style="font-weight:600; color:#1e293b;">{{ sess.user.email|truncatechars:25 }}</div>
+            </td>
+            <td style="padding:0.5rem 0.6rem; color:#64748b; font-family:monospace; font-size:0.7rem;">
+              {{ sess.ip_address|default:"—" }}
+            </td>
+            <td style="padding:0.5rem 0.6rem; color:#64748b; font-size:0.7rem;">
+              {{ sess.device_fingerprint|default:"—"|slice:":12" }}
+            </td>
+            <td style="padding:0.5rem 0.6rem;">
+              {% if sess.risk_score >= 70 %}
+              <span style="background:#fef2f2; color:#dc2626; padding:0.15rem 0.5rem; border-radius:10px; font-size:0.65rem; font-weight:700;">🔴 {{ sess.risk_score }}</span>
+              {% elif sess.risk_score >= 40 %}
+              <span style="background:#fffbeb; color:#d97706; padding:0.15rem 0.5rem; border-radius:10px; font-size:0.65rem; font-weight:700;">🟡 {{ sess.risk_score }}</span>
+              {% else %}
+              <span style="background:#f0fdf4; color:#16a34a; padding:0.15rem 0.5rem; border-radius:10px; font-size:0.65rem; font-weight:700;">🟢 {{ sess.risk_score }}</span>
+              {% endif %}
+            </td>
+            <td style="padding:0.5rem 0.6rem; color:#94a3b8; font-size:0.7rem;">
+              {{ sess.last_activity|timesince }} {% trans "ago" %}
+            </td>
+            <td style="padding:0.5rem 0.6rem; text-align:center;">
+              <form method="post" action="{% url 'kill-session' sess.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" style="background:#fee2e2; color:#dc2626; border:none; padding:0.2rem 0.5rem; border-radius:4px; font-size:0.65rem; font-weight:600; cursor:pointer;" onclick="return confirm('{% trans 'Kill this session?' %}')">
+                  ❌ {% trans "Kill" %}
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div style="text-align:center; padding:1.5rem; color:#94a3b8; font-size:0.8rem;">
+      {% trans "No active sessions" %}
+    </div>
+    {% endif %}
+  </div>
+
 {% endblock %}

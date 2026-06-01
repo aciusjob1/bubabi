@@ -360,9 +360,47 @@
 
     @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes modalSlideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-  </style>
+  
+#session-warning {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #fff;
+    text-align: center;
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    z-index: 9999;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+}
+#session-warning button {
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #fff;
+    padding: 0.2rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-left: 0.5rem;
+    font-size: 0.75rem;
+}
+@keyframes slideDown {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+}
+
+</style>
 </head>
 <body>
+
+<div id="session-warning">
+    ⏰ {% trans "Your session will expire soon due to inactivity." %}
+    <button id="extend-session">{% trans "Keep me signed in" %}</button>
+</div>
+
 
 <!-- OVERLAY INTERACTIVES -->
 <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
@@ -855,31 +893,63 @@
 
 
 
+
+
 {% if request.user.is_authenticated %}
 <script>
-// Auto-logout after 10 minutes of inactivity
-(function() {
-    var idleTime = 0;
-    var idleLimit = 10 * 60; // 10 minutes
+// Session expiry warning at 8 minutes (2 min before timeout)
+var sessionWarningTime = 8 * 60; // 8 minutes
+var sessionExpiryTime = 10 * 60; // 10 minutes
+var idleTime = 0;
+var warned = false;
 
-    function resetTimer() {
-        idleTime = 0;
+function resetIdleTimer() {
+    idleTime = 0;
+    if (warned) {
+        warned = false;
+        // Hide warning if it was showing
+        var warnEl = document.getElementById('session-warning');
+        if (warnEl) warnEl.style.display = 'none';
     }
+}
 
-    // Listen for user activity
-    ['click', 'keypress', 'touchstart', 'scroll'].forEach(function(event) {
-        document.addEventListener(event, resetTimer, true);
-    });
+// Listen for user activity
+['click', 'keypress', 'touchstart', 'scroll'].forEach(function(event) {
+    document.addEventListener(event, resetIdleTimer, true);
+});
 
-    // Check every 30 seconds
-    setInterval(function() {
-        idleTime += 30;
-        if (idleTime >= idleLimit) {
-            window.location.href = "{% url 'logout' %}";
+// Check every 30 seconds
+setInterval(function() {
+    idleTime += 30;
+    
+    // Show warning at 8 minutes
+    if (idleTime >= sessionWarningTime && !warned) {
+        warned = true;
+        var warnEl = document.getElementById('session-warning');
+        if (warnEl) {
+            warnEl.style.display = 'block';
+            warnEl.style.animation = 'slideDown 0.3s ease';
         }
-    }, 30000);
-})();
+    }
+    
+    // Logout at 10 minutes
+    if (idleTime >= sessionExpiryTime) {
+        window.location.href = "{% url 'logout' %}";
+    }
+}, 30000);
+
+// Extend session button
+document.addEventListener('DOMContentLoaded', function() {
+    var extendBtn = document.getElementById('extend-session');
+    if (extendBtn) {
+        extendBtn.addEventListener('click', function() {
+            fetch(window.location.href, {method: 'HEAD'});
+            resetIdleTimer();
+        });
+    }
+});
 </script>
 {% endif %}
+
 </body>
 </html>

@@ -13,6 +13,7 @@ from datetime import datetime, timedelta
 import json
 
 from apps.identity.models import Member, Person, Clan, Announcement, AnnouncementComment, Notification
+from apps.accounts.models_session import UserSession
 from apps.identity.constants import MemberStatus
 from apps.identity.services.membership_service import MembershipService
 from apps.identity.notification_service import NotificationService
@@ -401,7 +402,10 @@ def system_dashboard(request):
         'contribution_count': Contribution.objects.count(), 'ledger_count': LedgerEntry.objects.count(),
         'relationship_count': Relationship.objects.count(), 'votes_count': VoteCast.objects.count(),
         'all_clans': all_clans,
-        'pending_members': Member.objects.filter(status='pending').select_related('person', 'clan').order_by('-created_at'),
+                'pending_members': Member.objects.filter(status='pending').select_related('person', 'clan').order_by('-created_at'),
+        'active_sessions': UserSession.objects.filter(is_active=True).count(),
+        'total_sessions_today': UserSession.objects.filter(created_at__date=timezone.now().date()).count(),
+        'recent_sessions': UserSession.objects.filter(is_active=True).select_related('user').order_by('-last_activity')[:10],
         'all_members': Member.objects.select_related('person', 'clan').order_by('clan__name', 'person__full_name'),
         'recent_audit': AuditLog.objects.select_related('actor').order_by('-timestamp')[:20],
     }

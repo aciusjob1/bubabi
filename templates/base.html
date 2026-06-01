@@ -852,5 +852,26 @@
 
   window.updateSystemBackgroundTheme = updateSystemBackgroundTheme;
 </script>
+
+<script>
+// Auto-logout after 10 minutes of inactivity
+var idleTime = 0;
+var idleLimit = 10 * 60; // 10 minutes
+
+// Reset timer on user activity
+document.onclick = function() { idleTime = 0; };
+document.onkeypress = function() { idleTime = 0; };
+document.ontouchstart = function() { idleTime = 0; };
+document.onscroll = function() { idleTime = 0; };
+
+// Check every 30 seconds
+setInterval(function() {
+    idleTime += 30;
+    if (idleTime >= idleLimit) {
+        window.location.href = "{% url 'logout' %}";
+    }
+}, 30000);
+</script>
+
 </body>
 </html>

@@ -1,6 +1,5 @@
 """IP-based session anomaly detection."""
 from django.shortcuts import redirect
-from django.contrib import messages
 from django.utils import timezone
 from apps.accounts.models_session import UserSession
 
@@ -43,7 +42,7 @@ class SessionSecurityMiddleware:
                             session.logout_reason = 'ip_change'
                             session.expired_at = timezone.now()
                             session.save()
-                            messages.error(request, 'Session terminated: IP address changed.')
+                            pass  # Session terminated due to IP change
                             return redirect('login')
                             
                 except UserSession.DoesNotExist:

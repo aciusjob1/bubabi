@@ -792,6 +792,7 @@ def clan_settings_view(request):
 # ══════════════════════════════════════════════
 
 
+@login_required
 def notifications_view(request):
     Notification.objects.filter(recipient=request.user, is_read=False).update(is_read=True)
     notifications = Notification.objects.filter(recipient=request.user).order_by('-sent_at')[:50]
@@ -976,6 +977,7 @@ def add_family_member_view(request, family_id):
 # ══════════════════════════════════════════════
 
 
+@login_required
 def posts_view(request):
     from apps.identity.models import Post, PostReaction
     clan = request.user.clan

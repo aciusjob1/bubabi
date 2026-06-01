@@ -853,25 +853,33 @@
   window.updateSystemBackgroundTheme = updateSystemBackgroundTheme;
 </script>
 
+
+
+{% if request.user.is_authenticated %}
 <script>
 // Auto-logout after 10 minutes of inactivity
-var idleTime = 0;
-var idleLimit = 10 * 60; // 10 minutes
+(function() {
+    var idleTime = 0;
+    var idleLimit = 10 * 60; // 10 minutes
 
-// Reset timer on user activity
-document.onclick = function() { idleTime = 0; };
-document.onkeypress = function() { idleTime = 0; };
-document.ontouchstart = function() { idleTime = 0; };
-document.onscroll = function() { idleTime = 0; };
-
-// Check every 30 seconds
-setInterval(function() {
-    idleTime += 30;
-    if (idleTime >= idleLimit) {
-        window.location.href = "{% url 'logout' %}";
+    function resetTimer() {
+        idleTime = 0;
     }
-}, 30000);
-</script>
 
+    // Listen for user activity
+    ['click', 'keypress', 'touchstart', 'scroll'].forEach(function(event) {
+        document.addEventListener(event, resetTimer, true);
+    });
+
+    // Check every 30 seconds
+    setInterval(function() {
+        idleTime += 30;
+        if (idleTime >= idleLimit) {
+            window.location.href = "{% url 'logout' %}";
+        }
+    }, 30000);
+})();
+</script>
+{% endif %}
 </body>
 </html>

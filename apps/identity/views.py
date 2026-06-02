@@ -822,6 +822,7 @@ def mark_all_notifications_read(request):
 # ══════════════════════════════════════════════
 
 
+@login_required
 def announcements_view(request):
     clan = request.user.clan
     now = timezone.now()
@@ -887,6 +888,11 @@ def delete_announcement(request, pk):
     if request.user == announcement.author or request.user.is_superuser:
         announcement.is_active = False
         announcement.save()
+        # Delete related notifications
+        Notification.objects.filter(
+            notif_type='announcement',
+            link__icontains=f'/announcements/{announcement.id}/'
+        ).delete()
         AuditService.log(actor=request.user, action='announcement.deleted', domain='membership', target=announcement, request=request)
         messages.success(request, "Announcement deleted for everyone.")
     else:

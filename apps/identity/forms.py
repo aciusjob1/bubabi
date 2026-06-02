@@ -20,17 +20,22 @@ class ClanSettingsForm(forms.ModelForm):
         }
 
 class PaymentMethodsForm(forms.Form):
-    enabled_methods = forms.MultipleChoiceField(
-        choices=[('cash', 'Cash'), ('mobile_money', 'Mobile Money'), ('bank_transfer', 'Bank Transfer'), ('in_kind', 'In-Kind')],
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
+    cash_enabled = forms.BooleanField(initial=True, required=False)
+    mobile_money_enabled = forms.BooleanField(initial=True, required=False)
+    bank_transfer_enabled = forms.BooleanField(initial=True, required=False)
     default_method = forms.ChoiceField(
         choices=[('cash', 'Cash'), ('mobile_money', 'Mobile Money'), ('bank_transfer', 'Bank Transfer'), ('in_kind', 'In-Kind')],
+        initial='mobile_money',
         required=False
     )
-    mobile_providers = forms.CharField(widget=forms.Textarea(attrs={'rows': 4, 'placeholder': 'One per line. Format: code|Name|Prefixes'}), required=False)
-    banks = forms.CharField(widget=forms.Textarea(attrs={'rows': 4, 'placeholder': 'One per line. Format: code|Bank Name'}), required=False)
+    mobile_providers = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 6, 'placeholder': 'One per line. Format: code|Name|Prefixes'}),
+        required=False
+    )
+    banks = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 5, 'placeholder': 'One per line. Format: code|Bank Name'}),
+        required=False
+    )
 
 class TransitionMemberForm(forms.Form):
     new_status = forms.ChoiceField(choices=[('active', 'Active'), ('suspended', 'Suspended'), ('removed', 'Removed')])

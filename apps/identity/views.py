@@ -1536,9 +1536,9 @@ def payment_methods_view(request):
         if form.is_valid():
             # Build payment methods JSON
             methods = {
-                'cash_enabled': form.cleaned_data['cash_enabled'],
-                'mobile_money_enabled': form.cleaned_data['mobile_money_enabled'],
-                'bank_transfer_enabled': form.cleaned_data['bank_transfer_enabled'],
+                'cash_enabled': bool(form.cleaned_data.get('cash_enabled', False)),
+                'mobile_money_enabled': bool(form.cleaned_data.get('mobile_money_enabled', False)),
+                'bank_transfer_enabled': bool(form.cleaned_data.get('bank_transfer_enabled', False)),
                 'default_method': form.cleaned_data['default_method'],
                 'mobile_providers': [],
                 'banks': [],

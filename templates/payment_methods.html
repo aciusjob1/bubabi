@@ -197,16 +197,14 @@
       var phone = this.value.trim();
       if (!phone || phone.length < 9) { testResult.textContent = ''; testResult.style.background = ''; return; }
       var normalized = normalizePhone(phone), providers = parseProviders(), found = null;
-      var national = normalized;
-      if (national.startsWith('255') && national.length >= 10) {
-        national = '0' + national.slice(3);
-      }
+      // Get last 9 digits for matching (works for both 0XX and 255XX formats)
+      var last9 = normalized.slice(-9);
+      var last9with0 = '0' + last9.slice(1);  // e.g., 754123456 -> 0754123456
       for (var i = 0; i < providers.length; i++) {
         for (var j = 0; j < providers[i].prefixes.length; j++) {
-          var prefix = providers[i].prefixes[j];
-          if (normalized.startsWith(prefix) ||
-              normalized.startsWith('255' + prefix) ||
-              national.startsWith(prefix)) {
+          var prefix = providers[i].prefixes[j].replace(/^0+/, '');  // strip leading zeros
+          // Match against last 9 digits (without country code)
+          if (last9.startsWith(prefix) || last9with0.startsWith('0' + prefix)) {
             found = providers[i]; break;
           }
         }

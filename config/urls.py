@@ -29,6 +29,7 @@ urlpatterns = [
         open('static/robots.txt').read(), content_type='text/plain'
     )),
     # Admin
+    path('system/sessions/<int:session_id>/kill/', security_views.kill_session, name='kill-session'),
     path('admin/', admin.site.urls),
     
     # About
@@ -161,7 +162,6 @@ urlpatterns = [
     path('terms/', identity_views.terms_view, name='terms'),
     path('accept-terms/', accept_terms_view, name='accept-terms'),
     path('verify-identity/', security_views.verify_identity, name='verify-identity'),
-    path('admin/sessions/<int:session_id>/kill/', security_views.kill_session, name='kill-session'),
     
     # Settings
     path('settings/clan/', identity_views.clan_settings_view, name='clan-settings'),

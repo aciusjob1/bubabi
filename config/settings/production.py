@@ -11,7 +11,29 @@ ALLOWED_HOSTS = [
 ]
 
 # Database configuration targeting Render's PostgreSQL database
-DATABASES = {
+# Use SQLite for free hosting (Fly.io, etc.)
+import os
+
+# Database - auto-detect environment
+if os.environ.get('RENDER', False) or os.environ.get('DATABASE_URL'):
+    # Render.com or any PostgreSQL hosting
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db' / 'clan_prod.sqlite3',
+    }
+}
+else:
+    # Free hosting (Fly.io, local, etc.) - use SQLite
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db' / 'clan_prod.sqlite3',
+        }
+    }
+
+# Keep old PostgreSQL config commented for reference
+# DATABASES_OLD = {
     'default': dj_database_url.config(
         default=os.environ.get('DATABASE_URL'),
         conn_max_age=600

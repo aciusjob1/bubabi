@@ -7,7 +7,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN mkdir -p db
+RUN mkdir -p db && touch db/clan_prod.sqlite3 && chmod 777 db
 
 EXPOSE 10000
 

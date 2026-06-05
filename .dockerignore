@@ -1,0 +1,7 @@
+__pycache__
+*.pyc
+db/clan_dev.sqlite3
+mediafiles
+venv
+.env
+.git

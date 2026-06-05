@@ -2,11 +2,11 @@ app = "bubabi"
 primary_region = "ams"
 
 [build]
-  builder = "paketobuildpacks/builder:base"
 
 [env]
   DJANGO_SETTINGS_MODULE = "config.settings.production"
   PYTHON_VERSION = "3.13.0"
+  PORT = "10000"
 
 [http_service]
   internal_port = 10000

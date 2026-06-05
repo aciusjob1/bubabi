@@ -7,7 +7,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN mkdir -p db && touch db/clan_prod.sqlite3 && chmod 777 db
+RUN mkdir -p db && chmod 777 db
+RUN python manage.py migrate --noinput
+RUN python manage.py collectstatic --noinput || true
 
 EXPOSE 10000
 

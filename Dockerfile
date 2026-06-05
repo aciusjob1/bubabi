@@ -7,8 +7,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN mkdir -p db staticfiles
-RUN python manage.py collectstatic --noinput
+RUN mkdir -p db
 
 EXPOSE 10000
 

@@ -13,9 +13,9 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
 ]
 
-# Database - auto-detect: PostgreSQL on Render, SQLite on Fly.io/local
-if os.environ.get('RENDER') or os.environ.get('DATABASE_URL'):
-    # Render.com PostgreSQL
+# Database - use DATABASE_URL if set, else SQLite
+import os
+if os.environ.get('DATABASE_URL'):
     DATABASES = {
         'default': dj_database_url.config(
             default=os.environ.get('DATABASE_URL'),
@@ -23,7 +23,6 @@ if os.environ.get('RENDER') or os.environ.get('DATABASE_URL'):
         )
     }
 else:
-    # Fly.io / local - SQLite
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',

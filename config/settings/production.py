@@ -13,22 +13,14 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
 ]
 
-# Database - use DATABASE_URL if set, else SQLite
+# Database - use DATABASE_URL from environment
 import os
-if os.environ.get('DATABASE_URL'):
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=os.environ.get('DATABASE_URL'),
-            conn_max_age=600
-        )
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db' / 'clan_prod.sqlite3',
-        }
-    }
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL', f'sqlite:///{BASE_DIR}/db/clan_prod.sqlite3'),
+        conn_max_age=600
+    )
+}
 
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 STORAGES = {

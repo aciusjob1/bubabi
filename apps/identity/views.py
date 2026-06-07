@@ -77,6 +77,7 @@ elder_required      = user_passes_test(is_elder_or_above, login_url='member-dash
 
 @ensure_csrf_cookie
 @rate_limit("login", 20, 300)
+@cache_page(15)
 def login_view(request):
     if request.user.is_authenticated:
         return redirect(get_role_dashboard(request.user))
@@ -162,6 +163,7 @@ def get_role_dashboard(user):
     return 'member-dashboard'
 
 
+@cache_page(15)
 def register_view(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
@@ -369,7 +371,6 @@ def elder_dashboard(request):
 
 
 @login_required
-@cache_page(30)
 def member_dashboard(request):
     # Block pending/suspended/removed users
     if hasattr(request.user, 'status'):
@@ -420,7 +421,6 @@ def system_dashboard(request):
 
 
 @login_required
-@cache_page(60)
 def members_view(request):
     clan = request.user.clan
     search = request.GET.get('search', '').strip()
@@ -826,7 +826,6 @@ def mark_all_notifications_read(request):
 
 
 @login_required
-@cache_page(30)
 def announcements_view(request):
     clan = request.user.clan
     now = timezone.now()

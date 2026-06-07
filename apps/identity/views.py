@@ -1,3 +1,4 @@
+from django.views.decorators.cache import cache_page
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.clickjacking import xframe_options_exempt
@@ -368,6 +369,7 @@ def elder_dashboard(request):
 
 
 @login_required
+@cache_page(30)
 def member_dashboard(request):
     # Block pending/suspended/removed users
     if hasattr(request.user, 'status'):
@@ -418,6 +420,7 @@ def system_dashboard(request):
 
 
 @login_required
+@cache_page(60)
 def members_view(request):
     clan = request.user.clan
     search = request.GET.get('search', '').strip()
@@ -823,6 +826,7 @@ def mark_all_notifications_read(request):
 
 
 @login_required
+@cache_page(30)
 def announcements_view(request):
     clan = request.user.clan
     now = timezone.now()

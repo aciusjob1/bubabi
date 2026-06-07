@@ -766,5 +766,30 @@
           '{% trans "Primary Colour" %}: ' + primary + '\n\n' +
           '{% trans "Click Save All Settings to commit configuration records changes." %}');
   }
+
+// Fix for ERR_UPLOAD_FILE_CHANGED - copy file to memory before upload
+document.addEventListener('DOMContentLoaded', function() {
+    var fileInputs = document.querySelectorAll('input[type="file"]');
+    fileInputs.forEach(function(input) {
+        input.addEventListener('change', function(e) {
+            var file = e.target.files[0];
+            if (!file) return;
+            
+            // Create a copy of the file in memory
+            var reader = new FileReader();
+            reader.onload = function(evt) {
+                var blob = new Blob([evt.target.result], {type: file.type});
+                var newFile = new File([blob], file.name, {type: file.type, lastModified: Date.now()});
+                
+                // Replace the original file with our copy
+                var dt = new DataTransfer();
+                dt.items.add(newFile);
+                e.target.files = dt.files;
+            };
+            reader.readAsArrayBuffer(file);
+        });
+    });
+});
+
 </script>
 {% endblock %}

@@ -179,7 +179,7 @@ AT_SENDER_ID = config('AT_SENDER_ID', default='BUBABI')
 # ── Session ────────────────────────────────────────────────
 # ── Session Security ─────────────────────────────────────────
 SESSION_SAVE_EVERY_REQUEST = True
-SESSION_COOKIE_AGE = 600  # 10 minutes
+SESSION_COOKIE_AGE = 1800  # 10 minutes
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = False  # Set True in production.py

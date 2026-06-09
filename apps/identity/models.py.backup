@@ -48,20 +48,27 @@ class Clan(BaseModel):
     contact_email = models.EmailField(max_length=255, blank=True, default="")
     contact_phone = models.CharField(max_length=50, blank=True, default="")
     payment_methods = models.TextField(default="{}", blank=True, null=True)
+    # ── Identity ────────────────────────
     name = models.CharField(max_length=255, unique=True)
     code = models.CharField(max_length=10, blank=True, help_text="Short acronym")
     motto = models.CharField(max_length=255, blank=True, help_text="Clan motto or slogan")
     description = models.TextField(blank=True, help_text="Brief history or description")
+
+    # ── Branding ────────────────────────
     logo = models.ImageField(upload_to='clan_logos/', blank=True, null=True)
     banner_image = models.ImageField(upload_to='clan_banners/', blank=True, null=True)
     primary_color = models.CharField(max_length=7, default='#10b981')
     accent_color = models.CharField(max_length=7, default='#6366f1')
     sidebar_color = models.CharField(max_length=20, default='#3d1a1a')
     blur_intensity = models.CharField(max_length=10, default='16px')
+
+    # ── Financial defaults ──────────────
     currency = models.CharField(max_length=3, default='TZS')
     default_contribution = models.DecimalField(max_digits=12, decimal_places=2, default=50000)
     late_fine_amount = models.DecimalField(max_digits=12, decimal_places=2, default=10000)
     max_loan_amount = models.DecimalField(max_digits=12, decimal_places=2, default=500000)
+
+    # ── Preferences ─────────────────────
     timezone = models.CharField(max_length=50, default='Africa/Dar_es_Salaam')
     default_language = models.CharField(max_length=10, choices=[('en', 'English'), ('sw', 'Kiswahili')], default='sw')
     is_public = models.BooleanField(default=True)
@@ -93,35 +100,25 @@ class MemberManager(BaseUserManager):
 
 
 class Member(AbstractBaseUser, PermissionsMixin, BaseModel):
-    """
-    Custom user model for clan members.
-    STATUS FIELD is single source of truth:
-    - INVITED: Invited but hasn't registered
-    - PENDING: Registered, awaiting approval
-    - ACTIVE: Approved and can access system
-    - BLOCKED: Explicitly blocked by moderator
-    - SUSPENDED: Temporarily suspended
-    - REMOVED: Permanently removed from clan
-    """
     person     = models.ForeignKey(Person, on_delete=models.PROTECT, related_name='memberships', null=True, blank=True)
     clan       = models.ForeignKey(Clan, on_delete=models.PROTECT, related_name='members', null=True, blank=True)
-    status     = models.CharField(
-        max_length=20, 
-        choices=MemberStatus.CHOICES, 
-        default=MemberStatus.INVITED,
-        db_index=True,
-        help_text="Single source of truth for account lifecycle"
-    )
+    status     = models.CharField(max_length=20, choices=MemberStatus.CHOICES, default=MemberStatus.INVITED)
     email      = models.EmailField(unique=True)
     phone      = models.CharField(max_length=20, blank=True)
     joined_at  = models.DateTimeField(null=True, blank=True)
     invited_by = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, related_name='invitees')
     invited_at = models.DateTimeField(auto_now_add=True)
     is_staff   = models.BooleanField(default=False)
-    has_accepted_terms = models.BooleanField(default=False, help_text="Has accepted current terms of service")
+    is_active  = models.BooleanField(default=True)
+    is_blocked = models.BooleanField(default=False, help_text="Blocked from accessing the system")
+    has_accepted_terms = models.BooleanField(default=False, help_text="Has accepted terms of service")
+    has_accepted_legal = models.BooleanField(default=False, help_text="Has accepted legal terms")
     accepted_terms_at = models.DateTimeField(null=True, blank=True)
     accepted_terms_ip = models.GenericIPAddressField(null=True, blank=True)
     accepted_terms_version = models.CharField(max_length=10, default="v1")
+    blocked_at = models.DateTimeField(null=True, blank=True)
+    blocked_by = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, related_name='blocked_members')
+    block_reason = models.TextField(blank=True)
 
     USERNAME_FIELD  = 'email'
     REQUIRED_FIELDS = []
@@ -130,11 +127,6 @@ class Member(AbstractBaseUser, PermissionsMixin, BaseModel):
 
     class Meta:
         unique_together = [('person', 'clan')]
-        indexes = [
-            models.Index(fields=['clan', 'status']),
-            models.Index(fields=['clan', '-created_at']),
-            models.Index(fields=['email']),
-        ]
 
     def __str__(self):
         if self.person:
@@ -142,63 +134,24 @@ class Member(AbstractBaseUser, PermissionsMixin, BaseModel):
         return self.email
 
     @property
-    def is_active(self):
-        """Django convention: True if account can be used."""
-        return self.status in [MemberStatus.ACTIVE, MemberStatus.PENDING]
-    
-    @property
-    def is_blocked(self):
-        """Convenience property: equivalent to status == BLOCKED."""
-        return self.status == MemberStatus.BLOCKED
-
-    @property
-    def is_suspended(self):
-        """Convenience property: equivalent to status == SUSPENDED."""
-        return self.status == MemberStatus.SUSPENDED
-
-    @property
     def is_elder(self):
         """A member is an elder if they have an active Elder role OR are superuser."""
         if self.is_superuser:
             return True
         return self.clan_roles.filter(is_active=True, role__name='Elder').exists()
-
     @property
     def is_leader(self):
-        """A member is a leader if they have an active Leader role OR are superuser."""
         if self.is_superuser:
             return True
         return self.clan_roles.filter(is_active=True, role__name='Leader').exists()
 
     @property
-    def is_treasurer(self):
-        """A member is a treasurer if they have an active Treasurer role OR are superuser."""
-        if self.is_superuser:
-            return True
-        return self.clan_roles.filter(is_active=True, role__name='Treasurer').exists()
-
-    @property
-    def is_secretary(self):
-        """A member is a secretary if they have an active Secretary role OR are superuser."""
-        if self.is_superuser:
-            return True
-        return self.clan_roles.filter(is_active=True, role__name='Secretary').exists()
-
-    @property
     def is_moderator(self):
-        """
-        Check if member has moderation privileges (elder level or above).
-        FIXED: Removed duplicate definition that was shadowing the original.
-        Now uses consistent hierarchy-level check: ELDER (1) or higher.
-        """
         if self.is_superuser:
             return True
-        from apps.governance.constants import RoleLevel
-        return self.clan_roles.filter(
-            is_active=True,
-            role__hierarchy_level__gte=RoleLevel.ELDER
-        ).exists()
+        return self.clan_roles.filter(is_active=True, role__name__in=['Moderator', 'Deputy Leader']).exists()
 
+        return highest.role.hierarchy_level if highest else 0
     @property
     def max_role_level(self):
         """Return highest hierarchy level from active roles."""
@@ -206,6 +159,29 @@ class Member(AbstractBaseUser, PermissionsMixin, BaseModel):
             return 5
         highest = self.clan_roles.filter(is_active=True).select_related("role").order_by("-role__hierarchy_level").first()
         return highest.role.hierarchy_level if highest else 0
+
+    @property
+    def is_treasurer(self):
+        if self.is_superuser:
+            return True
+        return self.clan_roles.filter(is_active=True, role__name='Treasurer').exists()
+
+    @property
+    def is_secretary(self):
+        if self.is_superuser:
+            return True
+        return self.clan_roles.filter(is_active=True, role__name='Secretary').exists()
+
+    @property
+    def is_moderator(self):
+        """Check if member has moderation privileges (elder level or above)."""
+        from apps.governance.constants import RoleLevel
+        if not hasattr(self, 'clan_roles'):
+            return False
+        return self.clan_roles.filter(
+            is_active=True,
+            role__hierarchy_level__gte=RoleLevel.ELDER
+        ).exists()
 
 
 class MemberStatusHistory(BaseModel):
@@ -285,6 +261,10 @@ class AnnouncementComment(BaseModel):
         ordering = ['created_at']
 
 
+# ══════════════════════════════════════════════
+# CLAN FEED - POSTS
+# ══════════════════════════════════════════════
+
 class Post(BaseModel):
     clan = models.ForeignKey(Clan, on_delete=models.PROTECT, related_name='posts')
     author = models.ForeignKey(Member, on_delete=models.PROTECT, related_name='posts')
@@ -307,6 +287,34 @@ class Post(BaseModel):
     def __str__(self):
         return f"{self.author} — {self.content[:50]}"
 
+    @property
+    def like_count(self):
+        return self.reactions.filter(reaction='like').count()
+
+    @property
+    def love_count(self):
+        return self.reactions.filter(reaction='love').count()
+
+    @property
+    def laugh_count(self):
+        return self.reactions.filter(reaction='laugh').count()
+
+    @property
+    def wow_count(self):
+        return self.reactions.filter(reaction='wow').count()
+
+    @property
+    def sad_count(self):
+        return self.reactions.filter(reaction='sad').count()
+
+    @property
+    def support_count(self):
+        return self.reactions.filter(reaction='support').count()
+
+    @property
+    def comment_count(self):
+        return self.post_comments.count()
+
 
 class PostReaction(BaseModel):
     REACTIONS = [
@@ -325,6 +333,9 @@ class PostReaction(BaseModel):
         unique_together = [('post', 'member')]
         ordering = ['-created_at']
 
+    def __str__(self):
+        return f"{self.member} {self.get_reaction_display()} on post {self.post.id}"
+
 
 class PostComment(BaseModel):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_comments')
@@ -333,6 +344,9 @@ class PostComment(BaseModel):
 
     class Meta:
         ordering = ['created_at']
+
+    def __str__(self):
+        return f"{self.author} on post {self.post.id}: {self.content[:30]}"
 
 
 class PostReport(BaseModel):
@@ -358,7 +372,8 @@ class PostReport(BaseModel):
         unique_together = [('post', 'reported_by')]
         ordering = ['-created_at']
 
-
+    def __str__(self):
+        return f"Report on post {self.post.id} by {self.reported_by} - {self.reason}"
 class ClanDocument(BaseModel):
     """Official clan documents: constitution, bylaws, judicial rulings."""
     DOCUMENT_TYPES = [
@@ -385,6 +400,9 @@ class ClanDocument(BaseModel):
     
     class Meta:
         ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.get_document_type_display()}: {self.title}"
 
 
 class JudicialCase(BaseModel):
@@ -422,7 +440,9 @@ class JudicialCase(BaseModel):
     
     class Meta:
         ordering = ['-created_at']
-
+    
+    def __str__(self):
+        return f"Case #{self.case_number}: {self.title}"
 
 class LegalAcceptance(models.Model):
     """Immutable record of every legal acceptance."""
@@ -443,3 +463,6 @@ class LegalAcceptance(models.Model):
     class Meta:
         indexes = [models.Index(fields=['user', 'accepted_at'])]
         ordering = ['-accepted_at']
+
+    def __str__(self):
+        return f"{self.user.email} accepted v{self.terms_version} at {self.accepted_at}"

@@ -1,53 +1,63 @@
 """
-BUBABI RBAC Engine — Centralized Permission Resolution
-Supports: direct permissions + role inheritance + domain isolation + audit logging
+Role-Based Access Control (RBAC) Engine
 """
-from django.core.cache import cache
-from apps.governance.models import Role, ClanPermission
+from apps.governance.models import ClanPermission, MemberRole
 
-def resolve_role_permissions(role, visited=None):
-    """Recursively resolve all permissions from a role and its inherited roles."""
-    if visited is None:
-        visited = set()
-    if role.id in visited:
-        return set()
-    visited.add(role.id)
-    perms = set(role.permissions.all())
-    for parent in role.inherits.all():
-        perms |= resolve_role_permissions(parent, visited)
-    return perms
+
+def has_permission(user, perm_codename, resource=None):
+    """
+    Check if user has a specific permission.
+    """
+    if not user or not user.is_authenticated:
+        return False
+    
+    if user.is_superuser:
+        return True
+    
+    roles = MemberRole.objects.filter(
+        member=user,
+        is_active=True,
+        expires_at__isnull=True
+    ).select_related('role__permissions').prefetch_related('role__inherits__permissions')
+    
+    if not roles.exists():
+        return False
+    
+    for member_role in roles:
+        role = member_role.role
+        
+        if role.permissions.filter(codename=perm_codename).exists():
+            return True
+        
+        for inherited_role in role.inherits.all():
+            if inherited_role.permissions.filter(codename=perm_codename).exists():
+                return True
+    
+    return False
+
 
 def get_user_permissions(user):
-    """Get all effective permissions for a user (roles + inheritance)."""
+    """Get all permissions for a user."""
+    permissions = set()
+    
     if user.is_superuser:
-        return set(ClanPermission.objects.all().values_list('codename', flat=True))
+        return set(
+            ClanPermission.objects.values_list('codename', flat=True)
+        )
     
-    cache_key = f"user_perms_{user.id}"
-    cached = cache.get(cache_key)
-    if cached is not None:
-        return cached
+    roles = MemberRole.objects.filter(
+        member=user,
+        is_active=True
+    ).select_related('role').prefetch_related('role__permissions', 'role__inherits__permissions')
     
-    roles = user.clan_roles.filter(is_active=True).select_related('role')
-    all_perms = set()
     for member_role in roles:
-        all_perms |= resolve_role_permissions(member_role.role)
+        role = member_role.role
+        permissions.update(
+            role.permissions.values_list('codename', flat=True)
+        )
+        for inherited_role in role.inherits.all():
+            permissions.update(
+                inherited_role.permissions.values_list('codename', flat=True)
+            )
     
-    result = {p.codename for p in all_perms}
-    cache.set(cache_key, result, 300)  # 5 min cache
-    return result
-
-def has_permission(user, perm_code):
-    """Check if user has a specific permission."""
-    return perm_code in get_user_permissions(user)
-
-def get_permission_graph(user):
-    """Debug: return role → permissions mapping for a user."""
-    roles = user.clan_roles.filter(is_active=True).select_related('role')
-    return {
-        mr.role.name: [p.codename for p in resolve_role_permissions(mr.role)]
-        for mr in roles
-    }
-
-def invalidate_user_cache(user):
-    """Clear permission cache for a user (call after role changes)."""
-    cache.delete(f"user_perms_{user.id}")
+    return permissions

@@ -11,7 +11,6 @@ psycopg2-binary
 dj-database-url
 gunicorn
 africastalking
-africastalking
 requests
 cloudinary
 django-cloudinary-storage

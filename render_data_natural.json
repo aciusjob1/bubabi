@@ -1,0 +1,2033 @@
+[
+{
+  "model": "sessions.session",
+  "pk": "19bo4v7151hbwpe3xcisrp78pz9p99n3",
+  "fields": {
+    "session_data": ".eJxVjssOgjAURP-layEtfbM0ca1_QG7bS2jUQigkEuO_Ww0L3c6ZM5kn6WBdhm7NOHcxkJaApkY7byrrTV-J3svKSuMqj6h7zqSyqMnhV3Pgr5i-7jTlOgZMS1y2es9zfbpDvJ3nyzAmPO7lv4UB8lB0JRgopa0DaZWljMueB0GbYJnnEoMpAETjQDhotDflnLKcUi9pSRX7jGbMOY6pw8cU5420Bb_eYphI8w:1wUCGl:SI416OX9owr3n62pVamXj_ipqwVl0D-OELtiIJi4-A4",
+    "expire_date": "2026-06-01T23:47:07.270Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "3z5zcwo0cq3hipfpoo2zz9v3gaoxewt5",
+  "fields": {
+    "session_data": ".eJxVzDsOwjAQRdG9uMaW7fGXkp41ROPxmARQIuVTIfYOkVJA_e55L9HhtvbdtvDcDVWcBUadYqEkM6UmXSMvs09FEnNsYHzIHMXplxWkB4-7rXccb5OiaVznoag9Uce6qOtU-Xk52r-DHpf-q2NxJfkMaD2RSYE9GdYBsAYIhOgYAXODqE2Egg3JNtLOt2bBAkXx_gA3ckHj:1wNIJg:A9I6hiRHY_pADml8qRub_15lHY2EdQCKblY7szXwyw8",
+    "expire_date": "2026-05-27T22:44:36.041Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "kz679s1jgb6vgn9crvectxqo96ucja79",
+  "fields": {
+    "session_data": "e30:1wQhfa:nmE2GyUYLf6r2yA9ZHdwuBvGKwYyvUOnNDzvp8Dolx4",
+    "expire_date": "2026-06-06T08:25:18.341Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "oq1vcxq3qx40hgvotpvxcicy4lszlvmj",
+  "fields": {
+    "session_data": ".eJxVjk1PhTAURP-K6Rqwpd8sja51bwy5LRfbPC3YwlNi_O9W8xa6nZkzOZ9khH0L414wj3EiAwFNjXbetNabuRWzl62VxrUeUc-cSWVRk-Yv5sCfMP2y61q6OGHa4nZ0l7x0d68QX-7zQ1gS3lzG_x4ClFBxJRgopa0DaZWljMuZT4L2k2WeS5xMLUD0DoSDXntT5ZTllHpJa6rYz2nBUuKSRvxYYz7IUOuGnDHH-Rgzvu0xYzXd8o4NybGcaghlSYUMj-QWz9HjtcvLe7W68gHSc10_fX0D-r5g2A:1wU5ns:oRDFeFJtZep9p0-DnnRMlVkjD7hvH4PuQ_t65GpzbJo",
+    "expire_date": "2026-06-01T16:52:52.507Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "sfll0g1ptdgg5k3k9sphu5ne6zobyvie",
+  "fields": {
+    "session_data": ".eJxVzDsOwjAQRdG9uMaW7fGXkp41ROPxmARQIuVTIfYOkVJA_e55L9HhtvbdtvDcDVWcBUadYqEkM6UmXSMvs09FEnNsYHzIHMXplxWkB4-7rXccb5OiaVznoag9Uce6qOtU-Xk52r-DHpf-q2NxJfkMaD2RSYE9GdYBsAYIhOgYAXODqE2Egg3JNtLOt2bBAkXx_gA3ckHj:1wN1pY:8y9uLkaqgRqj0QeyC1IsG5kwHk3qfjoj7eUDYfuB9IE",
+    "expire_date": "2026-05-27T05:08:24.367Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "wre9ydphnu0b5cannyxojx37gv8kwhp2",
+  "fields": {
+    "session_data": ".eJxVzDsOwjAQBNC7uMaRP-sfJRI13CCyd41sASGKkwIh7k6QUsCUo3nzYn1c5tIvLU99JbZniIDCW81dzsTBeMmDkYGjNl4lnwjQsN0vSxGvefjaOI6tq5SHuc7Pbutbd7zHejtN5_IY8mEb_z2U2MrKQaMku0Y5ESJYRIHpcslIVioiEB4QIjknNChPOZBEp7VT2qZASbD3BzeUQXc:1wRGbs:Byjz7Dq06NRh9994c2gNDH33IshvE5G-bpdrkoa9WHE",
+    "expire_date": "2026-06-07T21:43:48.531Z"
+  }
+},
+{
+  "model": "identity.person",
+  "pk": "60dfd7ae-ede5-43f1-b3af-2b9938fb07f5",
+  "fields": {
+    "created_at": "2026-05-12T21:02:34.165Z",
+    "updated_at": "2026-05-22T16:37:56.539Z",
+    "full_name": "Acius Job Missingo",
+    "gender": "male",
+    "birth_date": "2003-11-13",
+    "death_date": null,
+    "biography": "Studied at ST Peter Claver",
+    "profile_image": "profiles/1000113621.png"
+  }
+},
+{
+  "model": "identity.person",
+  "pk": "642abc32-1e22-4c8a-a848-a00eaad246b7",
+  "fields": {
+    "created_at": "2026-05-23T16:47:55.600Z",
+    "updated_at": "2026-05-23T16:47:55.600Z",
+    "full_name": "Test User",
+    "gender": "male",
+    "birth_date": "2000-01-01",
+    "death_date": null,
+    "biography": "",
+    "profile_image": ""
+  }
+},
+{
+  "model": "identity.person",
+  "pk": "c3bcb872-46e5-4d95-ad08-2057a37eae46",
+  "fields": {
+    "created_at": "2026-05-23T08:31:04.714Z",
+    "updated_at": "2026-05-23T08:31:04.714Z",
+    "full_name": "Job Missingo",
+    "gender": "other",
+    "birth_date": "1959-03-03",
+    "death_date": null,
+    "biography": "",
+    "profile_image": ""
+  }
+},
+{
+  "model": "identity.clan",
+  "pk": "7633d7fc-b040-4bb9-861e-cacae15bffdc",
+  "fields": {
+    "created_at": "2026-05-12T20:59:58.311Z",
+    "updated_at": "2026-05-26T18:51:42.681Z",
+    "contact_email": "leader@bubabi.com",
+    "contact_phone": "+255 712 345 678",
+    "payment_methods": "{\"cash_enabled\": true, \"mobile_money_enabled\": true, \"bank_transfer_enabled\": true, \"default_method\": \"mobile_money\", \"mobile_providers\": [{\"code\": \"mpesa\", \"name\": \"M-Pesa\", \"prefixes\": [\"074\", \"075\", \"076\", \"25574\", \"25575\", \"25576\"]}, {\"code\": \"tigo\", \"name\": \"Tigo(Yas) Pesa\", \"prefixes\": [\"065\", \"067\", \"071\", \"25565\", \"25567\", \"25571\"]}, {\"code\": \"airtel\", \"name\": \"Airtel Money\", \"prefixes\": [\"068\", \"069\", \"078\", \"25568\", \"25569\", \"25578\"]}, {\"code\": \"halotel\", \"name\": \"Halotel\", \"prefixes\": [\"061\", \"062\", \"25561\", \"25562\"]}, {\"code\": \"ttcl\", \"name\": \"TTCL\", \"prefixes\": [\"073\", \"25573\"]}, {\"code\": \"zantel\", \"name\": \"Zantel\", \"prefixes\": [\"077\", \"25577\"]}], \"banks\": [{\"code\": \"crdb\", \"name\": \"CRDB Bank\"}, {\"code\": \"nmb\", \"name\": \"NMB Bank\"}, {\"code\": \"nbc\", \"name\": \"NBC Bank\"}, {\"code\": \"equity\", \"name\": \"Equity Bank\"}]}",
+    "name": "BUBABI",
+    "code": "Bulamalwa",
+    "motto": "Rugbuga Rwamtaga",
+    "description": "Rubhuga  Rwamtaga",
+    "logo": "",
+    "banner_image": "",
+    "primary_color": "#00a13e",
+    "accent_color": "#000000",
+    "sidebar_color": "#3d1a1a",
+    "blur_intensity": "0px",
+    "currency": "Tzs",
+    "default_contribution": "50000.00",
+    "late_fine_amount": "10000.00",
+    "max_loan_amount": "500000.00",
+    "timezone": "Africa/Dar_es_Salaam",
+    "default_language": "sw",
+    "is_public": true
+  }
+},
+{
+  "model": "identity.member",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$OoiQXuPiytEeoZk8T2Atsj$RCF+e1acFI6cAMRkk8GjLhEl5WLZ9oxOeR7AGxLOWbo=",
+    "last_login": null,
+    "is_superuser": false,
+    "created_at": "2026-05-23T16:47:56.107Z",
+    "updated_at": "2026-05-23T18:15:39.755Z",
+    "person": "642abc32-1e22-4c8a-a848-a00eaad246b7",
+    "clan": "7633d7fc-b040-4bb9-861e-cacae15bffdc",
+    "status": "pending",
+    "email": "test_new_user@bubabi.com",
+    "phone": "0711111111",
+    "joined_at": null,
+    "invited_by": null,
+    "invited_at": "2026-05-23T16:47:56.107Z",
+    "is_staff": false,
+    "is_active": true,
+    "is_blocked": true,
+    "has_accepted_terms": true,
+    "has_accepted_legal": false,
+    "accepted_terms_at": null,
+    "accepted_terms_ip": null,
+    "accepted_terms_version": "v1",
+    "blocked_at": "2026-05-23T18:15:39.755Z",
+    "blocked_by": null,
+    "block_reason": "Testing the blocked page",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "identity.member",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$lZbft0aJTk6iOA6C8AVFa1$fUL/4hmMXORgL4mC/Xq7mycz4HphEg543hxNWK81RIc=",
+    "last_login": "2026-06-01T23:39:33.941Z",
+    "is_superuser": true,
+    "created_at": "2026-05-12T11:55:16.171Z",
+    "updated_at": "2026-05-17T05:33:10.127Z",
+    "person": "60dfd7ae-ede5-43f1-b3af-2b9938fb07f5",
+    "clan": "7633d7fc-b040-4bb9-861e-cacae15bffdc",
+    "status": "active",
+    "email": "aciusjob1@gmail.com",
+    "phone": "0613458246",
+    "joined_at": null,
+    "invited_by": null,
+    "invited_at": "2026-05-12T11:55:16.172Z",
+    "is_staff": true,
+    "is_active": true,
+    "is_blocked": false,
+    "has_accepted_terms": true,
+    "has_accepted_legal": false,
+    "accepted_terms_at": null,
+    "accepted_terms_ip": null,
+    "accepted_terms_version": "v1",
+    "blocked_at": null,
+    "blocked_by": null,
+    "block_reason": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "identity.member",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$UaixsLY65BdhYLoWqgz0bM$TJU/KO3s4ROOrK4BS8yn4oF1WX8T1/JYGtEHr+b6v/Y=",
+    "last_login": "2026-05-26T11:42:06.954Z",
+    "is_superuser": false,
+    "created_at": "2026-05-23T08:31:05.250Z",
+    "updated_at": "2026-05-24T21:20:20.250Z",
+    "person": "c3bcb872-46e5-4d95-ad08-2057a37eae46",
+    "clan": "7633d7fc-b040-4bb9-861e-cacae15bffdc",
+    "status": "active",
+    "email": "keacius@gmail.com",
+    "phone": "0762795417",
+    "joined_at": "2026-05-23T16:53:18.406Z",
+    "invited_by": null,
+    "invited_at": "2026-05-23T08:31:05.250Z",
+    "is_staff": false,
+    "is_active": true,
+    "is_blocked": false,
+    "has_accepted_terms": true,
+    "has_accepted_legal": false,
+    "accepted_terms_at": "2026-05-24T21:20:20.250Z",
+    "accepted_terms_ip": "127.0.0.1",
+    "accepted_terms_version": "v1",
+    "blocked_at": null,
+    "blocked_by": null,
+    "block_reason": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "identity.memberstatushistory",
+  "pk": "191797a7-13df-4e3a-9cb8-206cd79d0488",
+  "fields": {
+    "created_at": "2026-05-23T16:53:18.408Z",
+    "updated_at": "2026-05-23T16:53:18.408Z",
+    "member": [
+      "keacius@gmail.com"
+    ],
+    "from_status": "pending",
+    "to_status": "active",
+    "changed_by": [
+      "aciusjob1@gmail.com"
+    ],
+    "reason": "",
+    "timestamp": "2026-05-23T16:53:18.408Z"
+  }
+},
+{
+  "model": "identity.clandocument",
+  "pk": "1ac73e65-b9e9-42fa-b609-d3d7ac53521a",
+  "fields": {
+    "created_at": "2026-05-23T18:51:47.044Z",
+    "updated_at": "2026-05-23T18:51:47.044Z",
+    "clan": "7633d7fc-b040-4bb9-861e-cacae15bffdc",
+    "title": "Constitution of BUBABI",
+    "document_type": "constitution",
+    "description": "Constitution of the BUBABI clan.",
+    "file": "clan_documents/2026/05/Katiba_ya_BUBABI_2026_Kamili.pdf",
+    "version": "1.0",
+    "is_active": false,
+    "is_public": true,
+    "uploaded_by": [
+      "aciusjob1@gmail.com"
+    ],
+    "effective_date": null,
+    "review_date": null
+  }
+},
+{
+  "model": "identity.clandocument",
+  "pk": "21123c82-0012-4fbd-acda-72648ddd584a",
+  "fields": {
+    "created_at": "2026-05-23T19:22:00.484Z",
+    "updated_at": "2026-05-23T19:22:00.484Z",
+    "clan": "7633d7fc-b040-4bb9-861e-cacae15bffdc",
+    "title": "Constitution of BUBABI",
+    "document_type": "constitution",
+    "description": "Constitution of the BUBABI clan.",
+    "file": "clan_documents/2026/05/Katiba_ya_BUBABI_2026_Kamili_IKlZonY.pdf",
+    "version": "1.0",
+    "is_active": true,
+    "is_public": true,
+    "uploaded_by": [
+      "aciusjob1@gmail.com"
+    ],
+    "effective_date": null,
+    "review_date": null
+  }
+},
+{
+  "model": "identity.clandocument",
+  "pk": "2d66f07d-f55a-4770-8dbb-c5e70101b3fc",
+  "fields": {
+    "created_at": "2026-05-23T05:54:07.328Z",
+    "updated_at": "2026-05-23T05:54:07.328Z",
+    "clan": "7633d7fc-b040-4bb9-861e-cacae15bffdc",
+    "title": "Constitution of BUBABI",
+    "document_type": "constitution",
+    "description": "Constitution of the BUBABI clan.",
+    "file": "clan_documents/2026/05/Katiba_ya_BUBABI_2026_WVgFuWs.docx",
+    "version": "1.0",
+    "is_active": false,
+    "is_public": true,
+    "uploaded_by": [
+      "aciusjob1@gmail.com"
+    ],
+    "effective_date": null,
+    "review_date": null
+  }
+},
+{
+  "model": "accounts.usersession",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "session_key": "oq1vcxq3qx40hgvotpvxcicy4lszlvmj",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Mobile Safari/537.36",
+    "created_at": "2026-06-01T16:47:19.488Z",
+    "last_activity": "2026-06-01T16:47:52.591Z",
+    "expired_at": "2026-06-01T23:39:33.949Z",
+    "is_active": false,
+    "device_fingerprint": "987a01048f23bb86195b81f48fde3ce76181504a057f939096d75c9fecd4ae7c",
+    "risk_score": 40,
+    "country": null,
+    "city": null,
+    "logout_reason": "new_login"
+  }
+},
+{
+  "model": "accounts.usersession",
+  "pk": 2,
+  "fields": {
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "session_key": "19bo4v7151hbwpe3xcisrp78pz9p99n3",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Mobile Safari/537.36",
+    "created_at": "2026-06-01T23:39:33.955Z",
+    "last_activity": "2026-06-01T23:42:07.221Z",
+    "expired_at": null,
+    "is_active": true,
+    "device_fingerprint": null,
+    "risk_score": 0,
+    "country": null,
+    "city": null,
+    "logout_reason": ""
+  }
+},
+{
+  "model": "genealogy.family",
+  "pk": "712c050d-edf9-4a9a-9779-bb2b298d6821",
+  "fields": {
+    "created_at": "2026-05-24T06:55:15.895Z",
+    "updated_at": "2026-05-24T06:55:15.895Z",
+    "clan": "7633d7fc-b040-4bb9-861e-cacae15bffdc",
+    "name": "Job family",
+    "description": "Together we strive",
+    "founding_person": "c3bcb872-46e5-4d95-ad08-2057a37eae46",
+    "established_date": null
+  }
+},
+{
+  "model": "genealogy.personfamilymembership",
+  "pk": "151cce2c-e0ec-4bfb-84c9-0e696e68a8a1",
+  "fields": {
+    "created_at": "2026-05-24T07:27:39.293Z",
+    "updated_at": "2026-05-24T07:27:39.293Z",
+    "person": "642abc32-1e22-4c8a-a848-a00eaad246b7",
+    "family": "712c050d-edf9-4a9a-9779-bb2b298d6821",
+    "role_in_family": "member",
+    "joined_family_at": null,
+    "notes": ""
+  }
+},
+{
+  "model": "genealogy.personfamilymembership",
+  "pk": "3cb9e457-b4c8-4753-989a-2db7dbca612a",
+  "fields": {
+    "created_at": "2026-05-24T06:55:15.970Z",
+    "updated_at": "2026-05-24T06:55:15.970Z",
+    "person": "c3bcb872-46e5-4d95-ad08-2057a37eae46",
+    "family": "712c050d-edf9-4a9a-9779-bb2b298d6821",
+    "role_in_family": "founder",
+    "joined_family_at": null,
+    "notes": ""
+  }
+},
+{
+  "model": "genealogy.personfamilymembership",
+  "pk": "9b93c321-1b8b-41d6-aad7-b91e5f86f865",
+  "fields": {
+    "created_at": "2026-05-24T06:56:50.783Z",
+    "updated_at": "2026-05-24T06:56:50.783Z",
+    "person": "60dfd7ae-ede5-43f1-b3af-2b9938fb07f5",
+    "family": "712c050d-edf9-4a9a-9779-bb2b298d6821",
+    "role_in_family": "child",
+    "joined_family_at": null,
+    "notes": ""
+  }
+},
+{
+  "model": "genealogy.relationship",
+  "pk": "f2b64f97-e214-413f-9238-d0429cf1f7d2",
+  "fields": {
+    "created_at": "2026-05-24T07:27:39.275Z",
+    "updated_at": "2026-05-24T07:27:39.275Z",
+    "from_person": "c3bcb872-46e5-4d95-ad08-2057a37eae46",
+    "to_person": "60dfd7ae-ede5-43f1-b3af-2b9938fb07f5",
+    "relation_type": "parent",
+    "is_biological": true,
+    "start_date": null,
+    "end_date": null,
+    "notes": "",
+    "recorded_by": [
+      "aciusjob1@gmail.com"
+    ]
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "107d197c-006a-43c7-ba98-ea23e070827b",
+  "fields": {
+    "created_at": "2026-05-12T21:48:54.249Z",
+    "updated_at": "2026-05-12T21:48:54.249Z",
+    "codename": "genealogy.add_relationship",
+    "description": "Add relationship",
+    "domain": "genealogy"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "11066b24-15d7-4c21-980e-dcac1705861e",
+  "fields": {
+    "created_at": "2026-05-24T04:08:09.660Z",
+    "updated_at": "2026-05-24T04:08:09.660Z",
+    "codename": "can_resolve_reports",
+    "description": "Resolve post reports",
+    "domain": "moderation"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "16eb739d-9bed-4180-b91a-a586ca5d4009",
+  "fields": {
+    "created_at": "2026-05-24T04:08:09.684Z",
+    "updated_at": "2026-05-24T04:08:09.684Z",
+    "codename": "can_assign_roles",
+    "description": "Assign/remove roles",
+    "domain": "governance"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "17b75856-8012-4117-b79d-6aecd5d2a293",
+  "fields": {
+    "created_at": "2026-05-24T04:08:09.694Z",
+    "updated_at": "2026-05-24T04:08:09.694Z",
+    "codename": "can_delete_events",
+    "description": "Delete events permanently",
+    "domain": "governance"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "2b01aac2-9b05-4eea-a37c-f5d68fc261ce",
+  "fields": {
+    "created_at": "2026-05-24T04:08:09.710Z",
+    "updated_at": "2026-05-24T04:08:09.710Z",
+    "codename": "can_delete_persons",
+    "description": "Delete persons",
+    "domain": "genealogy"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "31639b0a-3131-453e-946f-af339eff91cd",
+  "fields": {
+    "created_at": "2026-05-12T21:48:54.237Z",
+    "updated_at": "2026-05-12T21:48:54.237Z",
+    "codename": "genealogy.add_person",
+    "description": "Add person",
+    "domain": "genealogy"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "355a3a66-c3f8-4619-ad07-782f3d9cbe78",
+  "fields": {
+    "created_at": "2026-05-12T21:48:54.217Z",
+    "updated_at": "2026-05-12T21:48:54.217Z",
+    "codename": "governance.assign_role",
+    "description": "Assign roles",
+    "domain": "governance"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "458d8de1-d68c-46af-9f4c-6c0dc07b44f9",
+  "fields": {
+    "created_at": "2026-05-12T21:48:54.232Z",
+    "updated_at": "2026-05-12T21:48:54.232Z",
+    "codename": "governance.create_approval_request",
+    "description": "Create approval request",
+    "domain": "governance"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "53caaf86-590e-4cc9-b7a9-27b140053926",
+  "fields": {
+    "created_at": "2026-05-24T04:08:09.654Z",
+    "updated_at": "2026-05-24T04:08:09.654Z",
+    "codename": "can_block_members",
+    "description": "Block/unblock members",
+    "domain": "moderation"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "55334121-81ae-48e4-a3f5-ce5530f6c4fc",
+  "fields": {
+    "created_at": "2026-05-24T04:08:09.673Z",
+    "updated_at": "2026-05-24T04:08:09.673Z",
+    "codename": "can_manage_constitution",
+    "description": "Upload/manage constitution",
+    "domain": "moderation"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "622f0234-3fc5-42cc-a81a-5e863f68067d",
+  "fields": {
+    "created_at": "2026-05-24T04:08:09.718Z",
+    "updated_at": "2026-05-24T04:08:09.718Z",
+    "codename": "can_view_audit",
+    "description": "View audit logs",
+    "domain": "audit"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "816b1fee-775a-41de-ae26-8d7a34d6ef77",
+  "fields": {
+    "created_at": "2026-05-24T04:08:09.621Z",
+    "updated_at": "2026-05-24T04:08:09.621Z",
+    "codename": "can_invite_members",
+    "description": "Invite new members",
+    "domain": "operations"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "86109d76-a622-4057-8880-c4db1c6081e3",
+  "fields": {
+    "created_at": "2026-05-12T21:48:54.221Z",
+    "updated_at": "2026-05-12T21:48:54.221Z",
+    "codename": "governance.initiate_vote",
+    "description": "Initiate vote",
+    "domain": "governance"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "8734755d-f514-4719-8186-a6af7c219cce",
+  "fields": {
+    "created_at": "2026-05-24T04:08:09.643Z",
+    "updated_at": "2026-05-24T04:08:09.643Z",
+    "codename": "can_send_bulk_sms",
+    "description": "Send bulk SMS",
+    "domain": "operations"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "925c0c1a-a38b-4622-8b07-da5da93e39ca",
+  "fields": {
+    "created_at": "2026-05-24T04:08:09.648Z",
+    "updated_at": "2026-05-24T04:08:09.648Z",
+    "codename": "can_record_minutes",
+    "description": "Record meeting minutes",
+    "domain": "operations"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "95bd1b1f-9843-4a89-a4e0-a125431884e7",
+  "fields": {
+    "created_at": "2026-05-24T04:08:09.614Z",
+    "updated_at": "2026-05-24T04:08:09.614Z",
+    "codename": "can_approve_loans",
+    "description": "Approve/reject/disburse loans",
+    "domain": "finance"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "a1e19063-1c27-43b8-b41d-af46fbe402e9",
+  "fields": {
+    "created_at": "2026-05-24T04:08:09.598Z",
+    "updated_at": "2026-05-24T04:08:09.598Z",
+    "codename": "can_generate_contributions",
+    "description": "Generate contribution periods",
+    "domain": "finance"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "a7fbd5ba-dca0-45d4-a7e8-4cf532449c4b",
+  "fields": {
+    "created_at": "2026-05-24T04:08:09.699Z",
+    "updated_at": "2026-05-24T04:08:09.699Z",
+    "codename": "can_edit_relationships",
+    "description": "Add/edit relationships",
+    "domain": "genealogy"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "aa0d305b-9c1c-4374-8e53-bafc763f46f4",
+  "fields": {
+    "created_at": "2026-05-24T04:08:09.636Z",
+    "updated_at": "2026-05-24T04:08:09.636Z",
+    "codename": "can_manage_events",
+    "description": "Create/edit/cancel events",
+    "domain": "operations"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "ac5a0780-d949-4db1-9c17-fde1ac773e38",
+  "fields": {
+    "created_at": "2026-05-24T04:08:09.704Z",
+    "updated_at": "2026-05-24T04:08:09.704Z",
+    "codename": "can_add_family_members",
+    "description": "Add family members",
+    "domain": "genealogy"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "b3f63634-03ec-49eb-9b18-9bd76068b342",
+  "fields": {
+    "created_at": "2026-05-12T21:48:54.226Z",
+    "updated_at": "2026-05-12T21:48:54.226Z",
+    "codename": "governance.close_vote",
+    "description": "Close vote",
+    "domain": "governance"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "b607f09f-8b69-413f-b846-f87b7ab46c82",
+  "fields": {
+    "created_at": "2026-05-24T04:08:09.679Z",
+    "updated_at": "2026-05-24T04:08:09.679Z",
+    "codename": "can_manage_judicial",
+    "description": "File/update judicial cases",
+    "domain": "moderation"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "c4e8c585-c8f1-4040-9ae8-5b029a5d5da1",
+  "fields": {
+    "created_at": "2026-05-24T04:08:09.628Z",
+    "updated_at": "2026-05-24T04:08:09.628Z",
+    "codename": "can_create_announcements",
+    "description": "Create announcements",
+    "domain": "operations"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "c5539803-d66b-484e-92e0-56b02f8c0b40",
+  "fields": {
+    "created_at": "2026-05-24T04:08:09.609Z",
+    "updated_at": "2026-05-24T04:08:09.609Z",
+    "codename": "can_verify_payments",
+    "description": "Verify payments",
+    "domain": "finance"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "d26e4e86-3f27-4958-b941-e0c9f1564440",
+  "fields": {
+    "created_at": "2026-05-24T04:08:09.603Z",
+    "updated_at": "2026-05-24T04:08:09.604Z",
+    "codename": "can_record_expenses",
+    "description": "Record expenses",
+    "domain": "finance"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "d3e3764d-65f0-46db-8329-cff809ce60df",
+  "fields": {
+    "created_at": "2026-05-12T21:48:54.243Z",
+    "updated_at": "2026-05-12T21:48:54.243Z",
+    "codename": "genealogy.edit_person",
+    "description": "Edit person",
+    "domain": "genealogy"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "d465d7ac-e122-4a83-b777-4dea1d6c13c6",
+  "fields": {
+    "created_at": "2026-05-24T04:08:09.666Z",
+    "updated_at": "2026-05-24T04:08:09.666Z",
+    "codename": "can_upload_documents",
+    "description": "Upload clan documents",
+    "domain": "moderation"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "d5e3a61b-b082-42b4-b3f9-4414d74d81a2",
+  "fields": {
+    "created_at": "2026-05-24T04:08:09.590Z",
+    "updated_at": "2026-05-24T04:08:09.590Z",
+    "codename": "can_view_financials",
+    "description": "View financial dashboard",
+    "domain": "finance"
+  }
+},
+{
+  "model": "governance.clanpermission",
+  "pk": "ecdb06ce-48c1-4a0a-93e5-b7afafab82c1",
+  "fields": {
+    "created_at": "2026-05-24T04:08:09.689Z",
+    "updated_at": "2026-05-24T04:08:09.689Z",
+    "codename": "can_change_status",
+    "description": "Change member status",
+    "domain": "governance"
+  }
+},
+{
+  "model": "governance.role",
+  "pk": "2a279945-34d2-4d95-be66-165d9a765a21",
+  "fields": {
+    "created_at": "2026-05-12T21:30:13.101Z",
+    "updated_at": "2026-05-12T21:30:13.101Z",
+    "clan": "7633d7fc-b040-4bb9-861e-cacae15bffdc",
+    "name": "Leader",
+    "hierarchy_level": 5,
+    "is_system_role": false,
+    "description": "",
+    "permissions": [
+      "107d197c-006a-43c7-ba98-ea23e070827b",
+      "16eb739d-9bed-4180-b91a-a586ca5d4009",
+      "17b75856-8012-4117-b79d-6aecd5d2a293",
+      "31639b0a-3131-453e-946f-af339eff91cd",
+      "355a3a66-c3f8-4619-ad07-782f3d9cbe78",
+      "458d8de1-d68c-46af-9f4c-6c0dc07b44f9",
+      "86109d76-a622-4057-8880-c4db1c6081e3",
+      "b3f63634-03ec-49eb-9b18-9bd76068b342",
+      "d3e3764d-65f0-46db-8329-cff809ce60df",
+      "ecdb06ce-48c1-4a0a-93e5-b7afafab82c1"
+    ],
+    "inherits": []
+  }
+},
+{
+  "model": "governance.role",
+  "pk": "3ee23144-841d-4098-9b71-9c8e0897f87c",
+  "fields": {
+    "created_at": "2026-05-12T21:48:54.266Z",
+    "updated_at": "2026-05-12T21:48:54.266Z",
+    "clan": "7633d7fc-b040-4bb9-861e-cacae15bffdc",
+    "name": "Deputy Leader",
+    "hierarchy_level": 4,
+    "is_system_role": true,
+    "description": "",
+    "permissions": [
+      "107d197c-006a-43c7-ba98-ea23e070827b",
+      "31639b0a-3131-453e-946f-af339eff91cd",
+      "86109d76-a622-4057-8880-c4db1c6081e3"
+    ],
+    "inherits": []
+  }
+},
+{
+  "model": "governance.role",
+  "pk": "57f7bfe9-6cb7-4bad-8237-23ed6415198a",
+  "fields": {
+    "created_at": "2026-05-12T21:48:54.311Z",
+    "updated_at": "2026-05-12T21:48:54.311Z",
+    "clan": "7633d7fc-b040-4bb9-861e-cacae15bffdc",
+    "name": "Member",
+    "hierarchy_level": 0,
+    "is_system_role": true,
+    "description": "",
+    "permissions": [],
+    "inherits": []
+  }
+},
+{
+  "model": "governance.role",
+  "pk": "689a1a60-da3f-4dd6-b3c1-93b98f660270",
+  "fields": {
+    "created_at": "2026-05-18T21:44:22.014Z",
+    "updated_at": "2026-05-18T21:44:22.014Z",
+    "clan": "7633d7fc-b040-4bb9-861e-cacae15bffdc",
+    "name": "Moderator",
+    "hierarchy_level": 4,
+    "is_system_role": false,
+    "description": "Clan Moderator - Manages rules, reports, and community standards",
+    "permissions": [
+      "11066b24-15d7-4c21-980e-dcac1705861e",
+      "53caaf86-590e-4cc9-b7a9-27b140053926",
+      "55334121-81ae-48e4-a3f5-ce5530f6c4fc",
+      "b607f09f-8b69-413f-b846-f87b7ab46c82",
+      "d465d7ac-e122-4a83-b777-4dea1d6c13c6"
+    ],
+    "inherits": [
+      "e229419a-6560-4dce-9c09-885d44353048"
+    ]
+  }
+},
+{
+  "model": "governance.role",
+  "pk": "7366908b-5073-495b-9385-3986432a0dfe",
+  "fields": {
+    "created_at": "2026-05-12T21:48:54.299Z",
+    "updated_at": "2026-05-12T21:48:54.299Z",
+    "clan": "7633d7fc-b040-4bb9-861e-cacae15bffdc",
+    "name": "Elder",
+    "hierarchy_level": 1,
+    "is_system_role": true,
+    "description": "",
+    "permissions": [
+      "31639b0a-3131-453e-946f-af339eff91cd",
+      "622f0234-3fc5-42cc-a81a-5e863f68067d",
+      "a7fbd5ba-dca0-45d4-a7e8-4cf532449c4b",
+      "ac5a0780-d949-4db1-9c17-fde1ac773e38"
+    ],
+    "inherits": []
+  }
+},
+{
+  "model": "governance.role",
+  "pk": "8f45eff9-f42d-435e-ac09-08920ad84f2d",
+  "fields": {
+    "created_at": "2026-05-12T21:48:54.277Z",
+    "updated_at": "2026-05-12T21:48:54.277Z",
+    "clan": "7633d7fc-b040-4bb9-861e-cacae15bffdc",
+    "name": "Treasurer",
+    "hierarchy_level": 3,
+    "is_system_role": true,
+    "description": "",
+    "permissions": [
+      "95bd1b1f-9843-4a89-a4e0-a125431884e7",
+      "a1e19063-1c27-43b8-b41d-af46fbe402e9",
+      "c5539803-d66b-484e-92e0-56b02f8c0b40",
+      "d26e4e86-3f27-4958-b941-e0c9f1564440",
+      "d5e3a61b-b082-42b4-b3f9-4414d74d81a2"
+    ],
+    "inherits": []
+  }
+},
+{
+  "model": "governance.role",
+  "pk": "e229419a-6560-4dce-9c09-885d44353048",
+  "fields": {
+    "created_at": "2026-05-12T21:48:54.288Z",
+    "updated_at": "2026-05-12T21:48:54.288Z",
+    "clan": "7633d7fc-b040-4bb9-861e-cacae15bffdc",
+    "name": "Secretary",
+    "hierarchy_level": 2,
+    "is_system_role": true,
+    "description": "",
+    "permissions": [
+      "107d197c-006a-43c7-ba98-ea23e070827b",
+      "31639b0a-3131-453e-946f-af339eff91cd",
+      "816b1fee-775a-41de-ae26-8d7a34d6ef77",
+      "8734755d-f514-4719-8186-a6af7c219cce",
+      "925c0c1a-a38b-4622-8b07-da5da93e39ca",
+      "aa0d305b-9c1c-4374-8e53-bafc763f46f4",
+      "c4e8c585-c8f1-4040-9ae8-5b029a5d5da1"
+    ],
+    "inherits": [
+      "7366908b-5073-495b-9385-3986432a0dfe"
+    ]
+  }
+},
+{
+  "model": "governance.memberrole",
+  "pk": "0fb91fdc-6ebb-4528-b7cf-92f77ad36458",
+  "fields": {
+    "created_at": "2026-05-18T21:21:48.035Z",
+    "updated_at": "2026-05-23T17:09:27.397Z",
+    "member": [
+      "aciusjob1@gmail.com"
+    ],
+    "role": "2a279945-34d2-4d95-be66-165d9a765a21",
+    "assigned_by": [
+      "aciusjob1@gmail.com"
+    ],
+    "expires_at": null,
+    "is_active": false,
+    "notes": ""
+  }
+},
+{
+  "model": "governance.memberrole",
+  "pk": "127a553f-bc07-4dd2-a81c-0200f021fe3d",
+  "fields": {
+    "created_at": "2026-05-24T03:45:56.799Z",
+    "updated_at": "2026-05-24T21:15:53.576Z",
+    "member": [
+      "keacius@gmail.com"
+    ],
+    "role": "e229419a-6560-4dce-9c09-885d44353048",
+    "assigned_by": [
+      "aciusjob1@gmail.com"
+    ],
+    "expires_at": null,
+    "is_active": true,
+    "notes": ""
+  }
+},
+{
+  "model": "governance.memberrole",
+  "pk": "1b7f6211-7770-42b1-b2c7-0ee9cd7bb9ce",
+  "fields": {
+    "created_at": "2026-05-23T17:30:09.964Z",
+    "updated_at": "2026-05-23T17:31:45.856Z",
+    "member": [
+      "keacius@gmail.com"
+    ],
+    "role": "57f7bfe9-6cb7-4bad-8237-23ed6415198a",
+    "assigned_by": [
+      "aciusjob1@gmail.com"
+    ],
+    "expires_at": null,
+    "is_active": true,
+    "notes": ""
+  }
+},
+{
+  "model": "governance.memberrole",
+  "pk": "8a0a77ac-5d6c-4a0e-96ad-5d9ab945ce81",
+  "fields": {
+    "created_at": "2026-05-23T16:54:34.136Z",
+    "updated_at": "2026-06-01T23:41:29.684Z",
+    "member": [
+      "keacius@gmail.com"
+    ],
+    "role": "7366908b-5073-495b-9385-3986432a0dfe",
+    "assigned_by": [
+      "aciusjob1@gmail.com"
+    ],
+    "expires_at": null,
+    "is_active": true,
+    "notes": ""
+  }
+},
+{
+  "model": "governance.memberrole",
+  "pk": "d446f590-6fca-4e88-97f5-c0ddb9875786",
+  "fields": {
+    "created_at": "2026-05-23T06:13:06.749Z",
+    "updated_at": "2026-05-23T18:00:24.229Z",
+    "member": [
+      "aciusjob1@gmail.com"
+    ],
+    "role": "7366908b-5073-495b-9385-3986432a0dfe",
+    "assigned_by": [
+      "aciusjob1@gmail.com"
+    ],
+    "expires_at": null,
+    "is_active": false,
+    "notes": ""
+  }
+},
+{
+  "model": "governance.memberrole",
+  "pk": "dca857ce-551f-47c6-89bb-c59a09f2512f",
+  "fields": {
+    "created_at": "2026-05-24T01:42:36.003Z",
+    "updated_at": "2026-05-24T01:42:36.003Z",
+    "member": [
+      "keacius@gmail.com"
+    ],
+    "role": "689a1a60-da3f-4dd6-b3c1-93b98f660270",
+    "assigned_by": [
+      "aciusjob1@gmail.com"
+    ],
+    "expires_at": null,
+    "is_active": false,
+    "notes": ""
+  }
+},
+{
+  "model": "financials.account",
+  "pk": "4d84fea5-b557-4332-9a7f-08d9cc13ac54",
+  "fields": {
+    "created_at": "2026-05-22T23:31:05.550Z",
+    "updated_at": "2026-05-22T23:31:05.550Z",
+    "clan": "7633d7fc-b040-4bb9-861e-cacae15bffdc",
+    "name": "BUBABI Pool Account",
+    "account_type": "pool",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "audit.auditlog",
+  "pk": "29726e37-7202-4a2c-8774-e7c2719fe371",
+  "fields": {
+    "created_at": "2026-06-01T23:39:33.962Z",
+    "actor": [
+      "aciusjob1@gmail.com"
+    ],
+    "action": "login",
+    "domain": "auth",
+    "target_type": "Member",
+    "target_id": "a7087bc8-9c8f-4fc5-958b-cee7f31569e7",
+    "before_state": null,
+    "after_state": null,
+    "reason": "",
+    "ip_address": "127.0.0.1",
+    "timestamp": "2026-06-01T23:39:33.962Z"
+  }
+},
+{
+  "model": "audit.auditlog",
+  "pk": "458d9b48-ccc0-41f8-b665-3e08ceb9b19a",
+  "fields": {
+    "created_at": "2026-05-26T14:26:44.138Z",
+    "actor": [
+      "aciusjob1@gmail.com"
+    ],
+    "action": "login",
+    "domain": "auth",
+    "target_type": "Member",
+    "target_id": "a7087bc8-9c8f-4fc5-958b-cee7f31569e7",
+    "before_state": null,
+    "after_state": null,
+    "reason": "",
+    "ip_address": "127.0.0.1",
+    "timestamp": "2026-05-26T14:26:44.138Z"
+  }
+},
+{
+  "model": "audit.auditlog",
+  "pk": "46e0d6ee-6dd7-4adf-a3d7-b9bd1a9b388f",
+  "fields": {
+    "created_at": "2026-05-26T04:03:08.937Z",
+    "actor": [
+      "keacius@gmail.com"
+    ],
+    "action": "login",
+    "domain": "auth",
+    "target_type": "Member",
+    "target_id": "cc4c0863-7eed-4581-9519-c3582b8bd4c5",
+    "before_state": null,
+    "after_state": null,
+    "reason": "",
+    "ip_address": "127.0.0.1",
+    "timestamp": "2026-05-26T04:03:08.937Z"
+  }
+},
+{
+  "model": "audit.auditlog",
+  "pk": "a92c8dfa-94c1-47cd-82df-8d4fe8c69f86",
+  "fields": {
+    "created_at": "2026-05-26T18:51:10.504Z",
+    "actor": [
+      "aciusjob1@gmail.com"
+    ],
+    "action": "login",
+    "domain": "auth",
+    "target_type": "Member",
+    "target_id": "a7087bc8-9c8f-4fc5-958b-cee7f31569e7",
+    "before_state": null,
+    "after_state": null,
+    "reason": "",
+    "ip_address": "127.0.0.1",
+    "timestamp": "2026-05-26T18:51:10.504Z"
+  }
+},
+{
+  "model": "audit.auditlog",
+  "pk": "b6c289ef-5c5e-4c60-9942-f97816faedd2",
+  "fields": {
+    "created_at": "2026-05-26T19:04:17.750Z",
+    "actor": [
+      "aciusjob1@gmail.com"
+    ],
+    "action": "login",
+    "domain": "auth",
+    "target_type": "Member",
+    "target_id": "a7087bc8-9c8f-4fc5-958b-cee7f31569e7",
+    "before_state": null,
+    "after_state": null,
+    "reason": "",
+    "ip_address": "127.0.0.1",
+    "timestamp": "2026-05-26T19:04:17.750Z"
+  }
+},
+{
+  "model": "audit.auditlog",
+  "pk": "db009695-511e-45a7-93bd-ccf8b588d0ec",
+  "fields": {
+    "created_at": "2026-05-26T14:27:55.561Z",
+    "actor": [
+      "aciusjob1@gmail.com"
+    ],
+    "action": "login",
+    "domain": "auth",
+    "target_type": "Member",
+    "target_id": "a7087bc8-9c8f-4fc5-958b-cee7f31569e7",
+    "before_state": null,
+    "after_state": null,
+    "reason": "",
+    "ip_address": "127.0.0.1",
+    "timestamp": "2026-05-26T14:27:55.561Z"
+  }
+},
+{
+  "model": "audit.auditlog",
+  "pk": "dc8b1404-5b33-4641-a390-f84f37ad88ef",
+  "fields": {
+    "created_at": "2026-05-26T11:42:06.961Z",
+    "actor": [
+      "keacius@gmail.com"
+    ],
+    "action": "login",
+    "domain": "auth",
+    "target_type": "Member",
+    "target_id": "cc4c0863-7eed-4581-9519-c3582b8bd4c5",
+    "before_state": null,
+    "after_state": null,
+    "reason": "",
+    "ip_address": "127.0.0.1",
+    "timestamp": "2026-05-26T11:42:06.962Z"
+  }
+},
+{
+  "model": "compliance.policy",
+  "pk": "cdc02f9ff0f043c09b8ef14a30b0e7bb",
+  "fields": {
+    "key": "terms_of_service",
+    "version": "v1",
+    "is_active": true,
+    "title": "Terms of Service",
+    "content": "BUBABI Clan Management System Terms of Service v1",
+    "effective_at": "2026-05-24T21:40:27.630Z",
+    "created_at": "2026-05-24T21:40:27.630Z"
+  }
+},
+{
+  "model": "authtoken.token",
+  "pk": "18db99ca33553c3e2a006c2dc2a6cd23231126a8",
+  "fields": {
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "created": "2026-05-13T04:53:35.632Z"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 1,
+  "fields": {
+    "action_time": "2026-05-12T20:59:58.312Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "identity",
+      "clan"
+    ],
+    "object_id": "7633d7fc-b040-4bb9-861e-cacae15bffdc",
+    "object_repr": "Bubabi",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 2,
+  "fields": {
+    "action_time": "2026-05-12T21:02:34.167Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "identity",
+      "person"
+    ],
+    "object_id": "60dfd7ae-ede5-43f1-b3af-2b9938fb07f5",
+    "object_repr": "Acius Job Missingo",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 3,
+  "fields": {
+    "action_time": "2026-05-12T21:04:13.198Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "identity",
+      "member"
+    ],
+    "object_id": "a7087bc8-9c8f-4fc5-958b-cee7f31569e7",
+    "object_repr": "Acius Job Missingo (aciusjob1@gmail.com)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Person\", \"Clan\", \"Phone\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 4,
+  "fields": {
+    "action_time": "2026-05-12T21:13:58.242Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "genealogy",
+      "family"
+    ],
+    "object_id": "616356bf-3e4c-49aa-8a24-5b4ff11607d7",
+    "object_repr": "Job's Family (Bubabi)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 5,
+  "fields": {
+    "action_time": "2026-05-12T21:16:37.376Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "identity",
+      "person"
+    ],
+    "object_id": "7edc3cd9-de6d-4d89-8baf-9c80050d18be",
+    "object_repr": "Job Missingo",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 6,
+  "fields": {
+    "action_time": "2026-05-12T21:16:47.110Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "genealogy",
+      "family"
+    ],
+    "object_id": "616356bf-3e4c-49aa-8a24-5b4ff11607d7",
+    "object_repr": "Job's Family (Bubabi)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Founding person\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 7,
+  "fields": {
+    "action_time": "2026-05-12T21:18:41.982Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "genealogy",
+      "relationship"
+    ],
+    "object_id": "d128d6be-d8a4-4913-ab01-d586ed83ec1a",
+    "object_repr": "Job Missingo → [parent] → Acius Job Missingo",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 8,
+  "fields": {
+    "action_time": "2026-05-12T21:27:57.023Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "governance",
+      "role"
+    ],
+    "object_id": "077ec1a9-5b9c-416f-9832-1652f496f87f",
+    "object_repr": "Leader (Bubabi)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 9,
+  "fields": {
+    "action_time": "2026-05-12T21:29:49.983Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "governance",
+      "role"
+    ],
+    "object_id": "077ec1a9-5b9c-416f-9832-1652f496f87f",
+    "object_repr": "Leader (Bubabi)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 10,
+  "fields": {
+    "action_time": "2026-05-12T21:30:13.104Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "governance",
+      "role"
+    ],
+    "object_id": "2a279945-34d2-4d95-be66-165d9a765a21",
+    "object_repr": "Leader (Bubabi)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 11,
+  "fields": {
+    "action_time": "2026-05-12T21:31:54.236Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "governance",
+      "memberrole"
+    ],
+    "object_id": "021d6938-c9e1-4b5b-ab83-19e4e8ec25a3",
+    "object_repr": "Acius Job Missingo (aciusjob1@gmail.com) → Leader",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 12,
+  "fields": {
+    "action_time": "2026-05-12T21:35:11.500Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "financials",
+      "account"
+    ],
+    "object_id": "eb9ade20-4245-4d05-ab23-dd521c16ec00",
+    "object_repr": "BUBABI MAIN FUND (Bubabi)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 13,
+  "fields": {
+    "action_time": "2026-05-12T21:48:33.902Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "identity",
+      "clan"
+    ],
+    "object_id": "7633d7fc-b040-4bb9-861e-cacae15bffdc",
+    "object_repr": "BUBABI",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 14,
+  "fields": {
+    "action_time": "2026-05-14T23:21:29.143Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "identity",
+      "member"
+    ],
+    "object_id": "6c4d3462-40ab-46a2-9540-f6b721334e57",
+    "object_repr": "keacius@gmail.com",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 15,
+  "fields": {
+    "action_time": "2026-05-14T23:22:27.479Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "identity",
+      "member"
+    ],
+    "object_id": "6c4d3462-40ab-46a2-9540-f6b721334e57",
+    "object_repr": "Job Missingo (keacius@gmail.com)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Person\", \"Clan\", \"Phone\", \"Invited by\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 16,
+  "fields": {
+    "action_time": "2026-05-16T05:09:01.481Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "genealogy",
+      "relationship"
+    ],
+    "object_id": "d128d6be-d8a4-4913-ab01-d586ed83ec1a",
+    "object_repr": "Job Missingo → [parent] → Acius Job Missingo",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 17,
+  "fields": {
+    "action_time": "2026-05-16T05:11:50.308Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "genealogy",
+      "relationship"
+    ],
+    "object_id": "171b9790-830f-4381-866a-7e18972dd508",
+    "object_repr": "Acius Job Missingo → [child] → Job Missingo",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 18,
+  "fields": {
+    "action_time": "2026-05-16T05:13:07.324Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "genealogy",
+      "personfamilymembership"
+    ],
+    "object_id": "3a18e1f7-8797-4338-9322-00dff99c89e0",
+    "object_repr": "Job Missingo → Job's Family (member)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 19,
+  "fields": {
+    "action_time": "2026-05-17T05:02:34.892Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "identity",
+      "member"
+    ],
+    "object_id": "a7087bc8-9c8f-4fc5-958b-cee7f31569e7",
+    "object_repr": "Acius Job Missingo (aciusjob1@gmail.com)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Phone\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 20,
+  "fields": {
+    "action_time": "2026-05-17T05:33:10.133Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "identity",
+      "member"
+    ],
+    "object_id": "a7087bc8-9c8f-4fc5-958b-cee7f31569e7",
+    "object_repr": "Acius Job Missingo (aciusjob1@gmail.com)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Phone\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 21,
+  "fields": {
+    "action_time": "2026-05-17T05:38:18.832Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "identity",
+      "member"
+    ],
+    "object_id": "6c4d3462-40ab-46a2-9540-f6b721334e57",
+    "object_repr": "Job Missingo (keacius@gmail.com)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Phone\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 22,
+  "fields": {
+    "action_time": "2026-05-17T16:16:36.851Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "identity",
+      "member"
+    ],
+    "object_id": "7db92edd-b439-4cad-b5b3-517ef68c36f0",
+    "object_repr": "Abilius Missingo (abilius@gmail.com)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 23,
+  "fields": {
+    "action_time": "2026-05-17T17:01:39.288Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "genealogy",
+      "personfamilymembership"
+    ],
+    "object_id": "0d1496e3-d6e5-449b-865a-381de653aacd",
+    "object_repr": "Abilius Missingo -> Job's Family (member)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 24,
+  "fields": {
+    "action_time": "2026-05-18T18:57:30.788Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "genealogy",
+      "relationship"
+    ],
+    "object_id": "171b9790-830f-4381-866a-7e18972dd508",
+    "object_repr": "Acius Job Missingo -> [child] -> Job Missingo",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 25,
+  "fields": {
+    "action_time": "2026-05-18T18:57:30.788Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "genealogy",
+      "relationship"
+    ],
+    "object_id": "d128d6be-d8a4-4913-ab01-d586ed83ec1a",
+    "object_repr": "Job Missingo -> [parent] -> Acius Job Missingo",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 26,
+  "fields": {
+    "action_time": "2026-05-18T18:58:25.112Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "financials",
+      "loan"
+    ],
+    "object_id": "5f2c35f8-ed5f-4703-b0ae-3cd33cbd8791",
+    "object_repr": "Loan: Job Missingo (keacius@gmail.com) — 1000000.00 [disbursed]",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 27,
+  "fields": {
+    "action_time": "2026-05-18T18:59:34.737Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "genealogy",
+      "personfamilymembership"
+    ],
+    "object_id": "8962768a-311d-4ae1-aeab-9e1f8c9c46e2",
+    "object_repr": "Abilius Missingo -> Job's Family (child)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 28,
+  "fields": {
+    "action_time": "2026-05-18T18:59:42.158Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "genealogy",
+      "personfamilymembership"
+    ],
+    "object_id": "b096f6bd-f03f-493e-b312-1bf47abb58ec",
+    "object_repr": "Abilius Missingo -> Job's Family (child)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 29,
+  "fields": {
+    "action_time": "2026-05-18T19:00:53.319Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "identity",
+      "memberstatushistory"
+    ],
+    "object_id": "c75310c6-e15a-4e22-bc9d-7d33f00481f4",
+    "object_repr": "MemberStatusHistory object (c75310c6-e15a-4e22-bc9d-7d33f00481f4)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 30,
+  "fields": {
+    "action_time": "2026-05-18T19:03:40.523Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "financials",
+      "contribution"
+    ],
+    "object_id": "fe6d346b-02f7-4a8b-ba76-78b582b1d975",
+    "object_repr": "Job Missingo (keacius@gmail.com) — June 24 [paid]",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 31,
+  "fields": {
+    "action_time": "2026-05-18T19:03:54.202Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "financials",
+      "contribution"
+    ],
+    "object_id": "a792bfac-7551-4f27-8925-f6574ea9824f",
+    "object_repr": "Job Missingo (keacius@gmail.com) — Anko [paid]",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 32,
+  "fields": {
+    "action_time": "2026-05-18T19:46:38.717Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "identity",
+      "member"
+    ],
+    "object_id": "e550241c-a44a-450d-b1aa-09da92709c4e",
+    "object_repr": "Abilius Missingo (abilius@gmail.com)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 33,
+  "fields": {
+    "action_time": "2026-05-18T20:04:24.099Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "genealogy",
+      "personfamilymembership"
+    ],
+    "object_id": "c036f799-0994-4ed8-9796-d8ce82f3a67d",
+    "object_repr": "Abilius Missingo -> Seed Family (founder)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 34,
+  "fields": {
+    "action_time": "2026-05-23T04:11:53.268Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "genealogy",
+      "family"
+    ],
+    "object_id": "4b60067c-2041-44b4-9a2d-d235c17146e4",
+    "object_repr": "Seed Family (BUBABI)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 35,
+  "fields": {
+    "action_time": "2026-05-23T06:15:09.509Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "identity",
+      "member"
+    ],
+    "object_id": "6c4d3462-40ab-46a2-9540-f6b721334e57",
+    "object_repr": "Job Missingo (keacius@gmail.com)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is staff\", \"Is active\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 36,
+  "fields": {
+    "action_time": "2026-05-23T06:28:23.637Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "financials",
+      "contribution"
+    ],
+    "object_id": "e1a5568c-5b77-4338-8d08-a719d5874e17",
+    "object_repr": "Job Missingo (keacius@gmail.com) — May 2026 [due]",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 37,
+  "fields": {
+    "action_time": "2026-05-23T06:28:23.637Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "financials",
+      "contribution"
+    ],
+    "object_id": "06dbb33c-6231-40b6-8595-1de8e3ea6233",
+    "object_repr": "Acius Job Missingo (aciusjob1@gmail.com) — May 2026 [due]",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 38,
+  "fields": {
+    "action_time": "2026-05-23T06:29:30.493Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "governance",
+      "memberrole"
+    ],
+    "object_id": "e9a259a6-7af5-4669-a7bb-5a7cfba84ff0",
+    "object_repr": "Job Missingo (keacius@gmail.com) → Elder",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 39,
+  "fields": {
+    "action_time": "2026-05-23T06:29:48.530Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "governance",
+      "memberrole"
+    ],
+    "object_id": "73ce1dbd-66d8-4164-8d99-61a7a024b319",
+    "object_repr": "Job Missingo (keacius@gmail.com) → Moderator",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 40,
+  "fields": {
+    "action_time": "2026-05-23T06:29:48.530Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "governance",
+      "memberrole"
+    ],
+    "object_id": "2816baa4-f511-447a-ac1a-0cb5aae3b4a9",
+    "object_repr": "Job Missingo (keacius@gmail.com) → Leader",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 41,
+  "fields": {
+    "action_time": "2026-05-23T06:38:37.352Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "identity",
+      "memberstatushistory"
+    ],
+    "object_id": "1990f72f-726c-4a9b-a06c-38c061579d1a",
+    "object_repr": "MemberStatusHistory object (1990f72f-726c-4a9b-a06c-38c061579d1a)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 42,
+  "fields": {
+    "action_time": "2026-05-23T06:38:51.760Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "identity",
+      "memberstatushistory"
+    ],
+    "object_id": "962e0269-4403-4232-a442-820fa16e69c4",
+    "object_repr": "MemberStatusHistory object (962e0269-4403-4232-a442-820fa16e69c4)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 43,
+  "fields": {
+    "action_time": "2026-05-23T06:39:07.968Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "governance",
+      "memberrole"
+    ],
+    "object_id": "eddaf634-844f-4c0f-b413-4c6e417829dc",
+    "object_repr": "Job Missingo (keacius@gmail.com) → Moderator",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 44,
+  "fields": {
+    "action_time": "2026-05-23T06:39:19.288Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "governance",
+      "memberrole"
+    ],
+    "object_id": "f8ac9f75-298c-4410-a849-9b2f35f7fe81",
+    "object_repr": "Job Missingo (keacius@gmail.com) → Elder",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 45,
+  "fields": {
+    "action_time": "2026-05-23T06:39:19.288Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "governance",
+      "memberrole"
+    ],
+    "object_id": "33e8e062-19a2-452a-8b3f-3cfd7a1691ac",
+    "object_repr": "Job Missingo (keacius@gmail.com) → Leader",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 46,
+  "fields": {
+    "action_time": "2026-05-23T06:42:09.835Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "identity",
+      "member"
+    ],
+    "object_id": "6c4d3462-40ab-46a2-9540-f6b721334e57",
+    "object_repr": "Job Missingo (keacius@gmail.com)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 47,
+  "fields": {
+    "action_time": "2026-05-23T08:27:52.716Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "identity",
+      "member"
+    ],
+    "object_id": "e4d17277-a7ee-42e6-971f-eace29e2adea",
+    "object_repr": "Job Missingo (keacius@gmail.com)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 48,
+  "fields": {
+    "action_time": "2026-05-23T08:28:20.876Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "identity",
+      "person"
+    ],
+    "object_id": "7edc3cd9-de6d-4d89-8baf-9c80050d18be",
+    "object_repr": "Job Missingo",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 49,
+  "fields": {
+    "action_time": "2026-05-23T08:28:20.876Z",
+    "user": [
+      "aciusjob1@gmail.com"
+    ],
+    "content_type": [
+      "identity",
+      "person"
+    ],
+    "object_id": "1ac16bc4-2905-4785-a0fa-bfd92348fefe",
+    "object_repr": "Job Missingo",
+    "action_flag": 3,
+    "change_message": ""
+  }
+}
+]

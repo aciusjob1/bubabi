@@ -1,0 +1,50 @@
+[2m2026-06-05T03:57:02Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m][2026-06-05 03:57:02 +0000] [636] [INFO] Starting gunicorn 26.0.0
+[2m2026-06-05T03:57:02Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m][2026-06-05 03:57:02 +0000] [636] [INFO] Listening at: http://0.0.0.0:10000 (636)
+[2m2026-06-05T03:57:02Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m][2026-06-05 03:57:02 +0000] [636] [INFO] Using worker: sync
+[2m2026-06-05T03:57:02Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m][2026-06-05 03:57:02 +0000] [646] [INFO] Booting worker with pid: 646
+[2m2026-06-05T03:57:02Z[0m proxy[0801903be64528] [32mams[0m [[34minfo[0m]machine became reachable in 382.283258ms
+[2m2026-06-05T03:57:02Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m][2026-06-05 03:57:02 +0000] [636] [INFO] Control socket listening at /root/.gunicorn/gunicorn.ctl
+[2m2026-06-05T03:57:19Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m]Forbidden (Origin checking failed - https://bubabi.fly.dev does not match any trusted origins.): /login/
+[2m2026-06-05T04:00:01Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m]Forbidden (Origin checking failed - https://bubabi.fly.dev does not match any trusted origins.): /login/
+[2m2026-06-05T04:02:02Z[0m runner[0801903be64528] [32mams[0m [[33mwarn[0m]Trial machine stopping. To run for longer than 5m0s, add a credit card by visiting https://fly.io/trial.
+[2m2026-06-05T04:02:02Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m][32m INFO[0m Sending signal SIGINT to main child process w/ PID 636
+[2m2026-06-05T04:02:02Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m][2026-06-05 04:02:02 +0000] [636] [INFO] Handling signal: int
+[2m2026-06-05T04:02:02Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m][2026-06-05 07:02:02 +0300] [646] [INFO] Worker exiting (pid: 646)
+[2m2026-06-05T04:02:02Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m][2026-06-05 04:02:02 +0000] [636] [INFO] Shutting down: Master
+[2m2026-06-05T04:02:03Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m][32m INFO[0m Main child exited normally with code: 0
+[2m2026-06-05T04:02:03Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m][32m INFO[0m Starting clean up.
+[2m2026-06-05T04:02:03Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m][  302.373102] reboot: Restarting system
+[2m2026-06-05T04:04:57Z[0m runner[7813e23b2e03e8] [32mams[0m [[34minfo[0m]Pulling container image registry.fly.io/bubabi@sha256:bc5bb714c3a7746358ba4c5edde5d003700107491e4b8555fbdbde1983c8fb4f
+[2m2026-06-05T04:04:57Z[0m runner[0801903be64528] [32mams[0m [[34minfo[0m]Pulling container image registry.fly.io/bubabi@sha256:bc5bb714c3a7746358ba4c5edde5d003700107491e4b8555fbdbde1983c8fb4f
+[2m2026-06-05T04:04:59Z[0m runner[0801903be64528] [32mams[0m [[34minfo[0m]Successfully prepared image registry.fly.io/bubabi@sha256:bc5bb714c3a7746358ba4c5edde5d003700107491e4b8555fbdbde1983c8fb4f (1.714386892s)
+[2m2026-06-05T04:04:59Z[0m runner[7813e23b2e03e8] [32mams[0m [[34minfo[0m]Successfully prepared image registry.fly.io/bubabi@sha256:bc5bb714c3a7746358ba4c5edde5d003700107491e4b8555fbdbde1983c8fb4f (1.95433278s)
+[2m2026-06-05T04:04:59Z[0m runner[7813e23b2e03e8] [32mams[0m [[34minfo[0m]Configuring firecracker
+[2m2026-06-05T04:04:59Z[0m runner[0801903be64528] [32mams[0m [[34minfo[0m]Configuring firecracker
+[2m2026-06-05T07:35:31Z[0m runner[7813e23b2e03e8] [32mams[0m [[34minfo[0m]Pulling container image registry.fly.io/bubabi@sha256:bc5bb714c3a7746358ba4c5edde5d003700107491e4b8555fbdbde1983c8fb4f
+[2m2026-06-05T07:35:31Z[0m runner[7813e23b2e03e8] [32mams[0m [[34minfo[0m]Container image registry.fly.io/bubabi@sha256:bc5bb714c3a7746358ba4c5edde5d003700107491e4b8555fbdbde1983c8fb4f already prepared
+[2m2026-06-05T07:35:31Z[0m runner[0801903be64528] [32mams[0m [[34minfo[0m]Pulling container image registry.fly.io/bubabi@sha256:bc5bb714c3a7746358ba4c5edde5d003700107491e4b8555fbdbde1983c8fb4f
+[2m2026-06-05T07:35:31Z[0m runner[0801903be64528] [32mams[0m [[34minfo[0m]Container image registry.fly.io/bubabi@sha256:bc5bb714c3a7746358ba4c5edde5d003700107491e4b8555fbdbde1983c8fb4f already prepared
+[2m2026-06-05T07:35:32Z[0m runner[7813e23b2e03e8] [32mams[0m [[34minfo[0m]Configuring firecracker
+[2m2026-06-05T07:35:34Z[0m runner[0801903be64528] [32mams[0m [[34minfo[0m]Configuring firecracker
+[2m2026-06-05T07:37:02Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m]2026-06-05T07:37:02.911584610 [01KTBBAT7E7TWJVFCCE9SVK06T:main] Running Firecracker v1.14.4
+[2m2026-06-05T07:37:02Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m]2026-06-05T07:37:02.911811887 [01KTBBAT7E7TWJVFCCE9SVK06T:main] Listening on API socket ("/fc.sock").
+[2m2026-06-05T07:37:03Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m][32m INFO[0m Starting init (commit: ea887ee)...
+[2m2026-06-05T07:37:03Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m][32m INFO[0m Preparing to run: `gunicorn config.wsgi:application --bind 0.0.0.0:10000` as root
+[2m2026-06-05T07:37:03Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m][32m INFO[0m [fly api proxy] listening at /.fly/api
+[2m2026-06-05T07:37:04Z[0m runner[0801903be64528] [32mams[0m [[34minfo[0m]Machine started in 1.236s
+[2m2026-06-05T07:37:04Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m]2026/06/05 07:37:04 INFO SSH listening listen_address=[fdaa:7a:581:a7b:3d:e408:dfff:2]:22
+[2m2026-06-05T07:37:04Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m][2026-06-05 07:37:04 +0000] [637] [INFO] Starting gunicorn 26.0.0
+[2m2026-06-05T07:37:04Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m][2026-06-05 07:37:04 +0000] [637] [INFO] Listening at: http://0.0.0.0:10000 (637)
+[2m2026-06-05T07:37:04Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m][2026-06-05 07:37:04 +0000] [637] [INFO] Using worker: sync
+[2m2026-06-05T07:37:04Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m][2026-06-05 07:37:04 +0000] [647] [INFO] Booting worker with pid: 647
+[2m2026-06-05T07:37:04Z[0m app[0801903be64528] [32mams[0m [[34minfo[0m][2026-06-05 07:37:04 +0000] [637] [INFO] Control socket listening at /root/.gunicorn/gunicorn.ctl
+[2m2026-06-05T07:37:06Z[0m app[7813e23b2e03e8] [32mams[0m [[34minfo[0m]2026-06-05T07:37:06.847354414 [01KTBBAT3SC75ZV4A056QEVM32:main] Running Firecracker v1.14.4
+[2m2026-06-05T07:37:06Z[0m app[7813e23b2e03e8] [32mams[0m [[34minfo[0m]2026-06-05T07:37:06.847536886 [01KTBBAT3SC75ZV4A056QEVM32:main] Listening on API socket ("/fc.sock").
+[2m2026-06-05T07:37:07Z[0m app[7813e23b2e03e8] [32mams[0m [[34minfo[0m][32m INFO[0m Starting init (commit: ea887ee)...
+[2m2026-06-05T07:37:07Z[0m app[7813e23b2e03e8] [32mams[0m [[34minfo[0m][32m INFO[0m Preparing to run: `gunicorn config.wsgi:application --bind 0.0.0.0:10000` as root
+[2m2026-06-05T07:37:07Z[0m app[7813e23b2e03e8] [32mams[0m [[34minfo[0m][32m INFO[0m [fly api proxy] listening at /.fly/api
+[2m2026-06-05T07:37:08Z[0m runner[7813e23b2e03e8] [32mams[0m [[34minfo[0m]Machine started in 1.394s
+[2m2026-06-05T07:37:08Z[0m app[7813e23b2e03e8] [32mams[0m [[34minfo[0m]2026/06/05 07:37:08 INFO SSH listening listen_address=[fdaa:7a:581:a7b:71a:5c4a:280e:2]:22
+[2m2026-06-05T07:37:08Z[0m app[7813e23b2e03e8] [32mams[0m [[34minfo[0m][2026-06-05 07:37:08 +0000] [637] [INFO] Starting gunicorn 26.0.0
+[2m2026-06-05T07:37:08Z[0m app[7813e23b2e03e8] [32mams[0m [[34minfo[0m][2026-06-05 07:37:08 +0000] [637] [INFO] Listening at: http://0.0.0.0:10000 (637)
+[2m2026-06-05T07:37:08Z[0m app[7813e23b2e03e8] [32mams[0m [[34minfo[0m][2026-06-05 07:37:08 +0000] [637] [INFO] Using worker: sync

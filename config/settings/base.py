@@ -7,8 +7,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # ── Security ───────────────────────────────────────────────
 SECRET_KEY = config('SECRET_KEY', default='dev-secret-key-change-in-production')
-DEBUG = config('DEBUG', default=True, cast=bool)
-ALLOWED_HOSTS = ['*']
+DEBUG = config('DEBUG', default=False, cast=bool)
+ALLOWED_HOSTS = ['bubabi.onrender.com', 'bubabi.fly.dev', 'localhost', '127.0.0.1']
 
 # ── Installed apps ─────────────────────────────────────────
 INSTALLED_APPS = [
@@ -54,7 +54,6 @@ MIDDLEWARE = [
     'apps.core.middleware.advanced_security.AdvancedSessionSecurity',
     'apps.identity.middleware.BlockedUserMiddleware',
     "apps.identity.middleware_terms.TermsAcceptanceMiddleware",
-    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 

@@ -98,6 +98,7 @@ urlpatterns = [
     path('loans/', identity_views.loans_view, name='loans'),
     path('loans/request/', financials_views.request_loan_view, name='request-loan'),
     path('loans/<uuid:pk>/review/', identity_views.review_loan, name='review-loan'),
+    path('loans/<uuid:pk>/repay/', financials_views.repay_loan_view, name='repay-loan'),
     path('fines/', identity_views.fines_view, name='fines'),
     path('fines/issue/', financials_views.issue_fine_view, name='issue-fine'),
     path('expenses/add/', financials_views.add_expense_view, name='add-expense'),

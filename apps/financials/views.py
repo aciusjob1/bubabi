@@ -272,3 +272,48 @@ def mark_late_contributions_view(request):
 
 # Patch: re-decorate create_contributions_view
 # This will be applied by updating the decorator stack
+
+@login_required
+def repay_loan_view(request, pk):
+    """Record a loan repayment."""
+    loan = get_object_or_404(Loan, pk=pk, borrower__clan=request.user.clan)
+    
+    # Only the borrower or treasurer can record repayment
+    is_treasurer = request.user.clan_roles.filter(is_active=True, role__hierarchy_level__gte=3).exists()
+    if not (request.user.is_superuser or is_treasurer or loan.borrower == request.user):
+        messages.error(request, "You can only repay your own loans.")
+        return redirect('loans')
+    
+    if loan.status not in [LoanStatus.DISBURSED, LoanStatus.DEFAULTED]:
+        messages.error(request, "This loan is not in a repayable state.")
+        return redirect('loans')
+    
+    remaining = loan.total_due - sum(r.amount for r in loan.repayments.all())
+    
+    if request.method == 'POST':
+        try:
+            amount = float(request.POST.get('amount', 0))
+            if amount <= 0:
+                messages.error(request, "Please enter a valid amount.")
+                return redirect('repay-loan', pk=loan.id)
+            if amount > remaining:
+                messages.error(request, f"Amount exceeds remaining balance of {remaining:,.0f}.")
+                return redirect('repay-loan', pk=loan.id)
+            
+            svc.record_loan_repayment(
+                loan=loan,
+                amount=amount,
+                recorded_by=request.user,
+                request=request
+            )
+            messages.success(request, f"Repayment of {amount:,.0f} recorded successfully!")
+            return redirect('loans')
+        except Exception as e:
+            messages.error(request, str(e))
+    
+    return render(request, 'forms/repay_loan.html', {
+        'loan': loan,
+        'remaining': remaining,
+        'total_due': loan.total_due,
+        'total_repaid': sum(r.amount for r in loan.repayments.all()),
+    })

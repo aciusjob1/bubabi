@@ -77,7 +77,6 @@ elder_required      = user_passes_test(is_elder_or_above, login_url='member-dash
 
 @ensure_csrf_cookie
 @rate_limit("login", 20, 300)
-@cache_page(15)
 def login_view(request):
     if request.user.is_authenticated:
         return redirect(get_role_dashboard(request.user))
@@ -163,7 +162,6 @@ def get_role_dashboard(user):
     return 'member-dashboard'
 
 
-@cache_page(15)
 def register_view(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
@@ -405,7 +403,7 @@ def system_dashboard(request):
         'contribution_count': Contribution.objects.count(), 'ledger_count': LedgerEntry.objects.count(),
         'relationship_count': Relationship.objects.count(), 'votes_count': VoteCast.objects.count(),
         'all_clans': all_clans,
-                'pending_members': Member.objects.filter(status='pending').select_related('person', 'clan').order_by('-created_at'),
+        'pending_members': Member.objects.filter(status='pending').select_related('person', 'clan').order_by('-created_at'),
         'active_sessions': UserSession.objects.filter(is_active=True).count(),
         'total_sessions_today': UserSession.objects.filter(created_at__date=timezone.now().date()).count(),
         'recent_sessions': UserSession.objects.filter(is_active=True).select_related('user').order_by('-last_activity')[:10],
@@ -457,6 +455,7 @@ def member_profile(request, pk):
 
 
 
+@login_required
 def contributions_view(request):
     clan = request.user.clan
     contributions = Contribution.objects.filter(member__clan=clan).select_related('member__person', 'verified_by__person')
@@ -485,6 +484,7 @@ def contributions_view(request):
 
 
 
+@login_required
 def loans_view(request):
     clan = request.user.clan
     user = request.user
@@ -497,7 +497,6 @@ def loans_view(request):
 
 
 
-@login_required
 @login_required
 def fines_view(request):
     fines = Fine.objects.filter(member__clan=request.user.clan).select_related('member__person', 'issued_by__person').order_by('-created_at')
@@ -512,6 +511,7 @@ def audit_view(request):
 
 
 
+@login_required
 def reports_view(request):
     clan = request.user.clan
     monthly_data = []
@@ -803,6 +803,7 @@ def notifications_view(request):
 
 
 
+@login_required
 def mark_notification_read(request, pk):
     try:
         notif = Notification.objects.get(pk=pk, recipient=request.user)
@@ -814,6 +815,7 @@ def mark_notification_read(request, pk):
 
 
 
+@login_required
 def mark_all_notifications_read(request):
     Notification.objects.filter(recipient=request.user, is_read=False).update(is_read=True)
     messages.success(request, "All notifications marked as read.")
@@ -869,6 +871,7 @@ def create_announcement(request):
 
 
 
+@login_required
 def announcement_detail(request, pk):
     announcement = get_object_or_404(Announcement, pk=pk, clan=request.user.clan)
     if not announcement.is_active and request.user != announcement.author and not request.user.is_superuser:
@@ -886,6 +889,7 @@ def announcement_detail(request, pk):
 
 
 
+@login_required
 def delete_announcement(request, pk):
     announcement = get_object_or_404(Announcement, pk=pk, clan=request.user.clan, is_active=True)
     if request.user == announcement.author or request.user.is_superuser:
@@ -909,6 +913,7 @@ def delete_announcement(request, pk):
 # ══════════════════════════════════════════════
 
 
+@login_required
 def family_tree_view(request, person_pk=None):
     from apps.genealogy.services.genealogy_service import GenealogyService
     from apps.genealogy.models import Family
@@ -999,6 +1004,7 @@ def posts_view(request):
 
 
 
+@login_required
 def create_post(request):
     from apps.identity.models import Post
     if request.method == 'POST':
@@ -1149,6 +1155,7 @@ def resolve_report(request, pk):
 # ══════════════════════════════════════════════
 
 
+@login_required
 def download_monthly_pdf(request, period_label):
     from apps.core.pdf.pdf_service import generate_monthly_statement
     buffer = generate_monthly_statement(request.user.clan, period_label)
@@ -1157,6 +1164,7 @@ def download_monthly_pdf(request, period_label):
     return response
 
 
+@login_required
 def download_owing_pdf(request):
     from apps.core.pdf.pdf_service import generate_owing_list
     buffer = generate_owing_list(request.user.clan)
@@ -1165,6 +1173,7 @@ def download_owing_pdf(request):
     return response
 
 
+@login_required
 def download_annual_pdf(request, year):
     from apps.core.pdf.pdf_service import generate_annual_summary
     buffer = generate_annual_summary(request.user.clan, year)
@@ -1236,6 +1245,7 @@ def send_contribution_reminder(request, contribution_id):
 # ══════════════════════════════════════════════
 
 
+@login_required
 def upload_avatar(request, pk):
     member = get_object_or_404(Member, pk=pk, clan=request.user.clan)
     if request.user != member and not request.user.is_superuser:
@@ -1251,6 +1261,7 @@ def upload_avatar(request, pk):
     return redirect('member-profile', pk=pk)
 
 
+@login_required
 def remove_avatar(request, pk):
     member = get_object_or_404(Member, pk=pk, clan=request.user.clan)
     if request.user != member and not request.user.is_superuser:
@@ -1837,7 +1848,7 @@ def view_document(request, pk):
     import mimetypes
     mime_type, _ = mimetypes.guess_type(doc.file.name)
     
-        # Read text file content server-side (Django templates cannot call .read())
+    # Read text file content server-side
     file_content = None
     if doc.file.name.lower().endswith((".txt", ".log", ".md", ".csv")):
         try:
@@ -1877,6 +1888,7 @@ def terms_view(request):
     return render(request, 'terms.html')
 
 
+@login_required
 def accept_terms_view(request):
     """Force user to accept terms before using the system."""
     if request.user.has_accepted_terms:

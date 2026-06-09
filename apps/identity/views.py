@@ -592,25 +592,28 @@ def change_member_status(request, pk):
 
 
 def assign_leader_view(request, pk):
-    # Protected action: requires elder approval if not superuser
-    if not request.user.is_superuser and action == "assign":
-        from apps.governance.models import ApprovalRequest
-        existing = ApprovalRequest.objects.filter(action_type="assign_leader", payload__member_id=str(pk), status="pending").exists()
-        if not existing:
-            messages.info(request, "Assigning a Leader requires Elder Council approval. An approval request has been created.")
-            ApprovalRequest.objects.create(
-                clan=request.user.clan,
-                action_type="assign_leader",
-                description=f"Assign {member.person.full_name} as Leader",
-                payload={"member_id": str(pk), "action": "assign"},
-                initiated_by=request.user,
-                minimum_approvals=3
-            )
-            return redirect("members")
-    if not request.user.is_superuser:
-        messages.error(request, "Only the Super Admin can assign/remove Leaders.")
-        return redirect('members')
     member = get_object_or_404(Member, pk=pk, clan=request.user.clan)
+    
+    # Protected action: requires elder approval if not superuser
+    if not request.user.is_superuser:
+        action = request.POST.get('action')
+        if action == "assign":
+            from apps.governance.models import ApprovalRequest
+            existing = ApprovalRequest.objects.filter(action_type="assign_leader", payload__member_id=str(pk), status="pending").exists()
+            if not existing:
+                messages.info(request, "Assigning a Leader requires Elder Council approval. An approval request has been created.")
+                ApprovalRequest.objects.create(
+                    clan=request.user.clan,
+                    action_type="assign_leader",
+                    description=f"Assign {member.person.full_name} as Leader",
+                    payload={"member_id": str(pk), "action": "assign"},
+                    initiated_by=request.user,
+                    minimum_approvals=3
+                )
+                return redirect("members")
+        else:
+            messages.error(request, "Only the Super Admin can assign/remove Leaders.")
+            return redirect('members')
     from apps.governance.models import Role, MemberRole
     leader_role, _ = Role.objects.get_or_create(name='Leader', clan=member.clan, defaults={'hierarchy_level': 5, 'description': 'Clan Leader'})
     if request.method == 'POST':

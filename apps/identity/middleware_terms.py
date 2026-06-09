@@ -22,7 +22,7 @@ class TermsAcceptanceMiddleware:
 
         # only enforce for authenticated users
         if request.user.is_authenticated:
-            if not getattr(request.user, "has_accepted_terms", True):
+            if not getattr(request.user, "has_accepted_terms", False):
                 return redirect("accept-terms")
 
         return self.get_response(request)

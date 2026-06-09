@@ -41,7 +41,7 @@ class NotificationService:
             notif_type='contribution_due',
             title='Contribution Due',
             message=(
-                f"Your contribution of GHS {contribution.amount_due} "
+                f"Your contribution of {contribution.member.clan.currency} {contribution.amount_due} "
                 f"for {contribution.period_label} is due on "
                 f"{contribution.due_date}."
             ),
@@ -64,9 +64,9 @@ class NotificationService:
     @staticmethod
     def notify_loan_status(loan, status):
         messages = {
-            'approved':  f"Your loan of GHS {loan.amount_approved} has been approved.",
-            'rejected':  f"Your loan request of GHS {loan.amount_requested} was rejected.",
-            'disbursed': f"GHS {loan.amount_approved} has been disbursed to you.",
+            'approved':  f"Your loan of {loan.borrower.clan.currency} {loan.amount_approved} has been approved.",
+            'rejected':  f"Your loan request of {loan.borrower.clan.currency} {loan.amount_requested} was rejected.",
+            'disbursed': f"{loan.borrower.clan.currency} {loan.amount_approved} has been disbursed to you.",
         }
         NotificationService.notify(
             recipient=loan.borrower,

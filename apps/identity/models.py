@@ -111,7 +111,6 @@ class Member(AbstractBaseUser, PermissionsMixin, BaseModel):
     is_staff   = models.BooleanField(default=False)
     is_active  = models.BooleanField(default=True)
     is_blocked = models.BooleanField(default=False, help_text="Blocked from accessing the system")
-    has_accepted_terms = models.BooleanField
     has_accepted_terms = models.BooleanField(default=False, help_text="Has accepted terms of service")
     has_accepted_legal = models.BooleanField(default=False, help_text="Has accepted legal terms")
     accepted_terms_at = models.DateTimeField(null=True, blank=True)
@@ -161,6 +160,7 @@ class Member(AbstractBaseUser, PermissionsMixin, BaseModel):
         highest = self.clan_roles.filter(is_active=True).select_related("role").order_by("-role__hierarchy_level").first()
         return highest.role.hierarchy_level if highest else 0
 
+    @property
     def is_treasurer(self):
         if self.is_superuser:
             return True

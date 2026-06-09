@@ -268,11 +268,6 @@ def mark_late_contributions_view(request):
     except Exception as e:
         messages.error(request, str(e))
     return redirect('treasurer')
-# Replace old decorators with permission-based ones
-
-# Patch: re-decorate create_contributions_view
-# This will be applied by updating the decorator stack
-
 @login_required
 def repay_loan_view(request, pk):
     """Record a loan repayment."""
@@ -288,7 +283,10 @@ def repay_loan_view(request, pk):
         messages.error(request, "This loan is not in a repayable state.")
         return redirect('loans')
     
-    remaining = loan.total_due - sum(r.amount for r in loan.repayments.all())
+    remaining = max(0, loan.total_due - sum(r.amount for r in loan.repayments.all()))
+    if remaining <= 0:
+        messages.info(request, "This loan has been fully repaid.")
+        return redirect('loans')
     
     if request.method == 'POST':
         try:

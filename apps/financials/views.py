@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -26,7 +27,7 @@ svc = FinancialService()
 def record_payment_view(request, pk):
     # Fraud check: prevent duplicate payments within 60 seconds
     from django.core.cache import cache
-    cache_key = f"payment:{request.user.id}:{pk}"
+    cache_key = f"payment:{pk}"
     if cache.get(cache_key):
         messages.warning(request, "Duplicate payment detected. Please wait before trying again.")
         return redirect("contributions")
@@ -34,6 +35,11 @@ def record_payment_view(request, pk):
     contribution = get_object_or_404(
         Contribution, pk=pk, member__clan=request.user.clan
     )
+    # Only the member themselves or a treasurer can record payment
+    is_treasurer = request.user.clan_roles.filter(is_active=True, role__hierarchy_level__gte=3).exists()
+    if not (request.user.is_superuser or is_treasurer or contribution.member == request.user):
+        messages.error(request, "You can only record payments for yourself.")
+        return redirect('contributions')
     if request.method == 'POST':
         form = RecordPaymentForm(request.POST, user=request.user)
         if form.is_valid():
@@ -58,12 +64,8 @@ def record_payment_view(request, pk):
 
 
 @login_required
+@treasurer_required
 def verify_payment_view(request, pk):
-    # Only treasurer (level 3) or superuser can verify — NOT leader (level 5)
-    is_treasurer = request.user.clan_roles.filter(is_active=True, role__hierarchy_level=3).exists()
-    if not (request.user.is_superuser or is_treasurer):
-        messages.error(request, "Only the Treasurer can verify payments.")
-        return redirect('contributions')
     
     contribution = get_object_or_404(
         Contribution, pk=pk, member__clan=request.user.clan
@@ -81,6 +83,7 @@ def verify_payment_view(request, pk):
 
 
 @login_required
+@treasurer_required
 def add_expense_view(request):
     if request.method == 'POST':
         form = ExpenseForm(request.POST)
@@ -107,6 +110,7 @@ def add_expense_view(request):
 
 
 @login_required
+@treasurer_required
 def issue_fine_view(request, pk):
     member = get_object_or_404(Member, pk=pk, clan=request.user.clan)
     clan = request.user.clan
@@ -207,26 +211,27 @@ def create_contributions_view(request):
                 clan.default_contribution if clan else 50000
             )
 
-            for member in Member.objects.filter(
-                clan=clan, status=MemberStatus.ACTIVE
-            ):
-                exists = Contribution.objects.filter(
-                    member=member,
-                    period_label=form.cleaned_data['period_label']
-                ).exists()
-
-                if not exists:
-                    Contribution.objects.create(
+            with transaction.atomic():
+                for member in Member.objects.filter(
+                    clan=clan, status=MemberStatus.ACTIVE
+                ):
+                    exists = Contribution.objects.filter(
                         member=member,
-                        amount_due=amount_due,
-                        amount_paid=0,
-                        due_date=form.cleaned_data['due_date'],
-                        period_label=form.cleaned_data['period_label'],
-                        status=ContributionStatus.DUE
-                    )
-                    created += 1
-                else:
-                    skipped += 1
+                        period_label=form.cleaned_data['period_label']
+                    ).exists()
+
+                    if not exists:
+                        Contribution.objects.create(
+                            member=member,
+                            amount_due=amount_due,
+                            amount_paid=0,
+                            due_date=form.cleaned_data['due_date'],
+                            period_label=form.cleaned_data['period_label'],
+                            status=ContributionStatus.DUE
+                        )
+                        created += 1
+                    else:
+                        skipped += 1
 
             messages.success(
                 request,
@@ -254,6 +259,7 @@ def create_contributions_view(request):
 
 
 @login_required
+@treasurer_required
 def mark_late_contributions_view(request):
     """Manually trigger marking late contributions."""
     try:

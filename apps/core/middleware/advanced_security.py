@@ -66,13 +66,16 @@ class AdvancedSessionSecurity:
                         return redirect('verify-identity')
                     
             except UserSession.DoesNotExist:
-                # Create session record if missing
-                UserSession.objects.create(
+                # Create or update session record
+                UserSession.objects.update_or_create(
+                    session_key=session_key,
+                    defaults={
                     user=request.user,
                     session_key=session_key,
                     ip_address=current_ip,
                     device_fingerprint=current_device,
-                    user_agent=request.META.get('HTTP_USER_AGENT', '')[:500],
+                        user_agent=request.META.get('HTTP_USER_AGENT', '')[:500],
+                    }
                 )
         
         # Clear verification if risk is low

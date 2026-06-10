@@ -76,10 +76,6 @@ class AdvancedSessionSecurity:
                         'user_agent': request.META.get('HTTP_USER_AGENT', '')[:500],
                     }
                 )
-                    user=request.user,
-                    session_key=session_key,
-                    ip_address=current_ip,
-                    device_fingerprint=current_device,
 
         
         # Clear verification if risk is low

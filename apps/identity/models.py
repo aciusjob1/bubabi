@@ -148,8 +148,8 @@ class Member(AbstractBaseUser, PermissionsMixin, BaseModel):
     
     @property
     def is_blocked(self):
-        """Convenience property: equivalent to status == BLOCKED."""
-        return self.status == MemberStatus.BLOCKED
+        """Check if member is blocked (suspended status)."""
+        return self.status == MemberStatus.SUSPENDED
 
     @property
     def is_suspended(self):

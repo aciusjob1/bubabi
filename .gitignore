@@ -8,3 +8,5 @@ mediafiles/
 *.log
 .DS_Store
 *.tar.gz
+*.backup
+*.broken

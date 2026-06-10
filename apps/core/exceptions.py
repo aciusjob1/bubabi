@@ -56,6 +56,16 @@ class DataIntegrityError(BubabiException):
     detail = "Data conflict or inconsistency"
 
 
+class InvalidStatusTransitionError(ValidationError):
+    """Raised when an invalid member status transition is attempted."""
+    detail = "Invalid status transition"
+
+
+class PermissionDeniedError(AuthorizationError):
+    """Raised when a user lacks permission for an action."""
+    detail = "Permission denied"
+
+
 class ImmutableRecordError(DataIntegrityError):
     detail = "Cannot modify immutable record"
 

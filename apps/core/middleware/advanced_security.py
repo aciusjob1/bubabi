@@ -70,13 +70,17 @@ class AdvancedSessionSecurity:
                 UserSession.objects.update_or_create(
                     session_key=session_key,
                     defaults={
+                        'user': request.user,
+                        'ip_address': current_ip,
+                        'device_fingerprint': current_device,
+                        'user_agent': request.META.get('HTTP_USER_AGENT', '')[:500],
+                    }
+                )
                     user=request.user,
                     session_key=session_key,
                     ip_address=current_ip,
                     device_fingerprint=current_device,
-                        user_agent=request.META.get('HTTP_USER_AGENT', '')[:500],
-                    }
-                )
+
         
         # Clear verification if risk is low
         if request.user.is_authenticated and request.path == '/verify-identity/':

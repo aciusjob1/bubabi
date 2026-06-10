@@ -18,7 +18,7 @@ def has_permission(user, perm_codename, resource=None):
         member=user,
         is_active=True,
         expires_at__isnull=True
-    ).select_related('role__permissions').prefetch_related('role__inherits__permissions')
+    ).select_related('role').prefetch_related('role__permissions', 'role__inherits__permissions')
     
     if not roles.exists():
         return False
